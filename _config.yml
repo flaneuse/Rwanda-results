@@ -1,0 +1,18 @@
+# Site settings
+title: Rwanda LAM
+email: geocenter@usaid.gov
+description: > #
+  An intro into the fundamentals of data analysis and visualization using Stata
+baseurl:  /Rwanda-results
+url:  geocenter.github.io # the base hostname & protocol for your site
+twitter_username: usaidgeo
+github_username:  geocenter
+
+# Build settings
+markdown: kramdown
+
+
+collections:
+  portfolio:
+    output: true
+    permalink: /portfolio/:path/
