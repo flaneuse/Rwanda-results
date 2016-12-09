@@ -7,9 +7,11 @@ baseurl:  /Rwanda-results
 url:  geocenter.github.io # the base hostname & protocol for your site
 twitter_username: usaidgeo
 github_username:  geocenter
+gc_website: https://sites.google.com/a/usaid.gov/usaidgeocenter/
 
 # Build settings
 markdown: kramdown
+permalink: pretty
 
 
 collections:

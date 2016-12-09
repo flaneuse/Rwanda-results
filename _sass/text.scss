@@ -1,0 +1,34 @@
+// important text
+mark {
+  color: $accent-main;
+  background-color: transparent;
+  font-family: $accent-font;
+}
+
+
+// indented pull quotes.
+.pullQuote {
+  width: 66.67%;
+
+ h1 {
+    color: #ffffff;
+    background-color: $accent-light;
+    font-size: $base-font-size;
+    font-weight: $base-weight;
+    margin-bottom: $base-pad;
+    padding: $sm-pad;
+    padding-left: $base-pad;
+  }
+
+p {
+    margin-top: 0;
+    padding-left: $sm-pad;
+}
+
+}
+
+h3 {
+  font-size: large-font-size;
+  font-weight: $base-weight;
+  margin-bottom: $base-pad;
+}

@@ -1,3 +1,93 @@
-.mark {
+html {
   font-family: "Lato", Helvetica, Arial, sans-serif;
-  color: "#ff0000"; }
+  font-weight: 300;
+  color: #4e5253; }
+
+body {
+  width: 900px;
+  line-height: 1.25;
+  margin: 20px; }
+
+ul {
+  margin-top: 0.25em; }
+
+a {
+  color: #00A3E0; }
+
+a:visited {
+  color: #1F6E90; }
+
+.site-nav {
+  line-height: 1.75em;
+  background-color: #353839;
+  color: #b4b8b9;
+  font-size: 14px;
+  font-family: "Oswald", sans-serif;
+  text-transform: uppercase;
+  text-align: right;
+  margin-bottom: 0; }
+  .site-nav a {
+    color: #b4b8b9;
+    text-decoration: none; }
+    .site-nav a:not(:first-child) {
+      margin-left: 15px; }
+  @media screen and (max-width: 680px) {
+    .site-nav ul.topnav li:not(:first-child) {
+      display: none; }
+    .site-nav ul.topnav li.icon {
+      float: right;
+      display: inline-block; } }
+
+.site-footer {
+  background-color: #CCCCCC;
+  height: 40px;
+  position: relative; }
+  .site-footer > img {
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto; }
+  .site-footer span {
+    vertical-align: middle;
+    line-height: 40px; }
+
+.logo-L {
+  padding: 6px;
+  padding-right: 12px;
+  float: left;
+  height: 85%; }
+
+.logo-R {
+  padding: 12px;
+  float: right;
+  height: 40%; }
+
+mark {
+  color: #00A3E0;
+  background-color: transparent;
+  font-family: "Lato"; }
+
+.pullQuote {
+  width: 66.67%; }
+  .pullQuote h1 {
+    color: #ffffff;
+    background-color: #87C0E8;
+    font-size: 16px;
+    font-weight: 300;
+    margin-bottom: 6px;
+    padding: 3px;
+    padding-left: 6px; }
+  .pullQuote p {
+    margin-top: 0;
+    padding-left: 3px; }
+
+h3 {
+  font-size: large-font-size;
+  font-weight: 300;
+  margin-bottom: 6px; }

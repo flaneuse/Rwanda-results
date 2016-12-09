@@ -6,25 +6,70 @@
 
 
 // Define global variables
-$base-font-family: 'Lato', Helvetica, Arial, sans-serif;
+
+// colors
+$soft-black: #353839;
+$rwanda-blue: #00A3E0;
+$rwanda-ltblue: #87C0E8;
+$rwanda-dkblue: #1F6E90;
+$rwanda-green: #006f3d;
+$rwanda-yellow: #f7b500;
+$rwanda-dkyellow: #f9a800;
+
+
+$usaid-ltblue: #A7C6ED;
+$usaid-medblue: #006789;
+$usaid-webblue: #205483;
+$usaid-blue: #002F6C;
+$usaid-red: #BA0C2F;
+$usaid-dkred: #651D32;
+
+$grey25K: #CCCCCC;
+
+
+
+$accent-main: $rwanda-blue;
+$accent-light: $rwanda-ltblue;
+$accent-dark: $rwanda-dkblue;
+
+// font: family
+$base-font-family:'Lato', Helvetica, Arial, sans-serif;
+$accent-font:
+//'Josefin Sans', sans-serif;
+//'Raleway', sans-serif;
+//'Muli', sans-serif;
+'Lato';
+$nav-font: 'Oswald', sans-serif;
+
+// font: weight
+$base-weight: 300;
+$font-semibold: 400;
+$font-bold: 400;
+
+// font: sizes
 $base-font-size:   16px;
 $small-font-size:  $base-font-size * 0.875;
-$base-line-height: 1.5;
+$large-font-size:  $base-font-size * 1.125;
 
-$spacing-unit:     30px;
+// font: colors
+$base-font-color: lighten($soft-black, 10%);
 
-$text-color:       #111;
-$background-color: #fdfdfd;
-$brand-color:      #2a7ae2;
+// spacing
+$sm-pad: 3px;
+$base-pad: 6px;
+$large-pad: 12px;
+$base-line-height: 1.25;
+$horizontal-spacing-unit: 30px;
 
-$grey-color:       #828282;
-$grey-color-light: lighten($grey-color, 40%);
-$grey-color-dark:  darken($grey-color, 25%);
 
-$on-palm:          600px;
-$on-laptop:        800px;
+// widths for media queries
+$max-width:  900px;
+$med-width:  800px;
+$small-width:  500px;
 
-.mark {
-  font-family: $base-font-family;
-  color: '#ff0000'
-}
+
+// Import all derived css (scss) files from from `sass_dir` (defaults to `_sass`)
+@import
+"basics",
+"text"
+;
