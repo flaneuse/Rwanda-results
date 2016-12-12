@@ -1,9 +1,7 @@
-html {
+body {
   font-family: "Lato", Helvetica, Arial, sans-serif;
   font-weight: 300;
-  color: #4e5253; }
-
-body {
+  color: #4e5253;
   width: 900px;
   line-height: 1.25;
   margin: 20px; }
@@ -17,11 +15,15 @@ a {
 a:visited {
   color: #1F6E90; }
 
+a::before {
+  content: "\f101  ";
+  font-family: 'FontAwesome'; }
+
 .site-nav {
   line-height: 1.75em;
   background-color: #353839;
   color: #b4b8b9;
-  font-size: 14px;
+  font-size: 16px;
   font-family: "Oswald", sans-serif;
   text-transform: uppercase;
   text-align: right;
@@ -86,6 +88,10 @@ mark {
   .pullQuote p {
     margin-top: 0;
     padding-left: 3px; }
+
+img {
+  max-width: 25%;
+  max-height: 64px; }
 
 h3 {
   font-size: large-font-size;

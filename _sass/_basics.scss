@@ -1,12 +1,12 @@
 // -- Reset defaults for all site --
 html{
-  font-family: $base-font-family;
-  font-weight: $base-weight;
-  color: $base-font-color;
 }
 
 // -- define padding & sizing for site --
 body{
+  font-family: $base-font-family;
+  font-weight: $base-weight;
+  color: $base-font-color;
   width: $max-width;
   line-height: $base-line-height;
   margin: 20px;
@@ -26,12 +26,17 @@ a:visited {
   color: $accent-dark;
 }
 
+a::before {
+  content: "\f101  ";
+  font-family: 'FontAwesome';
+}
+
 // -- define Nav bar --
 .site-nav {
   line-height: 1.75em;
   background-color: $soft-black;
   color: lighten($soft-black, 50%);
-  font-size: $small-font-size;
+  font-size: $base-font-size;
   font-family: $nav-font;
   text-transform: uppercase;
   text-align: right;

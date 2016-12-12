@@ -27,6 +27,11 @@ p {
 
 }
 
+img {
+  max-width: 25%;
+  max-height: $base-font-size*4;
+}
+
 h3 {
   font-size: large-font-size;
   font-weight: $base-weight;
