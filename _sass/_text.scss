@@ -15,6 +15,26 @@ mark {
   color: $accent-main;
 }
 
+// side bar on what we did
+#what-did{
+  font-size: 1.2em;
+
+   ul {
+  list-style-type: none;
+  line-height: 1.5;
+  padding-left: 3.5em;
+}
+
+li {
+  margin-bottom: 10px;
+  text-indent: -1.5em;
+}
+
+.fa {
+  padding-right: 1em;
+}
+}
+
 // indented pull quotes.
 .pullQuote {
   width: 66.67%;

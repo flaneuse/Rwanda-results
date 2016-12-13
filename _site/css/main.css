@@ -102,6 +102,18 @@ mark {
 .list-emph {
   color: #00A3E0; }
 
+#what-did {
+  font-size: 1.2em; }
+  #what-did ul {
+    list-style-type: none;
+    line-height: 1.5;
+    padding-left: 3.5em; }
+  #what-did li {
+    margin-bottom: 10px;
+    text-indent: -1.5em; }
+  #what-did .fa {
+    padding-right: 1em; }
+
 .pullQuote {
   width: 66.67%; }
   .pullQuote h1 {
