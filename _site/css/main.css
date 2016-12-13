@@ -61,36 +61,6 @@ a:hover {
   content: "\f101  ";
   font-family: 'FontAwesome'; }
 
-.site-footer {
-  background-color: #CCCCCC;
-  height: 40px;
-  position: relative; }
-  .site-footer > img {
-    max-height: 100%;
-    max-width: 100%;
-    width: auto;
-    height: auto;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto; }
-  .site-footer span {
-    vertical-align: middle;
-    line-height: 40px; }
-
-.logo-L {
-  padding: 6px;
-  padding-right: 12px;
-  float: left;
-  height: 85%; }
-
-.logo-R {
-  padding: 12px;
-  float: right;
-  height: 40%; }
-
 p, li {
   font-size: 1.25em; }
 
@@ -158,3 +128,29 @@ h3 {
 .navbar-default .navbar-nav > li > a:hover {
   color: #ced1d2;
   text-decoration: underline; }
+
+.site-footer {
+  background-color: #CCCCCC;
+  height: 40px;
+  position: relative; }
+  .site-footer img {
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    position: relative;
+    margin: auto; }
+  .site-footer span {
+    vertical-align: middle;
+    line-height: 40px; }
+
+.logo-L {
+  padding: 6px;
+  padding-right: 12px;
+  float: left;
+  height: 85%; }
+
+.logo-R {
+  padding: 12px;
+  float: right;
+  height: 40%; }
