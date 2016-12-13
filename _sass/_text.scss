@@ -6,6 +6,15 @@ mark {
 }
 
 
+// high level findings
+#high-level {
+  font-size: $large-font-size;
+}
+
+.list-emph {
+  color: $accent-main;
+}
+
 // indented pull quotes.
 .pullQuote {
   width: 66.67%;

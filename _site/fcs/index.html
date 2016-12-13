@@ -15,12 +15,9 @@
   <!-- Accent font -->
   <link href="https://fonts.googleapis.com/css?family=Antic|Carrois+Gothic+SC|Josefin+Sans:300,400|Muli:300,400|Oxygen:300,400|Raleway:300,400|Roboto:300,400" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Economica|Oswald:300|Pathway+Gothic+One" rel="stylesheet">
-
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="/Rwanda-results/font-awesome-4.7.0 2/css/font-awesome.min.css">
-
+<link href="https://fonts.googleapis.com/css?family=Arima+Madurai|Cinzel+Decorative|Poiret+One|Amiri" rel="stylesheet">
   <!-- Bootstrap -->
-  <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <link href="/Rwanda-results/css/bootstrap.min.css" rel="stylesheet" media="screen">
 
 
   <!--custom css styling -->
@@ -33,75 +30,97 @@
 
 <body>
 
-  <!-- Include bootstrap scripts -->
-  <script src="http://code.jquery.com/jquery.js"></script>
-  <script src="js/bootstrap.min.js"></script>
 
-  <header class="site-header">
 
-  <div class="wrapper">
+  <!-- HEADER -->
+  <header>
+      <div class="container">
+  <nav id="navbar-header" class="navbar navbar-default">
 
-    <nav class="site-nav">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapsable-nav" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
 
-      <div class="trigger">
-
-        
+      <div id="collapsable-nav" class="collapse navbar-collapse">
+        <ul id="nav-list" class="nav navbar-nav navbar-right">
           
-          <a class="page-link" href="/Rwanda-results/about/">About</a>
           
-        
+          <li>
+            <a class="page-link" href="/Rwanda-results/about/">About</a>
+          </li>
           
-          <a class="page-link" href="/Rwanda-results/family-planning/">Family Planning</a>
           
-        
           
-          <a class="page-link" href="/Rwanda-results/fcs/">Nutrition</a>
+          <li>
+            <a class="page-link" href="/Rwanda-results/family-planning/">Family Planning</a>
+          </li>
           
-        
           
-          <a class="page-link" href="/Rwanda-results/">Introduction</a>
           
-        
+          <li>
+            <a class="page-link" href="/Rwanda-results/fcs/">Nutrition</a>
+          </li>
           
-        
           
-          <a class="page-link" href="/Rwanda-results/stunting1/">Stunting over time</a>
           
-        
+          <li>
+            <a class="page-link" href="/Rwanda-results/">Introduction</a>
+          </li>
           
-          <a class="page-link" href="/Rwanda-results/stunting2/">Stunting & USAID Programs</a>
           
-        
-
+          
+          
+          
+          <li>
+            <a class="page-link" href="/Rwanda-results/stunting1/">Stunting over time</a>
+          </li>
+          
+          
+          
+          <li>
+            <a class="page-link" href="/Rwanda-results/stunting2/">Stunting & USAID Programs</a>
+          </li>
+          
+          
+        </ul>
       </div>
-    </nav>
 
-  </div>
 
-</header>
-
-  
-
-  <div class="page-content">
-    <div class="wrapper">
-      <div class="post">
-
-  <header class="post-header">
-    <h1 class="post-title">Nutrition</h1>
-    <h5 class="post-description"></h5>
+  </nav>
+    </div>
   </header>
 
-  <article class="post-content">
-    
 
-  </article>
+  <!-- CONTENT -->
+    <div class="container">
+        <div class="container">
+  <div class="page">
+
+    <div class="row">
+
+      <header class="page-head">
+        <h1 class="page-title">Nutrition</h1>
+        <h5 class="page-description"></h5>
+      </header>
+
+      <!-- CONTENT -->
+      <article class="post-content">
+        
+
+      </article>
+    </div>
+  </div>
 
 </div>
 
     </div>
-  </div>
 
-  <footer class="site-footer">
+  <!-- FOOTER -->
+  <div class="container">
+<footer class="site-footer">
 
   <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -138,8 +157,13 @@
         <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">
         <img alt="Creative Commons License" class="logo-R"
         src="https://i.creativecommons.org/l/by-nc/4.0/80x15.png"/> </a>
-
   </footer>
+</div>
+
+
+  <!-- Include bootstrap scripts -->
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <script src="/Rwanda-results/js/bootstrap.min.js"></script>
 
 
 </body>

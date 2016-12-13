@@ -1,3 +1,7 @@
+.page {
+  margin-right: 15px;
+  margin-left: 15px; }
+
 body {
   font-family: "Lato", Helvetica, Arial, sans-serif;
   font-weight: 300;
@@ -15,30 +19,47 @@ a {
 a:visited {
   color: #1F6E90; }
 
+a:hover {
+  text-decoration: underline; }
+
 a::before {
   content: "\f101  ";
   font-family: 'FontAwesome'; }
 
-.site-nav {
-  line-height: 1.75em;
-  background-color: #353839;
-  color: #b4b8b9;
-  font-size: 16px;
-  font-family: "Oswald", sans-serif;
-  text-transform: uppercase;
-  text-align: right;
-  margin-bottom: 0; }
-  .site-nav a {
-    color: #b4b8b9;
-    text-decoration: none; }
-    .site-nav a:not(:first-child) {
-      margin-left: 15px; }
-  @media screen and (max-width: 680px) {
-    .site-nav ul.topnav li:not(:first-child) {
-      display: none; }
-    .site-nav ul.topnav li.icon {
-      float: right;
-      display: inline-block; } }
+#accent-title h2 {
+  text-align: center;
+  font-family: "Lora";
+  border-bottom: 1px solid #353839;
+  line-height: 0.1em;
+  margin: 10px 0 20px; }
+
+#accent-title h2 span {
+  background: #fff;
+  padding: 0 10px; }
+
+#intro-headline {
+  padding: 0; }
+
+.intro-img {
+  background-image: url("../Rwanda_img/IMG_1490.JPG");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 350px;
+  margin: 0px;
+  position: relative; }
+
+#intro-headline span {
+  position: absolute;
+  margin: 10px;
+  padding: 0;
+  width: 96%;
+  text-align: center;
+  font-size: 1.6em;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #fff;
+  opacity: 0.5; }
 
 .site-footer {
   background-color: #CCCCCC;
@@ -75,6 +96,12 @@ mark {
   background-color: transparent;
   font-family: "Lato"; }
 
+#high-level {
+  font-size: 18px; }
+
+.list-emph {
+  color: #00A3E0; }
+
 .pullQuote {
   width: 66.67%; }
   .pullQuote h1 {
@@ -97,3 +124,24 @@ h3 {
   font-size: large-font-size;
   font-weight: 300;
   margin-bottom: 6px; }
+
+.navbar-default {
+  line-height: 1.75em;
+  background-color: #353839;
+  border-radius: 0;
+  border-width: 0;
+  color: #b4b8b9;
+  font-size: 16px;
+  font-family: "Oswald", sans-serif;
+  text-transform: uppercase;
+  text-align: right;
+  margin-bottom: 0; }
+  .navbar-default .page-link a {
+    color: #b4b8b9;
+    text-decoration: none; }
+    .navbar-default .page-link a:not(:first-child) {
+      margin-left: 15px; }
+
+.navbar-default .navbar-nav > li > a:hover {
+  color: #ced1d2;
+  text-decoration: underline; }

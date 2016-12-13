@@ -2,6 +2,12 @@
 html{
 }
 
+// correct for bootstrap margins
+.page{
+margin-right: 15px;
+margin-left: 15px;
+}
+
 // -- define padding & sizing for site --
 body{
   font-family: $base-font-family;
@@ -25,40 +31,54 @@ a{
 a:visited {
   color: $accent-dark;
 }
+a:hover {
+  text-decoration: underline;
+}
 
 a::before {
   content: "\f101  ";
   font-family: 'FontAwesome';
 }
 
-// -- define Nav bar --
-.site-nav {
-  line-height: 1.75em;
-  background-color: $soft-black;
-  color: lighten($soft-black, 50%);
-  font-size: $base-font-size;
-  font-family: $nav-font;
-  text-transform: uppercase;
-  text-align: right;
-  margin-bottom: 0;
 
-  a {
-    color: lighten($soft-black, 50%);
-    text-decoration: none;
-    // Gaps between nav items, but not on the first one
-    &:not(:first-child) {
-      margin-left: 15px;
-    }
-  }
+#accent-title h2 {
+  text-align: center;
+  font-family: "Lora";
+  border-bottom: 1px solid $soft-black;
+  line-height: 0.1em;
+  margin: 10px 0 20px;
+}
 
-  @media screen and (max-width:680px) {
-    ul.topnav li:not(:first-child) {display: none;}
-    ul.topnav li.icon {
-      float: right;
-      display: inline-block;
-    }
-  }
+#accent-title h2 span {
+  background:#fff;
+  padding:0 10px;
+}
 
+#intro-headline{
+  padding: 0;
+}
+
+.intro-img {
+  background-image:url("../Rwanda_img/IMG_1490.JPG");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 350px;
+  margin: 0px;
+  position: relative;
+}
+
+#intro-headline span{
+  position: absolute;
+  margin: 10px;
+  padding: 0;
+  width: 96%;
+  text-align: center;
+  font-size: 1.6em;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #fff;
+  opacity: 0.5;
 }
 
 // -- footer --
@@ -99,32 +119,3 @@ a::before {
   float: right;
   height: 40%;
 }
-
-// .wrapper {
-//     max-width: -webkit-calc(800px - (#{$horizontal-spacing-unit} * 2));
-//     max-width:         calc(800px - (#{$horizontal-spacing-unit} * 2));
-//     margin-right: auto;
-//     margin-left: auto;
-//     padding-right: $horizontal-spacing-unit;
-//     padding-left: $horizontal-spacing-unit;
-//    @extend %clearfix;
-//
-//   //  @include media-query($on-laptop) {
-//     //    max-width: -webkit-calc(800px - (#{$horizontal-spacing-unit}));
-//         // max-width:         calc(800px - (#{$horizontal-spacing-unit}));
-//         // padding-right: $spacing-unit / 2;
-//         // padding-left: $spacing-unit / 2;
-//     // }
-// }
-//
-// /**
-//  * Clearfix
-//  */
-// %clearfix {
-//     &:before,
-//     &:after {
-//         content: "";
-//         display: table;
-//         clear: both;
-//     }
-// }
