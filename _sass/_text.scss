@@ -1,3 +1,8 @@
+// reset p
+p, li{
+  font-size: 1.25em;
+}
+
 // important text
 mark {
   color: $accent-main;
@@ -17,29 +22,28 @@ mark {
 
 // side bar on what we did
 #what-did{
-  font-size: 1.2em;
 
-   ul {
-  list-style-type: none;
-  line-height: 1.5;
-  padding-left: 3.5em;
-}
+  ul {
+    list-style-type: none;
+    line-height: 1.5;
+    padding-left: 3.5em;
+  }
 
-li {
-  margin-bottom: 10px;
-  text-indent: -1.5em;
-}
+  li {
+    margin-bottom: 10px;
+    text-indent: -1.5em;
+  }
 
-.fa {
-  padding-right: 1em;
-}
+  .fa {
+    padding-right: 1em;
+  }
 }
 
 // indented pull quotes.
 .pullQuote {
   width: 66.67%;
 
- h1 {
+  h1 {
     color: #ffffff;
     background-color: $accent-light;
     font-size: $base-font-size;
@@ -49,10 +53,10 @@ li {
     padding-left: $base-pad;
   }
 
-p {
+  p {
     margin-top: 0;
     padding-left: $sm-pad;
-}
+  }
 
 }
 
