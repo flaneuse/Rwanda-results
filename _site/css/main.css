@@ -22,10 +22,6 @@ a:visited {
 a:hover {
   text-decoration: underline; }
 
-a::before {
-  content: "\f101  ";
-  font-family: 'FontAwesome'; }
-
 #accent-title h2 {
   text-align: center;
   font-family: "Lora";
@@ -60,6 +56,10 @@ a::before {
   left: 0;
   background-color: #fff;
   opacity: 0.5; }
+
+#motivation a::before, #what-did a::before {
+  content: "\f101  ";
+  font-family: 'FontAwesome'; }
 
 .site-footer {
   background-color: #CCCCCC;
@@ -136,10 +136,10 @@ h3 {
   text-transform: uppercase;
   text-align: right;
   margin-bottom: 0; }
-  .navbar-default .page-link a {
+  .navbar-default .navbar-default .navbar-nav > li > a {
     color: #b4b8b9;
     text-decoration: none; }
-    .navbar-default .page-link a:not(:first-child) {
+    .navbar-default .navbar-default .navbar-nav > li > a:not(:first-child) {
       margin-left: 15px; }
 
 .navbar-default .navbar-nav > li > a:hover {

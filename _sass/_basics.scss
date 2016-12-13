@@ -35,12 +35,9 @@ a:hover {
   text-decoration: underline;
 }
 
-a::before {
-  content: "\f101  ";
-  font-family: 'FontAwesome';
-}
 
 
+// Titles with line across the middle
 #accent-title h2 {
   text-align: center;
   font-family: "Lora";
@@ -54,6 +51,7 @@ a::before {
   padding:0 10px;
 }
 
+// Intro image
 #intro-headline{
   padding: 0;
 }
@@ -79,6 +77,19 @@ a::before {
   left: 0;
   background-color: #fff;
   opacity: 0.5;
+}
+
+
+// Add >> for links within "motivation section"
+#motivation a::before, #what-did a::before {
+  content: "\f101  ";
+  font-family: 'FontAwesome';
+}
+
+// hyperlink
+.link-highlight {
+//  font-family: $nav-font;
+  //text-transform: uppercase;
 }
 
 // -- footer --
