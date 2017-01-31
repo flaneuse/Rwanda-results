@@ -37,23 +37,23 @@ a:hover {
   padding: 0; }
 
 .intro-img {
-  background-image: url("../Rwanda_img/IMG_1490.JPG");
+  background-image: url("../Rwanda_img/IMG_1490_copy.JPG");
   background-repeat: no-repeat;
   background-size: cover;
-  height: 350px;
-  margin: 0px;
+  height: 600px;
+  margin: 15px;
   position: relative; }
 
 #intro-headline span {
   position: absolute;
   margin: 10px;
   padding: 0;
-  width: 96%;
+  width: 50%;
   text-align: center;
   font-size: 1.6em;
   position: absolute;
-  top: 0;
-  left: 0;
+  bottom: 0;
+  right: 0;
   background-color: #fff;
   opacity: 0.5; }
 
@@ -154,3 +154,33 @@ h3 {
   padding: 12px;
   float: right;
   height: 40%; }
+
+#afr-map {
+  width: 100%;
+  height: auto;
+  position: relative;
+  margin: 0 auto; }
+
+#afr-map img {
+  position: absolute;
+  left: 0;
+  -webkit-transition: opacity 1s ease-in-out;
+  -moz-transition: opacity 1s ease-in-out;
+  -o-transition: opacity 1s ease-in-out;
+  transition: opacity 1s ease-in-out; }
+
+@keyframes cf3FadeInOut {
+  0% {
+    opacity: 1; }
+  45% {
+    opacity: 1; }
+  55% {
+    opacity: 0; }
+  100% {
+    opacity: 0; } }
+#afr-map img.top {
+  animation-name: cf3FadeInOut;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-duration: 5s;
+  animation-direction: alternate; }
