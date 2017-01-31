@@ -4,6 +4,17 @@
   padding-right: 15px; /* normal 15 px + 25 px for breadcrumbs.*/
 }
 
+
+body {
+  font-family: $base-font-family;
+  font-weight: $base-weight;
+}
+
+strong {
+  font-weight: 400;
+  color: #66c2a5;
+}
+
 /*Navbar on the right, for breadcrumbs*/
 .navbar-fixed-right {
   position: fixed;
