@@ -3,9 +3,9 @@
 var links = [
   {name: "introduction", order: 0, link: "/index.html"},
   {name: "family planning", order: 1, link:"/fp.html"},
-  {name: "malnutrition", order: 2, link:"/fp.html"},
-  {name: "nutrition", order: 3, link:"/fp.html"},
-  {name: "about", order: 4, link:"/fp.html"}
+  {name: "malnutrition", order: 2, link:"/stunting.html"},
+  {name: "nutrition", order: 3, link:"/nutrition.html"},
+  {name: "about", order: 4, link:"/about.html"}
 ];
 
 // Make sure the links are sorted by order
