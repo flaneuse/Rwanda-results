@@ -1,8 +1,15 @@
+// NAVBAR HEADER ---------------------------------------------------------------
 // array of links
 var links = [
   {name: "introduction", order: 0, link: "/index.html"},
-  {name: "family planning", order: 1, link:"/fp.html"}
+  {name: "family planning", order: 1, link:"/fp.html"},
+  {name: "malnutrition", order: 2, link:"/fp.html"},
+  {name: "nutrition", order: 3, link:"/fp.html"},
+  {name: "about", order: 4, link:"/fp.html"}
 ];
+
+// Make sure the links are sorted by order
+links.sort(function(a,b) {return a.order - b.order});
 
 // spans to insert to get hamburger collapse on small screens
 var collapse_spans = ["sr-only", "icon-bar", "icon-bar", "icon-bar"];
@@ -43,3 +50,4 @@ nav.selectAll(".nav.navbar-nav.navbar-right").selectAll("li")
   .attr("class", "page-link")
   .attr("href", function(d) {return d.link;})
   .text(function(d) {return d.name;})
+// END NAVBAR HEADER -----------------------------------------------------------

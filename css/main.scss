@@ -22,7 +22,29 @@ $accent-font: 'Lato', Helvetica, Arial, sans-serif;
 $serif-font: 'Lora', serif;
 $nav-font: 'Oswald', sans-serif;
 
+
+// font: weight
+$base-weight: 300;
+$font-semibold: 400;
+$font-bold: 400;
+
+// font: sizes
+$base-font-size:   16px;
+$small-font-size:  $base-font-size * 0.875;
+$large-font-size:  $base-font-size * 1.125;
+
+// font: colors
+$base-font-color: lighten($soft-black, 10%);
+
+
+
+// widths for media queries
+$max-width:  900px;
+$med-width:  800px;
+$small-width:  500px;
+
 // Sub-scss files to import.
 
 @import
-"style";
+  "style",
+  "nav";
