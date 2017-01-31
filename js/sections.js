@@ -37,9 +37,7 @@ console.log(height)
 
 var numSlides = 9;
 var radius_bc = 7; // radius of breadcrumbs
-
-// clear out existing graphics
-// $graphic.empty();
+var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
 
   // constant
   words = ["awesome", "clever", "nice", "helpful", "useful", "a javacript master",
@@ -63,7 +61,7 @@ var radius_bc = 7; // radius of breadcrumbs
   // for displaying visualizations
   var g = null;
 
-  // breadcrumbs
+  // breadcrumbs (dots on side of the page to indicate where in the scrolly story.)
   var breadcrumbs = null;
 
   // When scrolling to a new section
@@ -100,19 +98,19 @@ var radius_bc = 7; // radius of breadcrumbs
 // BREADCRUMBS
 
 var breadcrumbs = Array(numSlides).fill(0)
-breadcrumbs[0] = 1
-spacing_bc = 25; // spacing between breadcrumbs, in pixels.
+breadcrumbs[0] = 1 // Set the initial page to 1.
 
+// Embed the breadcrumbs at the far right side of the svg object
 dx_bc = width + margin.left + margin.right;
 dy_bc = (height + margin.top + margin.bottom)/2 - (breadcrumbs.length/2) * spacing_bc;
 svg = d3.select("svg");
 
+// Translate to the edge of the svg
 svg.append("g").attr("id", "breadcrumbs")
-  // .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
   .attr("transform", "translate(" + dx_bc + "," + dy_bc + ")");
 
 
-
+// Append circle markers to create the breadcrumbs
 br = svg.selectAll("#breadcrumbs");
 
   br.selectAll("circle")
@@ -127,6 +125,7 @@ br = svg.selectAll("#breadcrumbs");
      .style("fill", "")
      .style("fill-opacity", function(d) {return d * 0.5 + 0.1;});
 
+// EVENT: on clicking breadcrumb, change the page. -----------------------------
 br.selectAll("circle").on("click", function(d,i) {
   selectedFrame = this.id;
 
@@ -136,8 +135,10 @@ br.selectAll("circle").on("click", function(d,i) {
 
 });
 
+// Call the function to set up the svg objects
        setupVis(words);
 
+// Set up the functions to edit the sections.
        setupSections();
 
      });
@@ -227,14 +228,7 @@ br.selectAll("circle").on("click", function(d,i) {
    *
    */
 
-  /**
-   * showTitle - initial title
-   *
-   * hides: count title
-   * (no previous step to hide)
-   * shows: intro title
-   *
-   */
+
   function show1() {
     svg.selectAll(".rect")
       .transition()
