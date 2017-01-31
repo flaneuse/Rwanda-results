@@ -10,37 +10,33 @@ var scrollVis = function() {
 // Define std. transition length
 stdTransition = 600;
 
+// RESPONSIVENESS ---------------------------------------------------------------
 // Define graphic aspect ratio.
 // Based on iPad w/ 2/3 of max width taken up by vis., 2/3 of max height taken up by vis.: 1024 x 768 --> perserve aspect ratio of iPad
-
-// var $graphic = $('#graphic');
-// var graphic_data;
-var graphic_aspect_width = 1;
-var graphic_aspect_height = 1;
-// var mobile_threshold = 500;
-var pctVis = 2/3; // percent of #graphic occupied by #vis.
+var graphic_aspect_width = 4;
+var graphic_aspect_height = 3;
+var padding_right = 10;
 
 // window function to get the size of the outermost parent
 var graphic = d3.select("#graphic");
 
+// Get size of graphic and sidebar
 var graphicSize = graphic.node().getBoundingClientRect();
+var sidebarSize = d3.select("#sections").node().getBoundingClientRect();
 
-console.log("d3: ")
-console.log(graphicSize.width*pctVis)
-console.log("jQ: ")
-// console.log($graphic.width()*(2/3))
+w = graphicSize.width - sidebarSize.width - padding_right;
 
   // constants to define the size
   // and margins of the vis area, based on the outer vars.
-var margin = { top: 10, right: 15, bottom: 25, left: 35 };
-// var width = $graphic.width()* pctVis - margin.left - margin.right;
-var width = graphicSize.width * pctVis - margin.left - margin.right;
+var margin = { top: 15, right: 15, bottom: 15, left: 15 };
+var width = w - margin.left - margin.right;
 var height = Math.ceil((width * graphic_aspect_height) / graphic_aspect_width) - margin.top - margin.bottom;
 
-var numSlides = [0,1,2,3,4];
+var numSlides = 9;
+var radius_bc = 7; // radius of breadcrumbs
+var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
+// end RESPONSIVENESS (plus call in 'display') ---------------------------------------------------------------
 
-// clear out existing graphics
-// $graphic.empty();
 
 
   // Keep track of which visualization
@@ -124,29 +120,51 @@ var numSlides = [0,1,2,3,4];
          // big image elements (mostly maps; could also be used for static visualizations).
          imgG = svg.select("#imgs")
 
-// BREADCRUMBS
-         // create svg and give it a width and height
-//          breadcrumbs = d3.select("#breadcrumbs").selectAll("svg").data([numSlides]);
-//          breadcrumbs.enter().append("svg").append("g");
-//
-//          breadcrumbs.attr("width", margin.left + margin.right);
-//          breadcrumbs.attr("height", height + margin.top + margin.bottom);
-//
-//
-//          // this group element will be used to contain all
-//          // other elements.
-//          gBr = breadcrumbs.select("g")
-//          .attr("width", 50)
-//          .attr("height", 40)
-//            .attr("transform", "translate(" + graphicSize.width + "," + margin.top + ")").selectAll("circle")
-// .data(numSlides)
-// .enter().append()
-// .attr("id", "breadcrumb")
-// .attr("cx", 10)
-// .attr("cy", 10)
-// .attr("r", 10);
+         // BREADCRUMBS ------------------------------------------------------------
 
-       setupVis(words);
+         var breadcrumbs = Array(numSlides).fill(0)
+         breadcrumbs[0] = 1 // Set the initial page to 1.
+
+         // Embed the breadcrumbs at the far right side of the svg object
+         dx_bc = width + margin.left + margin.right;
+         dy_bc = (height + margin.top + margin.bottom)/2 - (breadcrumbs.length/2) * spacing_bc;
+         svg = d3.select("svg");
+
+         // Translate to the edge of the svg
+         svg.append("g").attr("id", "breadcrumbs")
+           .attr("transform", "translate(" + dx_bc + "," + dy_bc + ")");
+
+
+         // Append circle markers to create the breadcrumbs
+         br = svg.selectAll("#breadcrumbs");
+
+           br.selectAll("circle")
+              .data(breadcrumbs)
+              .enter().append("circle")
+              .attr("id", function(d,i) {return i})
+              .attr("cy", function(d,i) {return i * spacing_bc;})
+              .attr("cx", -radius_bc)
+              .attr("r",  radius_bc)
+              .style("stroke-width", 0.25)
+              .style("stroke", "#333")
+              .style("fill", "")
+              .style("fill-opacity", function(d) {return d * 0.5 + 0.1;});
+
+              function updateBreadcrumbs(idx) {
+                br.selectAll("circle")
+                   .style("fill-opacity", function(d,i) {return i==idx ? 0.6:0.1;});
+              }
+
+         // EVENT: on clicking breadcrumb, change the page. -----------------------------
+         br.selectAll("circle").on("click", function(d,i) {
+           selectedFrame = this.id;
+
+           updateBreadcrumbs(selectedFrame);
+           activateFunctions[selectedFrame]();
+         });
+         // end of BREADCRUMBS ------------------------------------------------------------
+
+       setupVis();
 
        setupSections();
 

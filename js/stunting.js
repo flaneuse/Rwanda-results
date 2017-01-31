@@ -6,14 +6,33 @@
  * http://bost.ocks.org/mike/chart/
  */
 var scrollVis = function() {
-  // constants to define the size
-  // and margins of the vis area.
-  // var width = 600;
-  // var height = 520;
-  // var margin = {top:0, left:20, bottom:40, right:10};
-  var margin = {top: 40, right: 75, bottom: 15, left: 250},
-    width = 900 - margin.left - margin.right,
-    height = 550 - margin.top - margin.bottom;
+  // RESPONSIVENESS ---------------------------------------------------------------
+  // Define graphic aspect ratio.
+  // Based on iPad w/ 2/3 of max width taken up by vis., 2/3 of max height taken up by vis.: 1024 x 768 --> perserve aspect ratio of iPad
+  var graphic_aspect_width = 4;
+  var graphic_aspect_height = 3;
+  var padding_right = 10;
+
+  // window function to get the size of the outermost parent
+  var graphic = d3.select("#graphic");
+
+  // Get size of graphic and sidebar
+  var graphicSize = graphic.node().getBoundingClientRect();
+  var sidebarSize = d3.select("#sections").node().getBoundingClientRect();
+
+  w = graphicSize.width - sidebarSize.width - padding_right;
+
+    // constants to define the size
+    // and margins of the vis area, based on the outer vars.
+  var margin = { top: 40, right: 75, bottom: 15, left: 250 };
+  var width = w - margin.left - margin.right;
+  var height = Math.ceil((width * graphic_aspect_height) / graphic_aspect_width) - margin.top - margin.bottom;
+
+  var numSlides = 9;
+  var radius_bc = 7; // radius of breadcrumbs
+  var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
+  // end RESPONSIVENESS (plus call in 'display') ---------------------------------------------------------------
+
 
   // Keep track of which visualization
   // we are on and which was the last
@@ -156,6 +175,51 @@ var scrollVis = function() {
       // plotting elements.
       plotG = svg.select("#plots")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+    // BREADCRUMBS ------------------------------------------------------------
+
+    var breadcrumbs = Array(numSlides).fill(0)
+    breadcrumbs[0] = 1 // Set the initial page to 1.
+
+    // Embed the breadcrumbs at the far right side of the svg object
+    dx_bc = width + margin.left + margin.right;
+    dy_bc = (height + margin.top + margin.bottom)/2 - (breadcrumbs.length/2) * spacing_bc;
+    svg = d3.select("svg");
+
+    // Translate to the edge of the svg
+    svg.append("g").attr("id", "breadcrumbs")
+      .attr("transform", "translate(" + dx_bc + "," + dy_bc + ")");
+
+
+    // Append circle markers to create the breadcrumbs
+    br = svg.selectAll("#breadcrumbs");
+
+      br.selectAll("circle")
+         .data(breadcrumbs)
+         .enter().append("circle")
+         .attr("id", function(d,i) {return i})
+         .attr("cy", function(d,i) {return i * spacing_bc;})
+         .attr("cx", -radius_bc)
+         .attr("r",  radius_bc)
+         .style("stroke-width", 0.25)
+         .style("stroke", "#333")
+         .style("fill", "")
+         .style("fill-opacity", function(d) {return d * 0.5 + 0.1;});
+
+         function updateBreadcrumbs(idx) {
+           br.selectAll("circle")
+              .style("fill-opacity", function(d,i) {return i==idx ? 0.6:0.1;});
+         }
+
+    // EVENT: on clicking breadcrumb, change the page. -----------------------------
+    br.selectAll("circle").on("click", function(d,i) {
+      selectedFrame = this.id;
+
+      updateBreadcrumbs(selectedFrame);
+      activateFunctions[selectedFrame]();
+    });
+    // end of BREADCRUMBS ------------------------------------------------------------
 
 // -- INTERACTION SELECTORS --
   beansWheat = d3.select("body").select("#beans-wheat");
@@ -1192,6 +1256,9 @@ function display(data) {
     plot.update(index, progress);
   });
 }
+
+// Add event listener: on resize, redraw the figure
+window.addEventListener("resize", display)
 
 // load data and display
 d3.csv("data/stunting.csv", display);

@@ -8,24 +8,22 @@
  */
 var scrollVis = function() {
 
+// RESPONSIVENESS ---------------------------------------------------------------
 // Define graphic aspect ratio.
 // Based on iPad w/ 2/3 of max width taken up by vis., 2/3 of max height taken up by vis.: 1024 x 768 --> perserve aspect ratio of iPad
-
-// var $graphic = $('#graphic');
-// var graphic_data;
 var graphic_aspect_width = 4;
 var graphic_aspect_height = 3;
 var padding_right = 10;
-// var mobile_threshold = 500;
-
 
 // window function to get the size of the outermost parent
 var graphic = d3.select("#graphic");
 
+// Get size of graphic and sidebar
 var graphicSize = graphic.node().getBoundingClientRect();
 var sidebarSize = d3.select("#sections").node().getBoundingClientRect();
 
 w = graphicSize.width - sidebarSize.width - padding_right;
+
   // constants to define the size
   // and margins of the vis area, based on the outer vars.
 var margin = { top: 10, right: 25, bottom: 25, left: 35 };
@@ -35,6 +33,7 @@ var height = Math.ceil((width * graphic_aspect_height) / graphic_aspect_width) -
 var numSlides = 9;
 var radius_bc = 7; // radius of breadcrumbs
 var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
+// end RESPONSIVENESS (plus call in 'display') ---------------------------------------------------------------
 
   // constant
   words = ["awesome", "clever", "nice", "helpful", "useful", "a javacript master",
@@ -92,7 +91,7 @@ var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
        g = svg.select("g")
          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-// BREADCRUMBS
+// BREADCRUMBS ------------------------------------------------------------
 
 var breadcrumbs = Array(numSlides).fill(0)
 breadcrumbs[0] = 1 // Set the initial page to 1.
@@ -128,9 +127,8 @@ br.selectAll("circle").on("click", function(d,i) {
 
   updateBreadcrumbs(selectedFrame);
   activateFunctions[selectedFrame]();
-
-
 });
+// end of BREADCRUMBS (+ update function) ------------------------------------------------------------
 
 // Call the function to set up the svg objects
        setupVis(words);
