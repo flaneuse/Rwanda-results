@@ -32,9 +32,6 @@ var margin = { top: 10, right: 25, bottom: 25, left: 35 };
 var width = w - margin.left - margin.right;
 var height = Math.ceil((width * graphic_aspect_height) / graphic_aspect_width) - margin.top - margin.bottom;
 
-console.log(width)
-console.log(height)
-
 var numSlides = 9;
 var radius_bc = 7; // radius of breadcrumbs
 var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
