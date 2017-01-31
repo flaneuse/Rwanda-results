@@ -35,7 +35,8 @@ var radius_bc = 7; // radius of breadcrumbs
 var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
 // end RESPONSIVENESS (plus call in 'display') ---------------------------------------------------------------
 
-  // constant
+  // constants
+  var radius = 10;
   words = ["awesome", "clever", "nice", "helpful", "useful", "a javacript master",
 "a nerd", "a coding ninja", "an innovator" , "a relationship manager", "a thought leader",
 "a pioneer", "an enabler", "a co-creator", "a matrix-er", "a disruptor", "bending the curve",
@@ -55,6 +56,8 @@ var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
 
   // d3 selection that will be used
   // for displaying visualizations
+  var imgG = null;
+  var plotG = null;
   var g = null;
 
   // breadcrumbs (dots on side of the page to indicate where in the scrolly story.)
@@ -78,9 +81,9 @@ var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
    *  example, we will be drawing it in #vis
    */
    var chart = function(selection) {
-     selection.each(function(words) {
+     selection.each(function(data) {
        // create svg and give it a width and height
-       svg = d3.select(this).selectAll("svg").data([words]);
+       svg = d3.select(this).selectAll("svg").data([data]);
        svg.enter().append("svg").append("g");
 
        svg.attr("width", width + margin.left + margin.right);
@@ -90,6 +93,49 @@ var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
        // other elements.
        g = svg.select("g")
          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+       // this group element will be used to contain all
+       // big image elements (mostly maps; could also be used for static visualizations).
+       imgG = svg.select("#imgs")
+
+         // define scales (# pixels for each axis)
+           var x = d3.scale.linear()
+             .range([0, width]);
+
+             var y = d3.scale.linear()
+               .range([height, 0]);
+
+          //  var z = d3.scaleSequential(colorPalette);
+          //  var   zCat = d3.scale.ordinal(d3.schemeCategory20b);
+
+         // define look of axis
+         var xAxis = d3.svg.axis()
+              .scale(x)
+              .orient("top")
+              .ticks(5)
+              .innerTickSize(height);
+
+         var yAxis = d3.svg.axis()
+              .scale(y)
+              .orient("left");
+         // gridlines in x axis function
+           function make_x_gridlines() {
+             return d3.axisBottom(x)
+             .ticks(5)
+           }
+
+           data = data.filter(function(d) {return d.country == "Rwanda"});
+               // console.log(data)
+
+               var cities = data.map(function(id) {
+                 return {
+                   id: id,
+                   values: data.map(function(d) {
+                     return {year: d.year, tfr: d[id]};
+                   })
+                 };
+               });
 
 // BREADCRUMBS ------------------------------------------------------------
 
@@ -121,6 +167,12 @@ br = svg.selectAll("#breadcrumbs");
      .style("fill", "")
      .style("fill-opacity", function(d) {return d * 0.5 + 0.1;});
 
+     // DOMAINS -------------------------------------------------------------------------
+     // set the domain (data range) of data
+       x.domain([d3.min(data, function(element) { return element.year; }), d3.max(data, function(element) { return element.year; })]);
+       y.domain([0, d3.max(data, function(element) { return element.tfr; })]);
+      //  z.domain([-0, 8]);
+
 // EVENT: on clicking breadcrumb, change the page. -----------------------------
 br.selectAll("circle").on("click", function(d,i) {
   selectedFrame = this.id;
@@ -130,8 +182,11 @@ br.selectAll("circle").on("click", function(d,i) {
 });
 // end of BREADCRUMBS (+ update function) ------------------------------------------------------------
 
+
+
+
 // Call the function to set up the svg objects
-       setupVis(words);
+       setupVis(data);
 
 // Set up the functions to edit the sections.
        setupSections();
@@ -146,7 +201,58 @@ br.selectAll("circle").on("click", function(d,i) {
    * sections of the visualization.
    *
    */
-  setupVis = function() {
+  setupVis = function(data) {
+
+    // MAP: map
+               imgG.append("image")
+                 .attr("class", "rw-map")
+                 .attr("id", "choro2010")
+                 .attr("xlink:href", function(d) {return "/img/intro/afr5.png"})
+                 .attr("width", "100%")
+                 .attr("height", "100%")
+                 .style("opacity", 1);
+
+
+    var line = d3.svg.line() // d3.line for v4
+        .x(function(d) { return x(d.year); })
+        .y(function(d) { return y(d.tfr); });
+
+        // add connector lines
+          svg.append("path")
+              .datum(data)
+              .attr("fill", "none")
+              .attr("stroke-linejoin", "round")
+              .attr("stroke-linecap", "round")
+              .attr("stroke-width", 1.5)
+              .attr("d", line);
+              // .style("stroke", function(d) { return zCat(d.id); });;
+
+    // FILTER THE DATA
+    // Outer g for dots.
+        var g = svg.selectAll("g")
+            .data(data)
+          .enter().append("g");
+
+          svg.selectAll("circle")
+              .data(data.filter(function(d) {return d.country == "Rwanda"}))
+          .enter().append("circle")
+              .attr("class", "dot")
+              .attr("r", radius)
+              .attr("cx", function(d) {console.log(arguments);return x(+d.year);})
+              .attr("cy", function(d) {return y(+d.tfr);})
+              .attr("fill", function(d) {return z(+d.tfr);});
+
+    // draw the axes
+      svg.append("g")
+        // .call(xAxis)
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + -margin.top/2 + ")");
+
+      svg.append("g")
+        // .call(yAxis)
+        .attr("class","y axis")
+
+/// DELETE
     g.append("rect")
       .attr("class", "rect")
       .attr("x", 0)
@@ -520,4 +626,4 @@ function display(data) {
 window.addEventListener("resize", display)
 
 // load data and display
-d3.tsv("", display);
+d3.tsv("/data/tfr.csv", display);
