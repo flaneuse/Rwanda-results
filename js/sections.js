@@ -521,7 +521,7 @@ function display(data) {
   });
 }
 
-
+// Add event listener: on resize, redraw the figure
 window.addEventListener("resize", display)
 
 // load data and display
