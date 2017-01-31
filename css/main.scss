@@ -10,5 +10,19 @@ $rwanda-yellow: #f7b500;
 $rwanda-dkyellow: #f9a800;
 
 
+// accent colors
+$accent-main: $rwanda-blue;
+$accent-light: $rwanda-ltblue;
+$accent-dark: $rwanda-dkblue;
+
+
+// font: family
+$base-font-family:'Lora', Helvetica, Arial, sans-serif;
+$accent-font: 'Lato', Helvetica, Arial, sans-serif;
+$serif-font: 'Lora', serif;
+$nav-font: 'Oswald', sans-serif;
+
+// Sub-scss files to import.
+
 @import
 "style";
