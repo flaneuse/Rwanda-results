@@ -1,0 +1,45 @@
+// -- footer --
+.site-footer {
+  background-color: $grey25K;
+  height: $footer-height;
+  position: relative;
+
+  img{
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+  height: $footer-height;
+    position: relative;
+    margin: auto;
+  }
+
+  span {
+    vertical-align: middle;
+    line-height: 40px;
+  }
+}
+
+
+
+.logo-L {
+  padding: $base-pad;
+  padding-right: $base-pad*2;
+  float: left;
+  height: 85%;
+}
+
+.logo-R {
+  padding: $large-pad;
+  float: right;
+  height: 40%;
+}
+
+#cc {
+  padding: $base-pad;
+  max-height: $footer-height *0.75;
+}
+
+#copyright {
+  padding: 0;
+  vertical-align: middle;
+}

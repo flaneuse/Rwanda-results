@@ -91,10 +91,21 @@ footer = d3.select(".site-footer")
       .attr("class", "col-sm-1")
       .attr("id", "copyright")
     .append("text")
-      .text("&#169; 2017");
+      .html("&#169; 2017");
+
+      footer.append("div")
+          .attr("class", "col-sm-3")
+        .append("a")
+          .attr("href", "http://creativecommons.org/licenses/by-nc/4.0/")
+          .attr("target", "_blank")
+        .append("img")
+          .attr("class", "logo logo-R")
+          .attr("id", "cc")
+          .attr("alt", "Creative Commons License")
+          .attr("src", "https://i.creativecommons.org/l/by-nc/4.0/80x15.png");
 
   footer.append("div")
-      .attr("class", "col-sm-5")
+      .attr("class", "col-sm-3")
       .attr("id", "gc-logo")
     .append("a")
       .attr("href", "https://sites.google.com/a/usaid.gov/usaidgeocenter/home")
@@ -102,18 +113,10 @@ footer = d3.select(".site-footer")
     .append("img")
       .attr("class", "logo logo-R")
       .attr("alt", "USAID GeoCenter")
-      .attr("src", "/img/geocenter.png")
+      .attr("src", "/img/geocenter.png");
 
 
-      footer.append("div")
-          .attr("class", "col-sm-1")
-        .append("a")
-          .attr("href", "http://creativecommons.org/licenses/by-nc/4.0/")
-          .attr("target", "_blank")
-        .append("img")
-          .attr("class", "logo logo-R")
-          .attr("alt", "Creative Commons License")
-          .attr("src", "https://i.creativecommons.org/l/by-nc/4.0/80x15.png")
+
 
 // end FOOTER ------------------------------------------------------------------
                 // <a href= "https://www.usaid.gov/rwanda" target="_blank">
