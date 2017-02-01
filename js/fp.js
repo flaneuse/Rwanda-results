@@ -141,6 +141,11 @@
 
 // Data processing
 data = rawData.filter(function(d) {return d.variable == "Total"});
+var dataNest = d3.nest()
+    .key(function(d) {return d.country;})
+    .entries(data);
+
+    console.log(dataNest)
 
 // convert to numbers
 data.forEach(function(d) {
@@ -211,7 +216,7 @@ br.selectAll("circle").on("click", function(d,i) {
 
 
 // Call the function to set up the svg objects
-       setupVis(data);
+       setupVis(data, dataNest);
 
 // Set up the functions to edit the sections.
        setupSections();
@@ -226,7 +231,8 @@ br.selectAll("circle").on("click", function(d,i) {
    * sections of the visualization.
    *
    */
-  setupVis = function(data) {
+  setupVis = function(data, dataNest) {
+
 
     // MAP: map
    imgG.append("image")
@@ -252,20 +258,31 @@ br.selectAll("circle").on("click", function(d,i) {
         .style("opacity", 1);
 
 
-  // add connector lines
-  tfr.append("path")
-    .datum(data)
-        .attr("id", "tfr-line")
-        .attr("fill", "none")
-        .attr("stroke-linejoin", "round")
-        .attr("stroke-linecap", "round")
-        .attr("stroke-width", 1.5)
-        .attr("d", line)
-        .style("stroke", function(d) { return z(d.country);})
-        .style("opacity", 1);
+  // PATH: add connector lines
+  var tfr2 = tfr.selectAll(".tfr")
+   .data(dataNest)
+   .enter().append("g")
+     .attr("class", "tfr");
+
+   tfr2.append("path")
+       .attr("class", "line")
+       .attr("d", function(d) { return line(d.values); })
+       .attr("id", "tfr-line")
+       .style("stroke", function(d) { return z(d.key);})
+       .style("opacity", 1);
 
     // CIRCLES: TFR over time
-    tfr.selectAll("circle")
+    tfr.selectAll("#tfr-mask")
+        .data(data)
+      .enter().append("circle")
+        .attr("id", "tfr-mask")
+        .attr("class", "dot_mask")
+        .attr("r", radius)
+        .attr("cx", function(d) {return x(d.year);})
+        .attr("cy", function(d) {return y(d.tfr);})
+        .style("opacity", 1);
+
+    tfr.selectAll("#tfr-circles")
         .data(data)
       .enter().append("circle")
         .attr("id", "tfr-circles")

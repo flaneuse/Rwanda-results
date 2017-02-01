@@ -76,12 +76,21 @@
 .dot_mask {
   stroke: #fff;
   fill: #fff;
-  stroke-width: 2;
+  stroke-width: 5;
 }
 
 #tfr-circles {
   // fill: $grey25K;
 }
+
+// line charts
+#tfr-line{
+  fill: none;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-width: 1.5;
+}
+
 
 // ref lines ------------------------------------------------------------------------
 .natl {
