@@ -1,4 +1,4 @@
-country,year,variable,tfr,mostrecent,leastrecent,datatype,Livelihood Zone,Category,order,ave,se,t,pvalue,lb,ub,crit,N
+country,year,variable,tfr,mostrecent,leastrecent,datatype,Variable,Category,order,ave,se,t,pvalue,lb,ub,crit,N
 Kenya,1989,Rural,7.1,0,1,tfr,,,,,,,,,,,
 Kenya,1993,Rural,5.8,0,0,tfr,,,,,,,,,,,
 Kenya,1998,Rural,5.2,0,0,tfr,,,,,,,,,,,

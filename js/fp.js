@@ -26,7 +26,9 @@
 
   // constants to define the size
   // and margins of the vis area, based on the outer vars.
-  var margin = { top: 50, right: 125, bottom: 25, left: 35 };
+  var margin1 = { top: 50, right: 125, bottom: 25, left: 35 };
+  var margin2 = { top: 50, right: 25, bottom: 25, left: 235 };
+  var margin = margin2;
   var width = w - margin.left - margin.right;
   var height = Math.ceil((width * graphic_aspect_height) / graphic_aspect_width) - margin.top - margin.bottom;
 // end RESPONSIVENESS (plus call in 'display') ---------------------------------------------------------------
@@ -42,6 +44,10 @@
 
   var colorPalette = ['#5254a3','#ad494a','#e7ba52']; // Vega category20b
 
+  // Initial settings for MCU stepper
+  var selectedCat = "Livelihood Zone";
+  var selectedYear = 2014;
+
   // Keep track of which visualization
   // we are on and which was the last
   // index activated. When user scrolls
@@ -51,6 +57,11 @@
   var activeIndex = 0;
 
 // INITIALIZE SELECTORS
+  var vis = d3.select("#graphic");
+  var nav = vis.append("ul")
+    .attr("id", "select-cat")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
   // main svg used for visualization
   var svg = null;
 
@@ -76,16 +87,39 @@
        var z = d3.scale.ordinal()
         .range(colorPalette)
 
-        var xAxis = d3.svg.axis()
+        var xAxTFR = d3.svg.axis()
              .scale(x)
             //  .tickFormat(d3.time.format("%Y"))
              .orient("top")
              .ticks(5);
 
-        var yAxis = d3.svg.axis()
+        var yAxTFR = d3.svg.axis()
              .scale(y)
              .orient("left")
              .innerTickSize(width);
+
+// AXES for MCU
+             var xMCU = d3.scale.linear()
+                  .range([0, width]);
+
+             var yMCU = d3.scale.ordinal()
+                  .rangeBands([0, height], 0.2, 0);
+
+             var zMCU = d3.scale.linear()
+             // .range(colorPalette)
+               .range(colorbrewer.Spectral[11])
+               .interpolate(d3.interpolateHcl)
+                  .domain([0.1, 0.2]);
+
+             var xAxMCU = d3.svg.axis()
+                  .scale(xMCU)
+                  .orient("top")
+                  .ticks(5, "%")
+                  .innerTickSize(height);
+
+             var yAxMCU= d3.svg.axis()
+                  .scale(yMCU)
+                  .orient("left");
 
 // line generator
         var line = d3.svg.line() // d3.line for v4
@@ -138,12 +172,16 @@
 
        tfr = plotG.append("g").attr("id", "tfr")
 
+       mcu = plotG.append("g").attr("id", "mcu")
 
 // Data processing
 // convert to numbers
 rawData.forEach(function(d) {
     d.tfr = +d.tfr;
     d.year = +d.year;
+    d.ave = +d.ave;
+    d.lb = +d.lb;
+    d.ub = +d.ub;
 });
 
 
@@ -157,21 +195,20 @@ var tfrNest = d3.nest()
     .key(function(d) {return d.country;})
     .entries(tfrCountries);
 
-    console.log(tfrNest)
+    // MCU data
+    mcuData = rawData.filter(function(d) {return d.datatype == "mcu"});
+    // sort the average values, descendingly.
+      mcuData.sort(function(a,b) {return b.ave-a.ave;});
 
+      lz = mcuData
+      .filter(function(d) {return d.Category == "Livelihood Zone"})
+      .map(function(element) {return element.Variable;});
 
+      var nested = d3.nest()
+      .key(function(d) { return d.Category })
+         .entries(mcuData);
 
-
-  //  var cities = data.map(function(id) {
-  //    return {
-  //      id: id,
-  //      values: data.map(function(d) {
-  //        return {year: d.year, tfr: d[id]};
-  //      })
-  //    };
-  //  });
-   //
-  //  console.log(cities)
+console.log(nested)
 
 // BREADCRUMBS ------------------------------------------------------------
 var breadcrumbs = Array(numSlides).fill(0)
@@ -202,14 +239,40 @@ br = svg.selectAll("#breadcrumbs");
      .style("fill", "")
      .style("fill-opacity", function(d) {return d * 0.5 + 0.1;});
 
+ // NAVBAR ----------------------------------------------------------------------
+           // Clicky buttons at top.
+           // create the nav bar
+     nav.selectAll("ul")
+       .style("width", "20px")
+       .data(nested)
+     .enter().append("li").append("a")
+       .attr("id", "cats")
+       .attr("class", function(d) {return "button " + d.key;})
+       .attr("x", function(d, i) {return i*150 + 10;})
+       .attr("y",100)
+       .text(function(d) {return d.key;});
+   // -----------------------------------------------------------------------------
+
  // DOMAINS -------------------------------------------------------------------------
  // set the domain (data range) of data
 
+ // TFR
    x.domain([d3.min(tfrData, function(element) { return element.year; }),
              d3.max(tfrData, function(element) { return element.year; })]);
    y.domain([0, d3.max(tfrData, function(element) { return element.tfr; })]);
    z.domain(tfrData.map(function(element) {return element.country}));
 
+// MCU
+   xMCU.domain([0, d3.max(mcuData, function(element) { return element.ave; })]);
+
+   function updateY(mcuData, selectedCat) {
+     yMCU.domain(mcuData
+       .filter(function(d) {return d.Category == selectedCat})
+       .map(function(element) {return element.Variable})
+     );
+};
+     // Initialize y-domain.
+     updateY(mcuData, selectedCat);
 
 // EVENT: on clicking breadcrumb, change the page. -----------------------------
 br.selectAll("circle").on("click", function(d,i) {
@@ -240,27 +303,58 @@ br.selectAll("circle").on("click", function(d,i) {
    *
    */
   setupVis = function(data, tfrNest, tfrRwanda) {
+    // x-axis label
+        mcu.append("text")
+            .attr("class", "top-label")
+            .attr("x", 0)
+            .attr("y", -30)
+            .text("percent of married women using modern contraception");
 
+mcu.append("g")
+.call(xAxMCU)
+    .attr("class", "x axis")
+    .attr("id", "mcu-x")
+    .attr("transform", "translate(0," + height + ")")
+    .style("opacity", 1);
+
+mcu.append("g")
+.call(yAxMCU)
+  .attr("class","y axis")
+  .attr("id", "mcu-y")
+  .style("opacity", 1);
+
+
+  mcu.selectAll("circle")
+          .data(mcuData)
+  .enter().append("circle")
+    .filter(function(d) {return d.Category == selectedCat })
+    .filter(function(d) {return d.year == selectedYear })
+      .attr("class", "dot")
+      .attr("r", radius)
+      .attr("cx", function(d) {return xMCU(d.ave);})
+      .attr("cy", function(d) {return yMCU(d.Variable)})
+      // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
+      .attr("fill", function(d) {return zMCU(d.ave);});
 
     // MAP: map
-   imgG.append("image")
-       .attr("class", "rw-map")
-       .attr("id", "popdensity")
-       .attr("xlink:href", function(d) {return "/img/intro/afr5.png"})
-       .attr("width", "100%")
-       .attr("height", "100%")
-       .style("opacity", 1);
+  //  imgG.append("image")
+  //      .attr("class", "rw-map")
+  //      .attr("id", "popdensity")
+  //      .attr("xlink:href", function(d) {return "/img/intro/afr5.png"})
+  //      .attr("width", "100%")
+  //      .attr("height", "100%")
+  //      .style("opacity", 1);
 
     // draw the axes
   tfr.append("g")
-    .call(xAxis)
+    .call(xAxTFR)
         .attr("class", "x axis")
         .attr("id", "tfr-x")
         .attr("transform", "translate(0," + -margin.top/2 + ")")
         .style("opacity", 1);
 
   tfr.append("g")
-    .call(yAxis)
+    .call(yAxTFR)
         .attr("class","y axis")
         .attr("id", "tfr-y")
         .style("opacity", 1);
