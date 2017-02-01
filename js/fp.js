@@ -460,7 +460,8 @@ function tfrOff() {
  *
  * @param data - loaded tsv data
  */
-function display(data) {
+function display(tfrData, mcuData) {
+
   // Clear out any previously drawn graphics.
   var $vis = $("#vis");
   $vis.empty();
@@ -469,7 +470,7 @@ function display(data) {
   // display it
   var plot = scrollVis();
   d3.select("#vis")
-    .datum(data)
+    .datum(tfrData)
     .call(plot);
 
   // setup scroll functionality
@@ -498,4 +499,8 @@ function display(data) {
 window.addEventListener("resize", display)
 
 // load data and display
-d3.csv("/data/tfr.csv", display);
+  d3.csv("/data/tfr.csv", function(error, data1){
+    d3.csv("/data/mcu.csv", function(error2, data2) {
+      display(data1, data2);
+    })
+  });
