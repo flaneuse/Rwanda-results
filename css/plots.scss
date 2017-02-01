@@ -22,11 +22,21 @@
   display:none;
 }
 
-.x.axis line {
+.y.axis #tfr-y line{
   stroke: $grey25K;
-  stroke-width: 1;
+  stroke-width: 10;
   shape-rendering: crispEdges;
 }
+
+.x.axis line {
+  stroke: $grey25K;
+  stroke-width: 0.5;
+  shape-rendering: crispEdges;
+}
+
+.x.axis > #tfr-x line {
+    display: none;
+  }
 
 .x.label {
   fill: #999;
@@ -61,7 +71,6 @@
 .dot {
   stroke: $soft-black;
   stroke-width: 0.5;
-  opacity: 1;
 }
 
 .dot_mask {
@@ -70,6 +79,9 @@
   stroke-width: 2;
 }
 
+#tfr-circles {
+  // fill: $grey25K;
+}
 
 // ref lines ------------------------------------------------------------------------
 .natl {
@@ -95,10 +107,16 @@
 
 
 // annotations ------------------------------------------------------------------------
+.annot {
+  font-family: $base-font-family;
+  font-size: 18px;
+  // fill: #555;
+  dominant-baseline: central;
+}
 
 .natl-value {
   font-size: 24px;
-  font-family: "Oxygen", sans-serif;
+  font-family: $base-font-family;
   font-weight: bold;
   fill: #fff;
   text-anchor: middle;
@@ -106,15 +124,12 @@
 
 .natl-annot {
   text-anchor: end;
-  font-family: "Oxygen", sans-serif;
-  font-size: 16px;
-  fill: #555;
 }
 
 .natl-annot2010 {
   text-anchor: start;
   font-size: 28px;
-  font-family: "Oxygen", sans-serif;
+  font-family: $base-font-family;
 }
 
 .val-labels text{
