@@ -12,7 +12,7 @@
 // Define graphic aspect ratio.
 // Based on iPad w/ 2/3 of max width taken up by vis., 2/3 of max height taken up by vis.: 1024 x 768 --> perserve aspect ratio of iPad
   var graphic_aspect_width = 4;
-  var graphic_aspect_height = 3;
+  var graphic_aspect_height = 5;
   var padding_right = 10;
 
 // window function to get the size of the outermost parent
@@ -136,6 +136,8 @@
 
        imgG = svg.select("#imgs")
 
+       tfr = plotG.append("g").attr("id", "tfr")
+
 
 // Data processing
 data = rawData.filter(function(d) {return d.variable == "Total"});
@@ -233,37 +235,37 @@ br.selectAll("circle").on("click", function(d,i) {
        .attr("xlink:href", function(d) {return "/img/intro/afr5.png"})
        .attr("width", "100%")
        .attr("height", "100%")
-       .style("opacity", 0);
+       .style("opacity", 1);
 
     // draw the axes
-  plotG.append("g")
+  tfr.append("g")
     .call(xAxis)
         .attr("class", "x axis")
         .attr("id", "tfr-x")
         .attr("transform", "translate(0," + -margin.top/2 + ")")
-        .style("opacity", 0);
+        .style("opacity", 1);
 
-  plotG.append("g")
+  tfr.append("g")
     .call(yAxis)
         .attr("class","y axis")
         .attr("id", "tfr-y")
-        .style("opacity", 0);
+        .style("opacity", 1);
 
 
   // add connector lines
-  plotG.append("path")
+  tfr.append("path")
     .datum(data)
-        .attr("id", "tfr")
+        .attr("id", "tfr-line")
         .attr("fill", "none")
         .attr("stroke-linejoin", "round")
         .attr("stroke-linecap", "round")
         .attr("stroke-width", 1.5)
         .attr("d", line)
         .style("stroke", function(d) { return z(d.country);})
-        .style("opacity", 0);
+        .style("opacity", 1);
 
     // CIRCLES: TFR over time
-    plotG.selectAll("circle")
+    tfr.selectAll("circle")
         .data(data)
       .enter().append("circle")
         .attr("id", "tfr-circles")
@@ -272,38 +274,43 @@ br.selectAll("circle").on("click", function(d,i) {
         .attr("cx", function(d) {return x(d.year);})
         .attr("cy", function(d) {return y(d.tfr);})
         .style("fill", function(d) {return z(d.country);})
-        .style("opacity", 0);
+        .style("opacity", 0.5);
 
   // TEXT: Country label
-      plotG.selectAll("#tfr-annot")
+      tfr.selectAll("#tfr-annot")
           .data(data.filter(function(d) {return d.mostrecent == true;}))
         .enter().append("text")
           .attr("id", "tfr-annot")
           .attr("class", "annot")
-          .attr("r", radius)
           .text(function(d) {return d.country})
           .attr("x", width)
-          .attr("dx", 10)
+          .attr("dx", 20)
           .attr("y", function(d) {return y(d.tfr);})
           // .attr("dy", "0.4em")
           .attr("fill", function(d) {return z(d.country);})
-          .style("opacity", 0);
+          .style("opacity", 1);
 
-  // TEXT: Country label
-      plotG.selectAll("#tfr-annot")
-          .data(data.filter(function(d) {return d.mostrecent == true;}))
+  // TEXT: TFR at final value
+      tfr.selectAll("#val-annot")
+          .data(data.filter(function(d) {return d.mostrecent == true | d.leastrecent == true;}))
         .enter().append("text")
-          .attr("id", "tfr-annot")
+          .attr("id", "val-annot")
           .attr("class", "annot")
-          .attr("r", radius)
           .text(function(d) {return d.tfr})
-          .attr("x", function(d) {return y(d.year);})
-          .attr("dy", 10)
+          .attr("x", function(d) {return x(d.year);})
+          .attr("dy", -20)
           .attr("y", function(d) {return y(d.tfr);})
           .attr("fill", function(d) {return z(d.country);})
-          .style("opacity", 0);
+          .style("opacity", 1);
 
-
+          // TEXT: source
+      tfr.append("text")
+            .attr("id", "source")
+            .attr("class", "source")
+            .text("Source: Demographic and Health Surveys")
+            .attr("x", 0)
+            .attr("y", height)
+            .style("opacity", 1);
 
 
   };
@@ -382,63 +389,17 @@ function updateBreadcrumbs(idx) {
 }
 
 function tfrOn(tDefault) {
-  // axes
-  plotG.selectAll("#tfr-y")
+  plotG.selectAll("#tfr")
     .transition()
       .duration(tDefault)
       .style("opacity", 1);
-
-  plotG.selectAll("#tfr-x")
-        .transition()
-          .duration(tDefault)
-          .style("opacity", 1);
-
-  // line
-  plotG.selectAll("#tfr")
-        .transition()
-          .duration(tDefault)
-          .style("opacity", 1);
-
-  // dots
-  plotG.selectAll("#tfr-circles")
-        .transition()
-          .duration(tDefault)
-          .style("opacity", 0.5);
-  // annotations
-  plotG.selectAll("#tfr-annot")
-        .transition()
-          .duration(tDefault)
-          .style("opacity", 1);
 }
 
 function tfrOff() {
-  // axes
-  plotG.selectAll("#tfr-y")
+  plotG.selectAll("#tfr")
     .transition()
       .duration(0)
       .style("opacity", 0);
-
-  plotG.selectAll("#tfr-x")
-        .transition()
-          .duration(tDefault)
-          .style("opacity", 0);
-
-  // line
-  plotG.selectAll("#tfr")
-        .transition()
-          .duration(0)
-          .style("opacity", 0);
-
-  // dots
-  plotG.selectAll("#tfr-circles")
-        .transition()
-          .duration(0)
-          .style("opacity", 0);
-  // annotations
-  plotG.selectAll("#tfr-annot")
-        .transition()
-          .duration(0)
-          .style("opacity", 0);
 
 }
 // end HELPER FUNCTIONS --------------------------------------------------------
