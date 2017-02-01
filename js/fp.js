@@ -140,18 +140,26 @@
 
 
 // Data processing
-data = rawData.filter(function(d) {return d.variable == "Total"});
-var dataNest = d3.nest()
-    .key(function(d) {return d.country;})
-    .entries(data);
-
-    console.log(dataNest)
-
 // convert to numbers
-data.forEach(function(d) {
+rawData.forEach(function(d) {
     d.tfr = +d.tfr;
     d.year = +d.year;
 });
+
+
+// TFR data
+tfrData = rawData.filter(function(d) {return d.datatype == "tfr"});
+
+tfrCountries = tfrData.filter(function(d) {return d.variable == "Total"});
+tfrRwanda = tfrData.filter(function(d) {return d.country == "Rwanda"});
+
+var tfrNest = d3.nest()
+    .key(function(d) {return d.country;})
+    .entries(tfrCountries);
+
+    console.log(tfrNest)
+
+
 
 
   //  var cities = data.map(function(id) {
@@ -197,10 +205,10 @@ br = svg.selectAll("#breadcrumbs");
  // DOMAINS -------------------------------------------------------------------------
  // set the domain (data range) of data
 
-   x.domain([d3.min(data, function(element) { return element.year; }),
-             d3.max(data, function(element) { return element.year; })]);
-   y.domain([0, d3.max(data, function(element) { return element.tfr; })]);
-   z.domain(data.map(function(element) {return element.country}));
+   x.domain([d3.min(tfrData, function(element) { return element.year; }),
+             d3.max(tfrData, function(element) { return element.year; })]);
+   y.domain([0, d3.max(tfrData, function(element) { return element.tfr; })]);
+   z.domain(tfrData.map(function(element) {return element.country}));
 
 
 // EVENT: on clicking breadcrumb, change the page. -----------------------------
@@ -216,7 +224,7 @@ br.selectAll("circle").on("click", function(d,i) {
 
 
 // Call the function to set up the svg objects
-       setupVis(data, dataNest);
+       setupVis(tfrCountries, tfrNest, tfrRwanda);
 
 // Set up the functions to edit the sections.
        setupSections();
@@ -231,7 +239,7 @@ br.selectAll("circle").on("click", function(d,i) {
    * sections of the visualization.
    *
    */
-  setupVis = function(data, dataNest) {
+  setupVis = function(data, tfrNest, tfrRwanda) {
 
 
     // MAP: map
@@ -260,7 +268,7 @@ br.selectAll("circle").on("click", function(d,i) {
 
   // PATH: add connector lines
   var tfr2 = tfr.selectAll(".tfr")
-   .data(dataNest)
+   .data(tfrNest)
    .enter().append("g")
      .attr("class", "tfr");
 
@@ -291,7 +299,9 @@ br.selectAll("circle").on("click", function(d,i) {
         .attr("cx", function(d) {return x(d.year);})
         .attr("cy", function(d) {return y(d.tfr);})
         .style("fill", function(d) {return z(d.country);})
-        .style("opacity", 0.5);
+        .style("stroke", function(d) {return z(d.country);})
+        .style("stroke-opacity", 1)
+        .style("fill-opacity", 0.5);
 
   // TEXT: Country label
       tfr.selectAll("#tfr-annot")
@@ -460,7 +470,7 @@ function tfrOff() {
  *
  * @param data - loaded tsv data
  */
-function display(tfrData, mcuData) {
+function display(data) {
 
   // Clear out any previously drawn graphics.
   var $vis = $("#vis");
@@ -470,7 +480,7 @@ function display(tfrData, mcuData) {
   // display it
   var plot = scrollVis();
   d3.select("#vis")
-    .datum(tfrData)
+    .datum(data)
     .call(plot);
 
   // setup scroll functionality
@@ -499,8 +509,8 @@ function display(tfrData, mcuData) {
 window.addEventListener("resize", display)
 
 // load data and display
-  d3.csv("/data/tfr.csv", function(error, data1){
-    d3.csv("/data/mcu.csv", function(error2, data2) {
-      display(data1, data2);
-    })
+// Note: choosing to use a combined csv file rather than loading in 2 nested csv calls.
+// Given how complicated the data passing is, seems simplest.
+  d3.csv("/data/fp.csv", function(error, data){
+      display(data);
   });
