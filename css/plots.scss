@@ -22,6 +22,19 @@
   display:none;
 }
 
+.x.axis line {
+  stroke: $grey25K;
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.x.label {
+  fill: #999;
+  font-size: 18px;
+  font-family: $base-font-family;
+  font-weight: $base-weight;
+
+}
 
 
 // grids ------------------------------------------------------------------------
@@ -42,6 +55,8 @@
   color: #888;
 }
 
+
+
 // dots ------------------------------------------------------------------------
 .dot {
   stroke: $soft-black;
@@ -52,4 +67,64 @@
 .dot_mask {
   stroke: #fff;
   fill: #fff;
+  stroke-width: 2;
+}
+
+
+// ref lines ------------------------------------------------------------------------
+.natl {
+  stroke: #333;
+  stroke-width: 1;
+}
+
+.natl2010 {
+  stroke: #666;
+  stroke-width: 1;
+}
+
+.change {
+  stroke: #333;
+  stroke-width: 0.5;
+}
+
+
+.ci {
+  stroke: #888;
+  stroke-width: 5;
+}
+
+
+// annotations ------------------------------------------------------------------------
+
+.natl-value {
+  font-size: 24px;
+  font-family: "Oxygen", sans-serif;
+  font-weight: bold;
+  fill: #fff;
+  text-anchor: middle;
+}
+
+.natl-annot {
+  text-anchor: end;
+  font-family: "Oxygen", sans-serif;
+  font-size: 16px;
+  fill: #555;
+}
+
+.natl-annot2010 {
+  text-anchor: start;
+  font-size: 28px;
+  font-family: "Oxygen", sans-serif;
+}
+
+.val-labels text{
+  text-anchor: end;
+  fill: #555;
+}
+
+// maps ------------------------------------------------------------------------
+.rw-map {
+  display: block;
+margin-left: auto;
+margin-right: auto
 }

@@ -93,6 +93,87 @@ a:hover {
   font-family: 'FontAwesome';
 }
 
+.pdf {
+  font-family: "Oxygen", sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: #008080;
+  margin-top: -20px;
+  text-align: right;
+}
+
+/* Add >> for links within "motivation section"*/
+.pdf a::before {
+  content: "\f101  ";
+  font-family: 'FontAwesome';
+}
+
+
+.highlight {
+  color: #008080;
+}
+
+
+#intro .title, .subtitle{
+  font-family: "Lora", serif;
+  text-align: center;
+}
+
+#intro .title{
+  font-size: 48px;
+    color: #666;
+      padding-bottom: 25px;
+}
+
+#intro .subtitle{
+  font-size: 28px;
+    color: #999;
+    padding-bottom: 10px;
+}
+
+#intro > .step > .paragraph{
+  font-size: 20px;
+  line-height: 1.25em;
+}
+
+#intro-sum .subtitle{
+  text-align: left;
+}
+
+
+#ciText {
+  font-family: "Oxygen", sans-serif;
+  font-size: 11px;
+  font-weight: 300;
+  fill: #888;
+  text-align: right;
+  text-anchor: end;
+}
+
+.summary-list{
+    padding-left: 100px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-top: 2px solid #bababa;
+    border-bottom: 2px solid #bababa;
+    /*font-family: "Lora", serif;*/
+    font-size: 22px;
+    line-height: 1.25em;
+}
+
+.summary-list > li {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.accent-red {
+  color: #d53e4f;
+}
+
+.accent-green {
+  color: #66c2a5;
+}
+
 // INTERACTION -----------------------------------------------------------------
 #breadcrumbs {
   cursor: pointer;
