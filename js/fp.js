@@ -6,41 +6,37 @@
  * http://bost.ocks.org/mike/chart/
  * responsiveness code based on http://blog.apps.npr.org/2014/05/19/responsive-charts.html
  */
-var scrollVis = function() {
+  var scrollVis = function() {
 
 // RESPONSIVENESS ---------------------------------------------------------------
 // Define graphic aspect ratio.
 // Based on iPad w/ 2/3 of max width taken up by vis., 2/3 of max height taken up by vis.: 1024 x 768 --> perserve aspect ratio of iPad
-var graphic_aspect_width = 4;
-var graphic_aspect_height = 3;
-var padding_right = 10;
+  var graphic_aspect_width = 4;
+  var graphic_aspect_height = 3;
+  var padding_right = 10;
 
 // window function to get the size of the outermost parent
-var graphic = d3.select("#graphic");
+  var graphic = d3.select("#graphic");
 
 // Get size of graphic and sidebar
-var graphicSize = graphic.node().getBoundingClientRect();
-var sidebarSize = d3.select("#sections").node().getBoundingClientRect();
+  var graphicSize = graphic.node().getBoundingClientRect();
+  var sidebarSize = d3.select("#sections").node().getBoundingClientRect();
 
-w = graphicSize.width - sidebarSize.width - padding_right;
+  w = graphicSize.width - sidebarSize.width - padding_right;
 
   // constants to define the size
   // and margins of the vis area, based on the outer vars.
-var margin = { top: 10, right: 25, bottom: 25, left: 35 };
-var width = w - margin.left - margin.right;
-var height = Math.ceil((width * graphic_aspect_height) / graphic_aspect_width) - margin.top - margin.bottom;
-
-var numSlides = 9;
-var radius_bc = 7; // radius of breadcrumbs
-var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
+  var margin = { top: 10, right: 25, bottom: 25, left: 35 };
+  var width = w - margin.left - margin.right;
+  var height = Math.ceil((width * graphic_aspect_height) / graphic_aspect_width) - margin.top - margin.bottom;
 // end RESPONSIVENESS (plus call in 'display') ---------------------------------------------------------------
 
-  // constants
+// CONSTANTS -------------------------------------------------------------------
+  var numSlides = 9;
+  var radius_bc = 7; // radius of breadcrumbs
+  var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
+
   var radius = 10;
-  words = ["awesome", "clever", "nice", "helpful", "useful", "a javacript master",
-"a nerd", "a coding ninja", "an innovator" , "a relationship manager", "a thought leader",
-"a pioneer", "an enabler", "a co-creator", "a matrix-er", "a disruptor", "bending the curve",
-"a yuge value add", "an accelerator", "a cross-pollinator", "a global solution"];
 
   // Keep track of which visualization
   // we are on and which was the last
@@ -50,7 +46,7 @@ var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
   var lastIndex = -1;
   var activeIndex = 0;
 
-
+// INITIALIZE SELECTORS
   // main svg used for visualization
   var svg = null;
 
@@ -73,7 +69,7 @@ var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
   // progress through the section.
   var updateFunctions = [];
 
-  /**
+/* CHART: where draw visualization ---------------------------------------------
    * chart
    *
    * @param selection - the current d3 selection(s)
@@ -84,19 +80,26 @@ var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
      selection.each(function(data) {
        // create svg and give it a width and height
        svg = d3.select(this).selectAll("svg").data([data]);
-       svg.enter().append("svg").append("g");
+
+       svg.enter()
+        .append("svg")
+        .append("g")
+        .attr("id", "plots");
 
        svg.attr("width", width + margin.left + margin.right);
        svg.attr("height", height + margin.top + margin.bottom);
 
        // this group element will be used to contain all
        // other elements.
-       g = svg.select("g")
+       plotG = svg.select("#plots")
          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+        // create group for images
+        // this group element will be used to contain all
+        // big image elements (mostly maps; could also be used for static visualizations).
+        svg.append("g")
+          .attr("id", "imgs");
 
-       // this group element will be used to contain all
-       // big image elements (mostly maps; could also be used for static visualizations).
        imgG = svg.select("#imgs")
 
          // define scales (# pixels for each axis)
@@ -138,7 +141,6 @@ var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
                });
 
 // BREADCRUMBS ------------------------------------------------------------
-
 var breadcrumbs = Array(numSlides).fill(0)
 breadcrumbs[0] = 1 // Set the initial page to 1.
 
@@ -196,7 +198,7 @@ br.selectAll("circle").on("click", function(d,i) {
 
 
 
-  /**
+/* SETUP VIS -------------------------------------------------------------------
    * setupVis - creates initial elements for all
    * sections of the visualization.
    *
@@ -213,95 +215,65 @@ br.selectAll("circle").on("click", function(d,i) {
                  .style("opacity", 1);
 
 
-    var line = d3.svg.line() // d3.line for v4
-        .x(function(d) { return x(d.year); })
-        .y(function(d) { return y(d.tfr); });
+    // var line = d3.svg.line() // d3.line for v4
+    //     .x(function(d) { return x(d.year); })
+    //     .y(function(d) { return y(d.tfr); });
+    //
+    //     // add connector lines
+    //       svg.append("path")
+    //           .datum(data)
+    //           .attr("fill", "none")
+    //           .attr("stroke-linejoin", "round")
+    //           .attr("stroke-linecap", "round")
+    //           .attr("stroke-width", 1.5)
+    //           .attr("d", line);
+    //           // .style("stroke", function(d) { return zCat(d.id); });;
+    //
+    // // FILTER THE DATA
+    // // Outer g for dots.
+    //     var g = svg.selectAll("g")
+    //         .data(data)
+    //       .enter().append("g");
+    //
+    //       svg.selectAll("circle")
+    //           .data(data.filter(function(d) {return d.country == "Rwanda"}))
+    //       .enter().append("circle")
+    //           .attr("class", "dot")
+    //           .attr("r", radius)
+    //           .attr("cx", function(d) {console.log(arguments);return x(+d.year);})
+    //           .attr("cy", function(d) {return y(+d.tfr);})
+    //           .attr("fill", function(d) {return z(+d.tfr);});
 
-        // add connector lines
-          svg.append("path")
-              .datum(data)
-              .attr("fill", "none")
-              .attr("stroke-linejoin", "round")
-              .attr("stroke-linecap", "round")
-              .attr("stroke-width", 1.5)
-              .attr("d", line);
-              // .style("stroke", function(d) { return zCat(d.id); });;
-
-    // FILTER THE DATA
-    // Outer g for dots.
-        var g = svg.selectAll("g")
-            .data(data)
-          .enter().append("g");
-
-          svg.selectAll("circle")
-              .data(data.filter(function(d) {return d.country == "Rwanda"}))
-          .enter().append("circle")
-              .attr("class", "dot")
-              .attr("r", radius)
-              .attr("cx", function(d) {console.log(arguments);return x(+d.year);})
-              .attr("cy", function(d) {return y(+d.tfr);})
-              .attr("fill", function(d) {return z(+d.tfr);});
-
-    // draw the axes
-      svg.append("g")
-        // .call(xAxis)
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + -margin.top/2 + ")");
-
-      svg.append("g")
-        // .call(yAxis)
-        .attr("class","y axis")
-
-/// DELETE
-    g.append("rect")
-      .attr("class", "rect")
-      .attr("x", 0)
-      .attr("y", 0)
-      .attr("height", height)
-      .attr("width", width)
-      .attr("fill", "slateblue")
-      .style("opacity", 1);
-
-
-
-      g.append("text")
-        .attr("class", "title openvis-title")
-        .attr("x", width/2)
-        .attr("y", height/2)
-        .style("font-size", 36)
-        .attr("fill", randomColor())
-        .text("Baboyma is " + randomWord(words))
-        .style("opacity", 1);
-
-        svg.append("text")
-          .attr("class", "pgNum")
-          .attr("x", width)
-          .attr("y", height)
-          .style("font-size", 10)
-          .attr("fill", "white")
-          .text(activeIndex)
-          .style("opacity", 1);
+    // // draw the axes
+    //   svg.append("g")
+    //     // .call(xAxis)
+    //     .attr("class", "x axis")
+    //     .attr("transform", "translate(0," + -margin.top/2 + ")");
+    //
+    //   svg.append("g")
+    //     // .call(yAxis)
+    //     .attr("class","y axis")
   };
+// end of SETUP VIS ------------------------------------------------------------
 
-  /**
+/* SETUP SECTIONS --------------------------------------------------------------
    * setupSections - each section is activated
    * by a separate function. Here we associate
    * these functions to the sections based on
    * the section's index.
-   *
    */
   setupSections = function() {
     // activateFunctions are called each
     // time the active section changes
     activateFunctions[0] = show1;
-    activateFunctions[1] = show2;
-    activateFunctions[2] = show3;
-    activateFunctions[3] = show4;
-    activateFunctions[4] = show5;
-    activateFunctions[5] = show6;
-    activateFunctions[6] = show7;
-    activateFunctions[7] = show8;
-    activateFunctions[8] = show9;
+    // activateFunctions[1] = show2;
+    // activateFunctions[2] = show3;
+    // activateFunctions[3] = show4;
+    // activateFunctions[4] = show5;
+    // activateFunctions[5] = show6;
+    // activateFunctions[6] = show7;
+    // activateFunctions[7] = show8;
+    // activateFunctions[8] = show9;
 
     // updateFunctions are called while
     // in a particular section to update
@@ -313,34 +285,15 @@ br.selectAll("circle").on("click", function(d,i) {
       updateFunctions[i] = function() {};
     }
   };
-
-  /**
-   * ACTIVATE FUNCTIONS
-   *
-   * These will be called their
-   * section is scrolled to.
-   *
-   * General pattern is to ensure
-   * all content for the current section
-   * is transitioned in, while hiding
-   * the content for the previous section
-   * as well as the next section (as the
-   * user may be scrolling up or down).
-   *
-   */
+// end of SETUP SECTIONS -------------------------------------------------------
 
 
+// ACTIVATE FUNCTIONS ----------------------------------------------------------
   function show1() {
     svg.selectAll(".rect")
       .transition()
       .duration(600)
-      .attr("fill", randomColor());
-
-    svg.selectAll(".title")
-        .transition()
-        .duration(600)
-        .attr("fill", randomColor())
-        .text("Baboyma is " + randomWord(words));
+      .attr("fill", "blue");
 
 
     svg.selectAll(".pgNum")
@@ -351,203 +304,15 @@ br.selectAll("circle").on("click", function(d,i) {
           .text(activeIndex)
           .style("opacity", 1);
   }
-
-  function show2() {
-    svg.selectAll(".rect")
-      .transition()
-      .duration(600)
-      .attr("fill", randomColor());
-
-    svg.selectAll(".title")
-        .transition()
-        .duration(600)
-        .attr("fill", randomColor())
-        .text("Baboyma is " + randomWord(words));
+// end of ACTIVATE FUNCTIONS ---------------------------------------------------
 
 
-    svg.selectAll(".pgNum")
-          .attr("x", width)
-          .attr("y", height)
-          .style("font-size", 10)
-          .attr("fill", "white")
-          .text(activeIndex)
-          .style("opacity", 1);
-  }
-
-  function show3() {
-    svg.selectAll(".rect")
-      .transition()
-      .duration(600)
-      .attr("fill", randomColor());
-
-    svg.selectAll(".title")
-        .transition()
-        .duration(600)
-        .attr("fill", randomColor())
-        .text("Baboyma is " + randomWord(words));
-
-
-    svg.selectAll(".pgNum")
-          .attr("x", width)
-          .attr("y", height)
-          .style("font-size", 10)
-          .attr("fill", "white")
-          .text(activeIndex)
-          .style("opacity", 1);
-  }
-
-
-  function show4() {
-    svg.selectAll(".rect")
-      .transition()
-      .duration(600)
-      .attr("fill", randomColor());
-
-    svg.selectAll(".title")
-        .transition()
-        .duration(600)
-        .attr("fill", randomColor())
-        .text("Baboyma is " + randomWord(words));
-
-
-    svg.selectAll(".pgNum")
-          .attr("x", width)
-          .attr("y", height)
-          .style("font-size", 10)
-          .attr("fill", "white")
-          .text(activeIndex)
-          .style("opacity", 1);
-  }
-
-  function show5() {
-    svg.selectAll(".rect")
-      .transition()
-      .duration(600)
-      .attr("fill", randomColor());
-
-    svg.selectAll(".title")
-        .transition()
-        .duration(600)
-        .attr("fill", randomColor())
-        .text("Baboyma is " + randomWord(words));
-
-
-    svg.selectAll(".pgNum")
-          .attr("x", width)
-          .attr("y", height)
-          .style("font-size", 10)
-          .attr("fill", "white")
-          .text(activeIndex)
-          .style("opacity", 1);
-  }
-
-  function show6() {
-    svg.selectAll(".rect")
-      .transition()
-      .duration(600)
-      .attr("fill", randomColor());
-
-    svg.selectAll(".title")
-        .transition()
-        .duration(600)
-        .attr("fill", randomColor())
-        .text("Baboyma is " + randomWord(words));
-
-
-    svg.selectAll(".pgNum")
-          .attr("x", width)
-          .attr("y", height)
-          .style("font-size", 10)
-          .attr("fill", "white")
-          .text(activeIndex)
-          .style("opacity", 1);
-  }
-
-  function show7() {
-    svg.selectAll(".rect")
-      .transition()
-      .duration(600)
-      .attr("fill", randomColor());
-
-    svg.selectAll(".title")
-        .transition()
-        .duration(600)
-        .attr("fill", randomColor())
-        .text("Baboyma is " + randomWord(words));
-
-
-    svg.selectAll(".pgNum")
-          .attr("x", width)
-          .attr("y", height)
-          .style("font-size", 10)
-          .attr("fill", "white")
-          .text(activeIndex)
-          .style("opacity", 1);
-  }
-
-  function show8() {
-    svg.selectAll(".rect")
-      .transition()
-      .duration(600)
-      .attr("fill", randomColor());
-
-    svg.selectAll(".title")
-        .transition()
-        .duration(600)
-        .attr("fill", randomColor())
-        .text("Baboyma is " + randomWord(words));
-
-
-    svg.selectAll(".pgNum")
-          .attr("x", width)
-          .attr("y", height)
-          .style("font-size", 10)
-          .attr("fill", "white")
-          .text(activeIndex)
-          .style("opacity", 1);
-  }
-
-  function show9() {
-    svg.selectAll(".rect")
-      .transition()
-      .duration(600)
-      .attr("fill", randomColor());
-
-    svg.selectAll(".title")
-        .transition()
-        .duration(600)
-        .attr("fill", randomColor())
-        .text("Baboyma is " + randomWord(words));
-
-
-    svg.selectAll(".pgNum")
-          .attr("x", width)
-          .attr("y", height)
-          .style("font-size", 10)
-          .attr("fill", "white")
-          .text(activeIndex)
-          .style("opacity", 1);
-  }
-
-function randomColor() {
-  r = Math.random()*255;
-  g = Math.random()*255;
-  b = Math.random()*255;
-
-  color = d3.rgb(r,g,b);
-
-  return(color);
-}
-
+// HELPER FUNCTIONS ------------------------------------------------------------
 function updateBreadcrumbs(idx) {
   br.selectAll("circle")
      .style("fill-opacity", function(d,i) {return i==idx ? 0.6:0.1;});
 }
-
-function randomWord(words) {
-  var rand = words[Math.floor(Math.random() * words.length)];
-  return(rand);
-}
+// end HELPER FUNCTIONS --------------------------------------------------------
 
   /**
    * activate -
