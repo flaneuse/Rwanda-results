@@ -1,0 +1,7 @@
+// CSS for plots, axes, etc.
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #666;
+  shape-rendering: crispEdges;
+}

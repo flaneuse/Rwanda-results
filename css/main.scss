@@ -25,7 +25,6 @@ $nav-font: 'Oswald', sans-serif;
 
 // font: weight
 $base-weight: 300;
-$font-semibold: 400;
 $font-bold: 400;
 
 // font: sizes
@@ -47,4 +46,5 @@ $small-width:  500px;
 
 @import
   "basics",
-  "nav";
+  "nav",
+  "plots";

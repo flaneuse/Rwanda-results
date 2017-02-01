@@ -126,7 +126,7 @@ var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
            }
 
            data = data.filter(function(d) {return d.country == "Rwanda"});
-               // console.log(data)
+               console.log(data)
 
                var cities = data.map(function(id) {
                  return {
