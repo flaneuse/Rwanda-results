@@ -2,7 +2,7 @@
 /*Width of main container*/
 .container {
   max-width: 1000px;
-  padding-right: 15px; /* normal 15 px + 25 px for breadcrumbs.*/
+  // padding-right: 15px; /* normal 15 px + 25 px for breadcrumbs.*/
 }
 
 body {
@@ -27,10 +27,11 @@ body {
 }
 
 #sections .title {
-  font-weight: 400;
-  font-size: 28px;
+  font-weight: $font-bold;
+  font-family: $base-font-family;
+  font-size: $title-size;
   margin-bottom: 2px;
-  color: #262626;
+  color: $title-color;
   text-shadow: 2px 2px #fff;
   line-height: 1.2em;
 }
@@ -42,9 +43,9 @@ body {
 
 .step {
   margin-bottom: 200px;
-  font-size: 18px;
-  line-height: 23px;
-  color: #767678;
+  font-size: $base-font-size;
+  line-height: $base-font-size * 1.3;
+  color: $base-font-color;
 }
 
 
@@ -68,11 +69,28 @@ body {
 // Accent/special fonts --------------------------------------------------------
 strong {
   font-weight: $font-bold;
-  color: #66c2a5;
+  color: $accent-green;
 }
 
 .overlay-text {
   text-shadow: 1px 1px #fff;
+}
+
+// -- standard links --
+a{
+  color: $accent-main;
+}
+a:visited {
+  color: $accent-dark;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+// Add >> for links within "motivation section"
+#motivation a::before, #what-did a::before {
+  content: "\f101  ";
+  font-family: 'FontAwesome';
 }
 
 // INTERACTION -----------------------------------------------------------------

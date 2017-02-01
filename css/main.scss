@@ -10,10 +10,21 @@ $rwanda-yellow: #f7b500;
 $rwanda-dkyellow: #f9a800;
 
 
+$usaid-ltblue: #A7C6ED;
+$usaid-medblue: #006789;
+$usaid-webblue: #205483;
+$usaid-blue: #002F6C;
+$usaid-red: #BA0C2F;
+$usaid-dkred: #651D32;
+
+$grey25K: #CCCCCC;
+
+
 // accent colors
 $accent-main: $rwanda-blue;
 $accent-light: $rwanda-ltblue;
 $accent-dark: $rwanda-dkblue;
+$accent-green: #66c2a5;
 
 
 // font: family
@@ -28,14 +39,22 @@ $base-weight: 300;
 $font-bold: 400;
 
 // font: sizes
-$base-font-size:   16px;
+$base-font-size: 18px;
+$title-size: 24px;
 $small-font-size:  $base-font-size * 0.875;
 $large-font-size:  $base-font-size * 1.125;
 
 // font: colors
-$base-font-color: lighten($soft-black, 10%);
+$title-color: lighten($soft-black, 10%);
+$base-font-color: lighten($soft-black, 25%);
 
-
+// spacing
+$sm-pad: 3px;
+$base-pad: 6px;
+$large-pad: 12px;
+$base-line-height: 1.25;
+$horizontal-spacing-unit: 30px;
+$footer-height: 40px;
 
 // widths for media queries
 $max-width:  900px;
@@ -47,4 +66,5 @@ $small-width:  500px;
 @import
   "basics",
   "nav",
+  "footer",
   "plots";
