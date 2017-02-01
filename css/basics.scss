@@ -97,3 +97,59 @@ a:hover {
 #breadcrumbs {
   cursor: pointer;
 }
+
+
+.button {
+  cursor: pointer;
+  display: block;
+  text-align: center;
+  box-shadow:  1px 3px 10px 0px rgba(0,0,0,0.1);
+  border-radius: 5px;
+  margin: 5px;
+  padding-top: 8px;
+  padding-bottom: 11px;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: #eee;
+  position:relative;
+}
+
+.button:before {
+content: " ";
+position: absolute;
+z-index: 50; /*place above the button*/
+border-radius: 0px 0px 5px 5px;
+left: 1px;
+right: 1px;
+bottom: 0px;
+border: 3px solid #ddd;
+}
+
+.button:after {
+content: " ";
+position: absolute;
+z-index: 90; /*place above the button*/
+border-radius: 5px;
+border: 1px solid #aaa;
+left: 0px;
+right: 0px;
+bottom: 0px;
+top: 0px;
+}
+
+.button:hover{
+background-color: #f8f8f8;
+}
+
+ul {
+list-style-type: none;
+margin: 0;
+padding: 0;
+overflow: hidden;
+}
+
+
+#select-cat > li {
+  float: right;
+
+}
