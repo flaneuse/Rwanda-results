@@ -38,6 +38,8 @@
 
   var radius = 5;
 
+  var tDefault = 600; // standard transition timing in ms
+
   var colorPalette = ['#5254a3','#ad494a','#e7ba52']; // Vega category20b
 
   // Keep track of which visualization
@@ -225,36 +227,40 @@ br.selectAll("circle").on("click", function(d,i) {
   setupVis = function(data) {
 
     // MAP: map
-    //  imgG.append("image")
-    //    .attr("class", "rw-map")
-    //    .attr("id", "choro2010")
-    //    .attr("xlink:href", function(d) {return "/img/intro/afr5.png"})
-    //    .attr("width", "100%")
-    //    .attr("height", "100%")
-    //    .style("opacity", 1);
+   imgG.append("image")
+       .attr("class", "rw-map")
+       .attr("id", "popdensity")
+       .attr("xlink:href", function(d) {return "/img/intro/afr5.png"})
+       .attr("width", "100%")
+       .attr("height", "100%")
+       .style("opacity", 0);
 
     // draw the axes
-      plotG.append("g")
-        .call(xAxis)
+  plotG.append("g")
+    .call(xAxis)
         .attr("class", "x axis")
-        // .attr("id", "tfr-x")
-        .attr("transform", "translate(0," + -margin.top/2 + ")");
+        .attr("id", "tfr-x")
+        .attr("transform", "translate(0," + -margin.top/2 + ")")
+        .style("opacity", 0);
 
-      plotG.append("g")
-        .call(yAxis)
+  plotG.append("g")
+    .call(yAxis)
         .attr("class","y axis")
-        // .attr("id", "tfr-y");
+        .attr("id", "tfr-y")
+        .style("opacity", 0);
 
 
   // add connector lines
-        plotG.append("path")
-            .datum(data)
-            .attr("fill", "none")
-            .attr("stroke-linejoin", "round")
-            .attr("stroke-linecap", "round")
-            .attr("stroke-width", 1.5)
-            .attr("d", line)
-            .style("stroke", function(d) { return z(d.country); });
+  plotG.append("path")
+    .datum(data)
+        .attr("id", "tfr")
+        .attr("fill", "none")
+        .attr("stroke-linejoin", "round")
+        .attr("stroke-linecap", "round")
+        .attr("stroke-width", 1.5)
+        .attr("d", line)
+        .style("stroke", function(d) { return z(d.country);})
+        .style("opacity", 0);
 
     // CIRCLES: TFR over time
     plotG.selectAll("circle")
@@ -266,24 +272,36 @@ br.selectAll("circle").on("click", function(d,i) {
         .attr("cx", function(d) {return x(d.year);})
         .attr("cy", function(d) {return y(d.tfr);})
         .style("fill", function(d) {return z(d.country);})
-        .style("opacity", 0.5);
+        .style("opacity", 0);
 
   // TEXT: Country label
-        plotG.selectAll("#tfr-annot")
-            .data(data.filter(function(d) {return d.mostrecent == true;}))
-            // .data(data)
-          .enter().append("text")
-            .attr("id", "tfr-annot")
-            .attr("class", "annot")
-            .attr("r", radius)
-            .text(function(d) {return d.country})
-            .attr("x", width)
-            .attr("dx", 10)
-            .attr("y", function(d) {return y(d.tfr);})
-            // .attr("dy", "0.4em")
-            .attr("fill", function(d) {return z(d.country);})
-            .style("opacity", 0.9);
+      plotG.selectAll("#tfr-annot")
+          .data(data.filter(function(d) {return d.mostrecent == true;}))
+        .enter().append("text")
+          .attr("id", "tfr-annot")
+          .attr("class", "annot")
+          .attr("r", radius)
+          .text(function(d) {return d.country})
+          .attr("x", width)
+          .attr("dx", 10)
+          .attr("y", function(d) {return y(d.tfr);})
+          // .attr("dy", "0.4em")
+          .attr("fill", function(d) {return z(d.country);})
+          .style("opacity", 0);
 
+  // TEXT: Country label
+      plotG.selectAll("#tfr-annot")
+          .data(data.filter(function(d) {return d.mostrecent == true;}))
+        .enter().append("text")
+          .attr("id", "tfr-annot")
+          .attr("class", "annot")
+          .attr("r", radius)
+          .text(function(d) {return d.tfr})
+          .attr("x", function(d) {return y(d.year);})
+          .attr("dy", 10)
+          .attr("y", function(d) {return y(d.tfr);})
+          .attr("fill", function(d) {return z(d.country);})
+          .style("opacity", 0);
 
 
 
@@ -301,7 +319,7 @@ br.selectAll("circle").on("click", function(d,i) {
     // activateFunctions are called each
     // time the active section changes
     activateFunctions[0] = show1;
-    // activateFunctions[1] = show2;
+    activateFunctions[1] = show2;
     // activateFunctions[2] = show3;
     // activateFunctions[3] = show4;
     // activateFunctions[4] = show5;
@@ -325,19 +343,34 @@ br.selectAll("circle").on("click", function(d,i) {
 
 // ACTIVATE FUNCTIONS ----------------------------------------------------------
   function show1() {
-    svg.selectAll(".rect")
+    // -- TURN OFF PREVIOUS --
+        // NA
+
+    // -- TURN OFF NEXT --
+    tfrOff();
+
+    // -- TURN ON CURRENT --
+    imgG.selectAll("#popdensity")
       .transition()
-      .duration(600)
-      .attr("fill", "blue");
+      .duration(tDefault)
+      .style("opacity", 1);
+
+  }
+
+  function show2() {
+
+// -- TURN OFF PREVIOUS --
+    imgG.selectAll("#popdensity")
+      .transition()
+        .duration(0)
+        .style("opacity", 0);
+
+// -- TURN OFF NEXT --
+
+// -- TURN ON CURRENT --
+  tfrOn(tDefault);
 
 
-    svg.selectAll(".pgNum")
-          .attr("x", width)
-          .attr("y", height)
-          .style("font-size", 10)
-          .attr("fill", "white")
-          .text(activeIndex)
-          .style("opacity", 1);
   }
 // end of ACTIVATE FUNCTIONS ---------------------------------------------------
 
@@ -346,6 +379,67 @@ br.selectAll("circle").on("click", function(d,i) {
 function updateBreadcrumbs(idx) {
   br.selectAll("circle")
      .style("fill-opacity", function(d,i) {return i==idx ? 0.6:0.1;});
+}
+
+function tfrOn(tDefault) {
+  // axes
+  plotG.selectAll("#tfr-y")
+    .transition()
+      .duration(tDefault)
+      .style("opacity", 1);
+
+  plotG.selectAll("#tfr-x")
+        .transition()
+          .duration(tDefault)
+          .style("opacity", 1);
+
+  // line
+  plotG.selectAll("#tfr")
+        .transition()
+          .duration(tDefault)
+          .style("opacity", 1);
+
+  // dots
+  plotG.selectAll("#tfr-circles")
+        .transition()
+          .duration(tDefault)
+          .style("opacity", 0.5);
+  // annotations
+  plotG.selectAll("#tfr-annot")
+        .transition()
+          .duration(tDefault)
+          .style("opacity", 1);
+}
+
+function tfrOff() {
+  // axes
+  plotG.selectAll("#tfr-y")
+    .transition()
+      .duration(0)
+      .style("opacity", 0);
+
+  plotG.selectAll("#tfr-x")
+        .transition()
+          .duration(tDefault)
+          .style("opacity", 0);
+
+  // line
+  plotG.selectAll("#tfr")
+        .transition()
+          .duration(0)
+          .style("opacity", 0);
+
+  // dots
+  plotG.selectAll("#tfr-circles")
+        .transition()
+          .duration(0)
+          .style("opacity", 0);
+  // annotations
+  plotG.selectAll("#tfr-annot")
+        .transition()
+          .duration(0)
+          .style("opacity", 0);
+
 }
 // end HELPER FUNCTIONS --------------------------------------------------------
 
