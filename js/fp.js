@@ -45,7 +45,7 @@
   var colorPalette = ['#5254a3','#ad494a','#e7ba52']; // Vega category20b
 
   // Initial settings for MCU stepper
-  var selectedCat = "Livelihood Zone";
+  var selectedCat = "National";
   var selectedYear = 2014;
 
   // Keep track of which visualization
@@ -201,14 +201,13 @@ var tfrNest = d3.nest()
       mcuData.sort(function(a,b) {return b.ave-a.ave;});
 
       lz = mcuData
-      .filter(function(d) {return d.Category == "Livelihood Zone"})
-      .map(function(element) {return element.Variable;});
+      .filter(function(d) {return d.Category == "Livelihood Zone"});
+      // .map(function(element) {return element.Variable;});
 
       var nested = d3.nest()
       .key(function(d) { return d.Category })
-         .entries(mcuData);
+      .entries(mcuData.sort(function(a,b) {return b.order - a.order}));
 
-console.log(nested)
 
 // BREADCRUMBS ------------------------------------------------------------
 var breadcrumbs = Array(numSlides).fill(0)
@@ -242,15 +241,91 @@ br = svg.selectAll("#breadcrumbs");
  // NAVBAR ----------------------------------------------------------------------
            // Clicky buttons at top.
            // create the nav bar
-     nav.selectAll("ul")
-       .style("width", "20px")
-       .data(nested)
-     .enter().append("li").append("a")
-       .attr("id", "cats")
-       .attr("class", function(d) {return "button " + d.key;})
-       .attr("x", function(d, i) {return i*150 + 10;})
-       .attr("y",100)
-       .text(function(d) {return d.key;});
+           var nav = vis.append("ul")
+             .attr("id", "select-cat")
+             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+             nav.selectAll("ul")
+               .style("width", "20px")
+               .data(nested)
+             .enter().append("li").append("a")
+               .attr("id", function(d) {return d.key;})
+               .attr("class", function(d) {return "button " + d.key;})
+               .attr("x", function(d, i) {return i*150 + 10;})
+               .attr("y",100)
+               .text(function(d) {return d.key;})
+               // #cde6c6
+               .style("background-color", function(d,i) {return d.key == selectedCat ? "#dceed7" : "#eee";});
+
+       // CLICK : select a different category
+       // Every time a button is clicked, do the following:
+       // 1. turn off the old button color
+       // 2. change the button color.
+       // 3. revert to the average value for MCU (transition)
+       // 4. update the y-axis (scales = "free_y")
+       // 5. transition to the new values
+       // 6. remove LZ, if needed
+   d3.selectAll("a.button")
+   .on("click", function(d) {
+     selectedCat = this.id;
+
+     console.log(selectedCat);
+
+     // Change the color of the buttons
+     nav.selectAll("a")
+       .style("background-color", function(d,i) {return d.key == selectedCat ? "#dceed7" : "#eee";})
+
+     nav.selectAll("a.button:before")
+       .style("background-color", function(d,i) {return d.key == selectedCat ? "#dceed7" : "#eee";})
+
+
+
+// change the dots
+
+filtered2 = mcuData.filter(function(d) {return d.Category == selectedCat })
+    .filter(function(d) {return d.year == selectedYear });
+
+    natl = mcuData.filter(function(d) {return d.Category == "National" })
+        .filter(function(d) {return d.year == selectedYear });
+
+    var mcuAvg = natl[0].ave;
+
+    console.log(mcuAvg)
+
+    var mcuDots = mcu.selectAll("circle")
+    .data(filtered2.sort(function(a,b) {return b.ave - a.ave}))
+
+
+    // Change the y-axis.
+    // Note: must be done AFTER the filtering and sorting.
+    updateY(filtered2, selectedCat);
+    d3.selectAll("#mcu-y")
+      .call(yAxMCU)
+
+    mcuDots
+    .enter().append("circle")
+        .attr("fill", function(d) {return zMCU(mcuAvg)})
+
+    // remove extra dots
+    mcuDots.exit().remove();
+
+    // change to average
+    mcuDots.transition()
+    .duration(600)
+    .attr("class", "dot")
+    .attr("cx", xMCU(mcuAvg))
+    .attr("cy",  height/2)
+    .attr("fill", function(d) {return zMCU(mcuAvg)})
+    .attr("r", radius*2)
+
+
+    // change to new values
+    mcuDots.transition(1000).delay(650)
+      .attr("cx", function(d) {console.log(d.ave); return xMCU(d.ave);})
+      .attr("cy", function(d) {return yMCU(d.Variable)})
+      // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
+      .attr("fill", function(d) {return zMCU(d.ave);});
+        })
    // -----------------------------------------------------------------------------
 
  // DOMAINS -------------------------------------------------------------------------
@@ -323,18 +398,32 @@ mcu.append("g")
   .attr("id", "mcu-y")
   .style("opacity", 1);
 
+filtered = mcuData.filter(function(d) {return d.Category == selectedCat })
+    .filter(function(d) {return d.year == selectedYear });
+
+
 
   mcu.selectAll("circle")
-          .data(mcuData)
+          .data(filtered)
   .enter().append("circle")
-    .filter(function(d) {return d.Category == selectedCat })
-    .filter(function(d) {return d.year == selectedYear })
       .attr("class", "dot")
       .attr("r", radius)
       .attr("cx", function(d) {return xMCU(d.ave);})
       .attr("cy", function(d) {return yMCU(d.Variable)})
       // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
       .attr("fill", function(d) {return zMCU(d.ave);});
+
+
+
+      // image
+        var imgs = mcu.selectAll("image")
+          .data(lz)
+        .enter().append("image")
+        .attr("xlink:href", function(d) {return "/img/" + d.Variable + ".png"})
+        // .attr("xlink:href", function(d) {return "/img/" +  d.Variable + ".png"})
+          .attr("x", d3.max(data, function(element) { return xMCU(element.ave) * 1.03; }))
+          .attr("y", function(d) {return yMCU(d.Variable)})
+          .attr("height", 40); //y.bandwidth()
 
     // MAP: map
   //  imgG.append("image")
