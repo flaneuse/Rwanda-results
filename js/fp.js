@@ -27,7 +27,7 @@
   // constants to define the size
   // and margins of the vis area, based on the outer vars.
   var margin1 = { top: 50, right: 125, bottom: 25, left: 35 };
-  var margin2 = { top: 100, right: 75, bottom: 25, left: 235 };
+  var margin2 = { top: 75, right: 75, bottom: 25, left: 235 };
   var margin = margin2;
   var width = w - margin.left - margin.right;
   var height = Math.ceil((width * graphic_aspect_height) / graphic_aspect_width) - margin.top - margin.bottom;
@@ -58,7 +58,7 @@
 
 // INITIALIZE SELECTORS
   var vis = d3.select("#graphic");
-  var nav = vis.append("ul")
+  var nav = d3.select("#clicky").append("ul")
     .attr("id", "select-cat")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -240,17 +240,12 @@ br = svg.selectAll("#breadcrumbs");
 
  // NAVBAR ----------------------------------------------------------------------
            // Clicky buttons at top.
-           // create the nav bar
-           var nav = vis.append("ul")
-             .attr("id", "select-cat")
-             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
              nav.selectAll("ul")
                .style("width", "20px")
                .data(nested)
              .enter().append("li").append("a")
                .attr("id", function(d) {return d.key;})
-               .attr("class", function(d) {return "button " + d.key;})
+               .attr("class", "button")
                .attr("x", function(d, i) {return i*150 + 10;})
                .attr("y",100)
                .text(function(d) {return d.key;})
@@ -319,10 +314,21 @@ filtered2 = mcuData.filter(function(d) {return d.Category == selectedCat })
 
     // change to new values
     mcuDots.transition(1000).delay(650)
-      .attr("cx", function(d) {console.log(d.ave); return xMCU(d.ave);})
+      .attr("cx", function(d) {return xMCU(d.ave);})
       .attr("cy", function(d) {return yMCU(d.Variable) + yMCU.rangeBand()/2})
       // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
       .attr("fill", function(d) {return zMCU(d.ave);});
+
+// Turn on or off lz maps
+if(selectedCat == "Livelihood Zone") {
+  mcu.selectAll("#lz-icons")
+  .transition(1000)
+     .style("opacity", 1);
+   } else {
+     mcu.selectAll("#lz-icons")
+       .transition(1000)
+        .style("opacity", 0);
+   }
         })
    // -----------------------------------------------------------------------------
 
@@ -420,11 +426,12 @@ filtered = mcuData.filter(function(d) {return d.Category == selectedCat })
         .enter().append("image")
         .attr("xlink:href", function(d) {return "/img/" + d.Variable + ".png"})
         // .attr("xlink:href", function(d) {return "/img/" +  d.Variable + ".png"})
+          .attr("id", "lz-icons")
           .attr("x", d3.max(data, function(element) { return xMCU(element.ave) * 1.03; }))
           .attr("y", function(d) {return yMCU(d.Variable) })
           .attr("height", yMCU.rangeBand()) //y.bandwidth()
           .attr("transform", "translate(" + width + ",0)")
-          .style("opacity", 1)
+          .style("opacity", function(d) {return d.Category == "Livelihood Zone" ? 1 : 0})
 
     // MAP: map
   //  imgG.append("image")
