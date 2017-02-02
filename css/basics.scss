@@ -218,7 +218,14 @@ bottom: 0px;
 top: 0px;
 }
 
-#select-cat > .button:hover{
+.row#clicky {
+  position: fixed;
+  display: block;
+  right: $large-pad;
+  height: $clicky-height;
+}
+
+#clicky .button:hover{
   background-color: #f8f8f8;
 }
 

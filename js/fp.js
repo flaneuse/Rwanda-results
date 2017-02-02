@@ -434,13 +434,13 @@ filtered = mcuData.filter(function(d) {return d.Category == selectedCat })
           .style("opacity", function(d) {return d.Category == "Livelihood Zone" ? 1 : 0})
 
     // MAP: map
-  //  imgG.append("image")
-  //      .attr("class", "rw-map")
-  //      .attr("id", "popdensity")
-  //      .attr("xlink:href", function(d) {return "/img/intro/afr5.png"})
-  //      .attr("width", "100%")
-  //      .attr("height", "100%")
-  //      .style("opacity", 1);
+   imgG.append("image")
+       .attr("class", "rw-map")
+       .attr("id", "popdensity")
+       .attr("xlink:href", function(d) {return "/img/intro/afr5.png"})
+       .attr("width", "100%")
+       .attr("height", "100%")
+       .style("opacity", 1);
 
     // draw the axes
   tfr.append("g")
@@ -545,7 +545,7 @@ filtered = mcuData.filter(function(d) {return d.Category == selectedCat })
     // time the active section changes
     activateFunctions[0] = show1;
     activateFunctions[1] = show2;
-    // activateFunctions[2] = show3;
+    activateFunctions[2] = show3;
     // activateFunctions[3] = show4;
     // activateFunctions[4] = show5;
     // activateFunctions[5] = show6;
@@ -591,10 +591,22 @@ filtered = mcuData.filter(function(d) {return d.Category == selectedCat })
         .style("opacity", 0);
 
 // -- TURN OFF NEXT --
+  mcuOff();
 
 // -- TURN ON CURRENT --
   tfrOn(tDefault);
 
+  }
+
+  function show3() {
+// -- TURN OFF PREVIOUS --
+  tfrOff();
+
+// -- TURN OFF NEXT --
+
+
+// -- TURN ON CURRENT --
+  mcuOn(tDefault);
 
   }
 // end of ACTIVATE FUNCTIONS ---------------------------------------------------
@@ -615,6 +627,31 @@ function tfrOn(tDefault) {
 
 function tfrOff() {
   plotG.selectAll("#tfr")
+    .transition()
+      .duration(0)
+      .style("opacity", 0);
+
+}
+
+function mcuOn(tDefault) {
+  nav.selectAll("a")
+    .transition()
+    .duration(tDefault)
+    .style("opacity", 1);
+
+  plotG.selectAll("#mcu")
+    .transition()
+      .duration(tDefault)
+      .style("opacity", 1);
+}
+
+function mcuOff() {
+  nav.selectAll("a")
+    .transition()
+    .duration(0)
+    .style("opacity", 0);
+
+  plotG.selectAll("#mcu")
     .transition()
       .duration(0)
       .style("opacity", 0);
