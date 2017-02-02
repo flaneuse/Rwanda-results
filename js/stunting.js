@@ -26,7 +26,7 @@ var scrollVis = function() {
     // and margins of the vis area, based on the outer vars.
   var margin = { top: 40, right: 75, bottom: 15, left: 250 };
   var width = w - margin.left - margin.right;
-  var height = Math.ceil((width * graphic_aspect_height) / graphic_aspect_width) - margin.top - margin.bottom;
+  var height = Math.ceil((w * graphic_aspect_height) / graphic_aspect_width) - margin.top - margin.bottom;
 
   var numSlides = 9;
   var radius_bc = 7; // radius of breadcrumbs
@@ -1227,6 +1227,10 @@ function hideCIbutton(){
  * @param data - loaded tsv data
  */
 function display(data) {
+
+  // Clear out any previously drawn graphics.
+  var $vis = $("#vis");
+  $vis.empty();
 
   // create a new plot and
   // display it
