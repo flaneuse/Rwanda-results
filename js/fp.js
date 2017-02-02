@@ -27,7 +27,7 @@
   // constants to define the size
   // and margins of the vis area, based on the outer vars.
   var margin1 = { top: 50, right: 125, bottom: 25, left: 35 };
-  var margin2 = { top: 50, right: 25, bottom: 25, left: 235 };
+  var margin2 = { top: 100, right: 75, bottom: 25, left: 235 };
   var margin = margin2;
   var width = w - margin.left - margin.right;
   var height = Math.ceil((width * graphic_aspect_height) / graphic_aspect_width) - margin.top - margin.bottom;
@@ -45,7 +45,7 @@
   var colorPalette = ['#5254a3','#ad494a','#e7ba52']; // Vega category20b
 
   // Initial settings for MCU stepper
-  var selectedCat = "National";
+  var selectedCat = "Livelihood Zone";
   var selectedYear = 2014;
 
   // Keep track of which visualization
@@ -198,7 +198,7 @@ var tfrNest = d3.nest()
     // MCU data
     mcuData = rawData.filter(function(d) {return d.datatype == "mcu"});
     // sort the average values, descendingly.
-      mcuData.sort(function(a,b) {return b.ave-a.ave;});
+
 
       lz = mcuData
       .filter(function(d) {return d.Category == "Livelihood Zone"});
@@ -269,8 +269,6 @@ br = svg.selectAll("#breadcrumbs");
    .on("click", function(d) {
      selectedCat = this.id;
 
-     console.log(selectedCat);
-
      // Change the color of the buttons
      nav.selectAll("a")
        .style("background-color", function(d,i) {return d.key == selectedCat ? "#dceed7" : "#eee";})
@@ -322,7 +320,7 @@ filtered2 = mcuData.filter(function(d) {return d.Category == selectedCat })
     // change to new values
     mcuDots.transition(1000).delay(650)
       .attr("cx", function(d) {console.log(d.ave); return xMCU(d.ave);})
-      .attr("cy", function(d) {return yMCU(d.Variable)})
+      .attr("cy", function(d) {return yMCU(d.Variable) + yMCU.rangeBand()/2})
       // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
       .attr("fill", function(d) {return zMCU(d.ave);});
         })
@@ -404,26 +402,29 @@ filtered = mcuData.filter(function(d) {return d.Category == selectedCat })
 
 
   mcu.selectAll("circle")
-          .data(filtered)
+          .data(filtered.sort(function(a,b) {return b.ave-a.ave;}))
   .enter().append("circle")
       .attr("class", "dot")
-      .attr("r", radius)
+      .attr("r", radius*1.5)
       .attr("cx", function(d) {return xMCU(d.ave);})
-      .attr("cy", function(d) {return yMCU(d.Variable)})
+      .attr("cy", function(d) {return yMCU(d.Variable) + yMCU.rangeBand()/2})
       // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
       .attr("fill", function(d) {return zMCU(d.ave);});
 
 
 
       // image
+
         var imgs = mcu.selectAll("image")
           .data(lz)
         .enter().append("image")
         .attr("xlink:href", function(d) {return "/img/" + d.Variable + ".png"})
         // .attr("xlink:href", function(d) {return "/img/" +  d.Variable + ".png"})
           .attr("x", d3.max(data, function(element) { return xMCU(element.ave) * 1.03; }))
-          .attr("y", function(d) {return yMCU(d.Variable)})
-          .attr("height", 40); //y.bandwidth()
+          .attr("y", function(d) {return yMCU(d.Variable) })
+          .attr("height", yMCU.rangeBand()) //y.bandwidth()
+          .attr("transform", "translate(" + width + ",0)")
+          .style("opacity", 1)
 
     // MAP: map
   //  imgG.append("image")
