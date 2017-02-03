@@ -15,7 +15,8 @@ stdTransition = 600;
 // Based on iPad w/ 2/3 of max width taken up by vis., 2/3 of max height taken up by vis.: 1024 x 768 --> perserve aspect ratio of iPad
 var graphic_aspect_width = 4;
 var graphic_aspect_height = 3;
-var padding_right = 10;
+var padding_right = 20;
+var padding_top = 0;
 
 // window function to get the size of the outermost parent
 var graphic = d3.select("#graphic");
@@ -28,9 +29,10 @@ w = graphicSize.width - sidebarSize.width - padding_right;
 
   // constants to define the size
   // and margins of the vis area, based on the outer vars.
-var margin = { top: 15, right: 15, bottom: 15, left: 15 };
+var margin = { top: 0, right: 75, bottom: 30, left: 15 };
 var width = w - margin.left - margin.right;
-var height = Math.ceil((width * graphic_aspect_height) / graphic_aspect_width) - margin.top - margin.bottom;
+var height = window.innerHeight - margin.top - margin.bottom;
+// var height = Math.ceil((width * graphic_aspect_height) / graphic_aspect_width) - margin.top - margin.bottom;
 
 var numSlides = 9;
 var radius_bc = 7; // radius of breadcrumbs
@@ -312,7 +314,7 @@ imgG.selectAll("text")
     afrMap
     .transition()
     .duration(stdTransition*2)
-    .attr("transform", "translate(-1000, -700)" + " scale(3.5)");
+    // .attr("transform", "translate("+ 0.6176 * width + "," + 0.4558 * height ")" + " scale(3.5)");
 
     // NOTE: Cross-fade to the real image
 
