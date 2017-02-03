@@ -48,6 +48,10 @@
   var selectedCat = "Livelihood Zone";
   var selectedYear = 2014;
 
+
+  // Protestant population numbers
+
+
   // Keep track of which visualization
   // we are on and which was the last
   // index activated. When user scrolls
