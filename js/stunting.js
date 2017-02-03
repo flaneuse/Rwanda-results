@@ -1261,8 +1261,15 @@ function display(data) {
   });
 }
 
-// Add event listener: on resize, redraw the figure
-window.addEventListener("resize", display)
+function readData() {
+  d3.csv("data/stunting.csv", display);
+}
 
-// load data and display
-d3.csv("data/stunting.csv", display);
+readData();
+
+// Add event listener: on resize, redraw the figure
+window.addEventListener("resize", readData)
+
+
+// // load data and display
+// d3.csv("data/stunting.csv", display);
