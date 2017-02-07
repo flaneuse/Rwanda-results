@@ -49,8 +49,6 @@
   var selectedYear = 2014;
 
 
-  // Protestant population numbers
-
 
   // Keep track of which visualization
   // we are on and which was the last
@@ -60,7 +58,7 @@
   var lastIndex = -1;
   var activeIndex = 0;
 
-// INITIALIZE SELECTORS
+// INITIALIZE SELECTORS -------------------------------------------------------------------
   var vis = d3.select("#graphic");
   var nav = d3.select("#clicky").append("ul")
     .attr("id", "select-cat")
@@ -212,8 +210,6 @@ var tfrNest = d3.nest()
     .entries(tfrCountries);
 
 // MCU data
-
-
     mcuData = rawData["mcu"];
 
     // convert to numbers
@@ -221,6 +217,7 @@ var tfrNest = d3.nest()
         d.ave = +d.ave;
         d.lb = +d.lb;
         d.ub = +d.ub;
+        d.year = +d.year;
     });
 
 // Filter and sort the data
@@ -235,6 +232,14 @@ var tfrNest = d3.nest()
       .key(function(d) { return d.Category })
       .entries(mcuData.sort(function(a,b) {return b.order - a.order}));
 
+
+var religAgeData = rawData["religAge"];
+
+// Nest by religion
+var religAgeData = d3.nest()
+  .key(function(d) { return d.religion })
+  .entries(religAgeData.sort(function(a,b) {return b.order - a.order}));
+console.log(religAgeData)
 
 // BREADCRUMBS ------------------------------------------------------------
 var breadcrumbs = Array(numSlides).fill(0)
@@ -778,15 +783,18 @@ function readData() {
  }
 
 // Nested data calls to read data, bind to ddata.
-  d3.csv("/data/tfr.csv", function(error, data1){
-
-    d3.csv("/data/mcu.csv", function(error, data2){
+  d3.csv("/data/tfr.csv", function(error, tfr){
+    d3.csv("/data/mcu.csv", function(error, mcu){
+      d3.csv("/data/relig_byAge2012.csv", function(error, religAge){
         ddata = {};
-        ddata['tfr'] = data1;
-        ddata['mcu'] = data2;
+        ddata['tfr'] = tfr;
+        ddata['mcu'] = mcu;
+        ddata['religAge'] = religAge;
 
+        console.log(ddata)
         // call function to plot the data
         display(ddata);
+    });
     });
   });
 
