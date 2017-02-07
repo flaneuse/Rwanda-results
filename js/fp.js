@@ -130,6 +130,13 @@
               .x(function(d) { return x(d.year); })
               .y(function(d) { return y(d.tfr); });
 
+// lollipop generator
+    // var lollipop = d3.svg.line() // d3.line for v4
+    //   .x1(function(d) { return x(0); })
+    //   .x2(function(d) { return x(d.ave); })
+    //   .y1(function(d) { return y(d.Variable); })
+    //   .y2(function(d) { return y(d.Variable); });
+
   // When scrolling to a new section
   // the activation function for that
   // section is called.
@@ -323,11 +330,12 @@ filtered2 = mcuData.filter(function(d) {return d.Category == selectedCat })
       // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
       .attr("fill", function(d) {return zMCU(d.ave);});
 
-// Turn on or off lz maps
+// Turn on or off lz maps & update position
 if(selectedCat == "Livelihood Zone") {
   mcu.selectAll("#lz-icons")
   .transition(1000)
-     .style("opacity", 1);
+    .attr("y", function(d) {return yMCU(d.Variable) })
+    .style("opacity", 1);
    } else {
      mcu.selectAll("#lz-icons")
        .transition(1000)
