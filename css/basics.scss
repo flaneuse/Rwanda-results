@@ -151,7 +151,7 @@ a:hover {
 }
 
 .summary-list{
-    padding-left: 100px;
+    // padding-left: 100px;
     padding-top: 5px;
     padding-bottom: 5px;
     border-top: 2px solid #bababa;
@@ -164,6 +164,15 @@ a:hover {
 .summary-list > li {
   padding-top: 10px;
   padding-bottom: 10px;
+}
+
+#bulleted ul {
+  list-style-type: circle;
+}
+
+#bulleted > li {
+    font-size: $base-font-size;
+    line-height: normal;
 }
 
 .accent-red {
@@ -229,7 +238,7 @@ top: 0px;
   background-color: #f8f8f8;
 }
 
-ul {
+#clicky ul {
 list-style-type: none;
 margin: 0;
 padding: 0;
