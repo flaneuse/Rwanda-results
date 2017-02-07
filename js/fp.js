@@ -103,27 +103,27 @@
              .innerTickSize(width);
 
 // AXES for MCU
-             var xMCU = d3.scale.linear()
-                  .range([0, width]);
+       var xMCU = d3.scale.linear()
+            .range([0, width]);
 
-             var yMCU = d3.scale.ordinal()
-                  .rangeBands([0, height], 0.2, 0);
+       var yMCU = d3.scale.ordinal()
+            .rangeBands([0, height], 0.2, 0);
 
-             var zMCU = d3.scale.linear()
-             // .range(colorPalette)
-               .range(colorbrewer.Spectral[11])
-               .interpolate(d3.interpolateHcl)
-                  .domain([0.1, 0.2]);
+       var zMCU = d3.scale.linear()
+       // .range(colorPalette)
+         .range(colorbrewer.Spectral[11])
+         .interpolate(d3.interpolateHcl)
+            .domain([0.1, 0.2]);
 
-             var xAxMCU = d3.svg.axis()
-                  .scale(xMCU)
-                  .orient("top")
-                  .ticks(5, "%")
-                  .innerTickSize(height);
+       var xAxMCU = d3.svg.axis()
+            .scale(xMCU)
+            .orient("top")
+            .ticks(5, "%")
+            .innerTickSize(height);
 
-             var yAxMCU= d3.svg.axis()
-                  .scale(yMCU)
-                  .orient("left");
+       var yAxMCU= d3.svg.axis()
+            .scale(yMCU)
+            .orient("left");
 
 // line generator
         var line = d3.svg.line() // d3.line for v4
@@ -181,9 +181,15 @@
 
        imgG = svg.select("#imgs")
 
-       tfr = plotG.append("g").attr("id", "tfr")
+       tfr = plotG
+        .append("g")
+          .attr("id", "tfr")
+          .attr("opacity", 0) // set initially to 0.
 
-       mcu = plotG.append("g").attr("id", "mcu")
+       mcu = plotG
+       .append("g")
+         .attr("id", "mcu")
+         .attr("opacity", 0)
 
 // Data processing
 // convert to numbers
@@ -433,7 +439,7 @@ filtered = mcuData.filter(function(d) {return d.Category == selectedCat })
 
       // image
 
-        var imgs = mcu.selectAll("image")
+var imgs = mcu.selectAll("image")
           .data(lz)
         .enter().append("image")
         .attr("xlink:href", function(d) {return "/img/" + d.Variable + ".png"})
@@ -585,6 +591,7 @@ filtered = mcuData.filter(function(d) {return d.Category == selectedCat })
 
     // -- TURN OFF NEXT --
     tfrOff();
+    mcuOff();
 
     // -- TURN ON CURRENT --
     imgG.selectAll("#popdensity")
