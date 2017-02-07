@@ -718,6 +718,7 @@ function mcuOff() {
  * @param data - loaded tsv data
  */
 function display(data) {
+  console.log(data);
 
   // Clear out any previously drawn graphics.
   var $vis = $("#vis");
@@ -725,10 +726,13 @@ function display(data) {
 
   // create a new plot and
   // display it
+
   var plot = scrollVis();
+
   d3.select("#vis")
     .datum(data)
     .call(plot);
+
 
   // setup scroll functionality
   var scroll = scroller()
@@ -752,14 +756,47 @@ function display(data) {
   });
 }
 
+var ddata = null;
 
 // load data and display
-// Note: choosing to use a combined csv file rather than loading in 2 nested csv calls.
-// Given how complicated the data passing is, seems simplest.
 function readData() {
-  d3.csv("/data/fp.csv", function(error, data){
-      display(data);
+
+// Check if ddata exists; if data has already been read, re-call display and exit function.
+ if(ddata) {
+   display(ddata);
+   return;
+ }
+
+// Nested data calls to read data, bind to ddata.
+  d3.csv("/data/fp.csv", function(error, data1){
+
+    d3.csv("/data/fp.csv", function(error, data2){
+        ddata = {};
+        ddata['fp'] = data1;
+        ddata['mcu'] = data2;
+
+           display(ddata);
+    });
   });
+
+
+
+//   var def = new $.Deferred();
+//
+//   d3.csv("/data/fp.csv", function(error, data1){
+//        //display(data1, data2);
+//        d[1]=data1;
+//   });
+//   d3.csv("/data/fp.csv", function(error, data2){
+//       //display(data1, data2);
+//       d[2]=data2
+//
+//   });
+//
+//   if (d != {}) def.resolve(d);
+//
+//   display(d);
+//   return def;
 }
 
 readData();
