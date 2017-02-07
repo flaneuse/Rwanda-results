@@ -752,12 +752,17 @@ function display(data) {
   });
 }
 
-// Add event listener: on resize, redraw the figure
-window.addEventListener("resize", display)
 
 // load data and display
 // Note: choosing to use a combined csv file rather than loading in 2 nested csv calls.
 // Given how complicated the data passing is, seems simplest.
+function readData() {
   d3.csv("/data/fp.csv", function(error, data){
       display(data);
   });
+}
+
+readData();
+
+// Add event listener: on resize, redraw the figure
+window.addEventListener("resize", readData)
