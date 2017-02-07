@@ -207,10 +207,6 @@ var scrollVis = function() {
          .style("fill", "")
          .style("fill-opacity", function(d) {return d * 0.5 + 0.1;});
 
-         function updateBreadcrumbs(idx) {
-           br.selectAll("circle")
-              .style("fill-opacity", function(d,i) {return i==idx ? 0.6:0.1;});
-         }
 
     // EVENT: on clicking breadcrumb, change the page. -----------------------------
     br.selectAll("circle").on("click", function(d,i) {
@@ -1032,6 +1028,13 @@ function showRegrMap() {
   /**
    * HELPER FUNCTIONS
    */
+
+// -- BREADCRUMBS --
+function updateBreadcrumbs(idx) {
+  br.selectAll("circle")
+     .style("fill-opacity", function(d,i) {return i==idx ? 0.6:0.1;});
+}
+
 // -- X-AXIS --
 function showX() {
   plotG.selectAll(".x.axis")
@@ -1199,6 +1202,7 @@ function hideCIbutton(){
     var scrolledSections = d3.range(lastIndex + sign, activeIndex + sign, sign);
     scrolledSections.forEach(function(i) {
       activateFunctions[i]();
+      updateBreadcrumbs(i);
     });
     lastIndex = activeIndex;
   };

@@ -152,10 +152,6 @@ var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
               .style("fill", "")
               .style("fill-opacity", function(d) {return d * 0.5 + 0.1;});
 
-              function updateBreadcrumbs(idx) {
-                br.selectAll("circle")
-                   .style("fill-opacity", function(d,i) {return i==idx ? 0.6:0.1;});
-              }
 
          // EVENT: on clicking breadcrumb, change the page. -----------------------------
          br.selectAll("circle").on("click", function(d,i) {
@@ -401,9 +397,16 @@ function changeAnnot(idxOn, idxOff, tDelay) {
     var scrolledSections = d3.range(lastIndex + sign, activeIndex + sign, sign);
     scrolledSections.forEach(function(i) {
       activateFunctions[i]();
+      updateBreadcrumbs(i);
     });
     lastIndex = activeIndex;
   };
+
+  // HELPER FUNCTIONS ------------------------------------------------------------
+  function updateBreadcrumbs(idx) {
+    br.selectAll("circle")
+       .style("fill-opacity", function(d,i) {return i==idx ? 0.6:0.1;});
+  }
 
   /**
    * update
