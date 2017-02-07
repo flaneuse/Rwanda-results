@@ -768,14 +768,15 @@ function readData() {
  }
 
 // Nested data calls to read data, bind to ddata.
-  d3.csv("/data/fp.csv", function(error, data1){
+  d3.csv("/data/tfr.csv", function(error, data1){
 
-    d3.csv("/data/fp.csv", function(error, data2){
+    d3.csv("/data/mcu.csv", function(error, data2){
         ddata = {};
-        ddata['fp'] = data1;
+        ddata['tfr'] = data1;
         ddata['mcu'] = data2;
 
-           display(ddata);
+        // call function to plot the data
+        display(ddata);
     });
   });
 

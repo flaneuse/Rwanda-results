@@ -1,4 +1,4 @@
-e ,Category,order,ave,se,t,pvalue,lb,ub,crit,N,year
+Variable,Category,order,ave,se,t,pvalue,lb,ub,crit,N,year
 Urban Areas,Livelihood Zone,3,0.48564295,0.01767038,27.483446,8.19E-158,0.4510035,0.52028239,1.9603112,801,2010
 Lake Kivu Coffee,Livelihood Zone,3,0.33089312,0.0180177,18.364889,1.45E-73,0.29557281,0.36621342,1.9603112,683,2010
 West Congo-Nile Crest Tea,Livelihood Zone,3,0.38461538,0.02426463,15.850867,1.35E-55,0.33704916,0.4321816,1.9603112,403,2010
