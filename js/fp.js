@@ -192,18 +192,17 @@
          .attr("opacity", 0)
 
 // Data processing
-// convert to numbers
-rawData.forEach(function(d) {
-    d.tfr = +d.tfr;
-    d.year = +d.year;
-    d.ave = +d.ave;
-    d.lb = +d.lb;
-    d.ub = +d.ub;
-});
+
 
 
 // TFR data
-tfrData = rawData.filter(function(d) {return d.datatype == "tfr"});
+tfrData = rawData["tfr"];
+
+// convert to numbers
+tfrData.forEach(function(d) {
+    d.tfr = +d.tfr;
+    d.year = +d.year;
+});
 
 tfrCountries = tfrData.filter(function(d) {return d.variable == "Total"});
 tfrRwanda = tfrData.filter(function(d) {return d.country == "Rwanda"});
@@ -212,10 +211,21 @@ var tfrNest = d3.nest()
     .key(function(d) {return d.country;})
     .entries(tfrCountries);
 
-    // MCU data
-    mcuData = rawData.filter(function(d) {return d.datatype == "mcu"});
-    // sort the average values, descendingly.
+// MCU data
 
+
+    mcuData = rawData["mcu"];
+
+    // convert to numbers
+    mcuData.forEach(function(d) {
+        d.ave = +d.ave;
+        d.lb = +d.lb;
+        d.ub = +d.ub;
+    });
+
+// Filter and sort the data
+    filtered = mcuData.filter(function(d) {return d.Category == selectedCat })
+        .filter(function(d) {return d.year == selectedYear });
 
       lz = mcuData
       .filter(function(d) {return d.Category == "Livelihood Zone"});
@@ -300,7 +310,6 @@ filtered2 = mcuData.filter(function(d) {return d.Category == selectedCat })
 
     var mcuAvg = natl[0].ave;
 
-    console.log(mcuAvg)
 
     var mcuDots = mcu.selectAll("circle")
     .data(filtered2.sort(function(a,b) {return b.ave - a.ave}))
@@ -308,7 +317,8 @@ filtered2 = mcuData.filter(function(d) {return d.Category == selectedCat })
 
     // Change the y-axis.
     // Note: must be done AFTER the filtering and sorting.
-    updateY(filtered2, selectedCat);
+    updateY(filtered2, selectedCat, selectedYear);
+
     d3.selectAll("#mcu-y")
       .call(yAxMCU)
 
@@ -362,14 +372,16 @@ if(selectedCat == "Livelihood Zone") {
 // MCU
    xMCU.domain([0, d3.max(mcuData, function(element) { return element.ave; })]);
 
-   function updateY(mcuData, selectedCat) {
+   function updateY(mcuData, selectedCat, selectedYear) {
      yMCU.domain(mcuData
        .filter(function(d) {return d.Category == selectedCat})
+       .filter(function(d) {return d.year == selectedYear})
+       .sort(function(a,b) {return b.ave - a.ave})
        .map(function(element) {return element.Variable})
      );
 };
      // Initialize y-domain.
-     updateY(mcuData, selectedCat);
+     updateY(mcuData, selectedCat, selectedYear);
 
 // EVENT: on clicking breadcrumb, change the page. -----------------------------
 br.selectAll("circle").on("click", function(d,i) {
@@ -420,13 +432,10 @@ mcu.append("g")
   .attr("id", "mcu-y")
   .style("opacity", 1);
 
-filtered = mcuData.filter(function(d) {return d.Category == selectedCat })
-    .filter(function(d) {return d.year == selectedYear });
 
 
-
-  mcu.selectAll("circle")
-          .data(filtered.sort(function(a,b) {return b.ave-a.ave;}))
+  mcu.selectAll(".dot")
+    .data(filtered)
   .enter().append("circle")
       .attr("class", "dot")
       .attr("r", radius*1.5)
@@ -756,9 +765,10 @@ function display(data) {
   });
 }
 
+// Declare empty holder of all the data
 var ddata = null;
 
-// load data and display
+// load data and display -------------------------------------------------------------------
 function readData() {
 
 // Check if ddata exists; if data has already been read, re-call display and exit function.
