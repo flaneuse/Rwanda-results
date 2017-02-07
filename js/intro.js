@@ -429,6 +429,10 @@ function changeAnnot(idxOn, idxOff, tDelay) {
  * @param data - loaded tsv data
  */
 function display(data) {
+  // Clear out any previously drawn graphics.
+  var $vis = $("#vis");
+  $vis.empty();
+
   // create a new plot and
   // display it
   var plot = scrollVis();
@@ -459,8 +463,13 @@ function display(data) {
 }
 
 
-// Add event listener: on resize, redraw the figure
-window.addEventListener("resize", display)
+function readData() {
+  d3.csv("", function(error, data){
+      display(data);
+  });
+}
 
-// load data and display
-d3.tsv("", display);
+readData();
+
+// Add event listener: on resize, redraw the figure
+window.addEventListener("resize", readData)
