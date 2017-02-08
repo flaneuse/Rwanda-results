@@ -42,7 +42,7 @@
   // Specific margins for each of the different windows
   var margins = {
     map:      { top: 0, right: 15, bottom: 0, left: 0 },
-    tfr:      { top: 50, right: 125, bottom: 25, left: 35 },
+    tfr:      { top: 65, right: 125, bottom: 25, left: 35 },
     mcu:      { top: 75, right: 75, bottom: 25, left: 235 },
     religDot: { top: 75, right: 125, bottom: 25, left: 35 },
     religBar: { top: 125, right: 75, bottom: 125, left: 35 }
@@ -72,6 +72,8 @@ console.log(dims)
   var radius = 5;
 
   var tDefault = 600; // standard transition timing in ms
+
+  var xaxisOffset = -20; // amount of spacing b/w end of axis and labels
 
   var colorPalette = ['#5254a3','#ad494a','#e7ba52']; // Vega category20b
   var colorPaletteLight = ['#637939', '#7b4173', '#e7ba52', '#ad494a', '#5254a3', '#a7a9ac'];
@@ -127,7 +129,7 @@ var focusRelig = ["Protestant", "Catholic"];
 
         var xAxTFR = d3.svg.axis()
              .scale(x)
-            //  .tickFormat(d3.time.format("%Y"))
+             .tickFormat(d3.format("d"))
              .orient("top")
              .ticks(5);
 
@@ -153,7 +155,7 @@ var focusRelig = ["Protestant", "Catholic"];
             .scale(xMCU)
             .orient("top")
             .ticks(5, "%")
-            .innerTickSize(dims.mcu.h);
+            .innerTickSize(-dims.mcu.h);
 
        var yAxMCU= d3.svg.axis()
             .scale(yMCU)
@@ -189,12 +191,13 @@ var focusRelig = ["Protestant", "Catholic"];
        .range([0, dims.religBar.w]);
 
        var yRbar = d3.scale.ordinal()
-            .rangeBands([0, dims.religBar.h], 0.2, 0);
+            .rangeBands([0, dims.religBar.h], 0.2, 0.2);
 
        var xAxRbar = d3.svg.axis()
             .scale(xRbar)
             .tickFormat(d3.format(".1s"))
-            .innerTickSize(dims.religBar.h)
+            .ticks(4)
+            .innerTickSize(-dims.religBar.h + xaxisOffset)
             .orient("top");
 
        var yAxRbar= d3.svg.axis()
@@ -549,14 +552,14 @@ br.selectAll("circle").on("click", function(d,i) {
             religBar.append("text")
                 .attr("class", "top-label")
                 .attr("x", 0)
-                .attr("y", -30)
+                .attr("y", -margins.religBar.top)
                 .text("percent of population");
 
             religBar.append("g")
                 .call(xAxRbar)
                 .attr("class", "x axis")
                 .attr("id", "relig-x")
-                // .attr("transform", "translate(0," + height + ")")
+                .attr("transform", "translate(0," + xaxisOffset + ")")
                 .style("opacity", 1);
 
             religBar.append("g")
@@ -637,7 +640,7 @@ br.selectAll("circle").on("click", function(d,i) {
         religDot.append("text")
             .attr("class", "top-label")
             .attr("x", 0)
-            .attr("y", -30)
+            .attr("y", 0)
             .text("percent of population");
 
         religDot.append("g")
@@ -752,18 +755,27 @@ var imgs = mcu.selectAll("image")
        .attr("height", "100%")
        .style("opacity", 1);
 
+// --- TFR plot ---
+tfr.append("text")
+    .attr("class", "top-label")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("dy", -margins.tfr.top)
+    .text("estimated total fertility rate");
+
     // draw the axes
   tfr.append("g")
     .call(xAxTFR)
         .attr("class", "x axis")
         .attr("id", "tfr-x")
-        .attr("transform", "translate(0," + -margin.top/2 + ")")
+        .attr("transform", "translate(0," + xaxisOffset + ")")
         .style("opacity", 1);
 
   tfr.append("g")
     .call(yAxTFR)
         .attr("class","y axis")
         .attr("id", "tfr-y")
+            .attr("transform", "translate(" + margins.tfr.left + "," + margins.tfr.top + ")")
         .style("opacity", 1);
 
 
