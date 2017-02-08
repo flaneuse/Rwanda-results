@@ -12,7 +12,7 @@
 // Define graphic aspect ratio.
 // Based on iPad w/ 2/3 of max width taken up by vis., 2/3 of max height taken up by vis.: 1024 x 768 --> perserve aspect ratio of iPad
   var graphic_aspect_width = 4;
-  var graphic_aspect_height = 5;
+  var graphic_aspect_height = 4;
   var padding_right = 20; // for breadcrumbs
   var padding_bottom = 5;
   var padding_top = 60;
@@ -41,13 +41,16 @@
 
   // Specific margins for each of the different windows
   var margins = {
+    map:      { top: 0, right: 15, bottom: 0, left: 0 },
     tfr:      { top: 50, right: 125, bottom: 25, left: 35 },
     mcu:      { top: 75, right: 75, bottom: 25, left: 235 },
-    religDot: { top: 75, right: 75, bottom: 25, left: 235 },
+    religDot: { top: 75, right: 125, bottom: 25, left: 35 },
     religBar: { top: 125, right: 75, bottom: 125, left: 35 }
   };
 
   var dims = {
+    map:      { w: width - margins.map.right - margins.map.left,
+                h: height - margins.map.top - margins.map.bottom},
     tfr:      { w: width - margins.tfr.right - margins.tfr.left,
                 h: height - margins.tfr.top - margins.tfr.bottom},
     mcu:      { w: width - margins.mcu.right - margins.mcu.left,
@@ -57,7 +60,7 @@
     religBar: { w: width - margins.religBar.right - margins.religBar.left,
                 h: height - margins.religBar.top - margins.religBar.bottom}
   }
-
+console.log(dims)
 
 // end RESPONSIVENESS (plus call in 'display') ---------------------------------------------------------------
 
@@ -135,10 +138,10 @@ var focusRelig = ["Protestant", "Catholic"];
 
 // AXES for MCU
        var xMCU = d3.scale.linear()
-            .range([0, width]);
+            .range([0, dims.mcu.w]);
 
        var yMCU = d3.scale.ordinal()
-            .rangeBands([0, height], 0.2, 0);
+            .rangeBands([0, dims.mcu.h], 0.2, 0);
 
        var zMCU = d3.scale.linear()
        // .range(colorPalette)
@@ -150,7 +153,7 @@ var focusRelig = ["Protestant", "Catholic"];
             .scale(xMCU)
             .orient("top")
             .ticks(5, "%")
-            .innerTickSize(height);
+            .innerTickSize(dims.mcu.h);
 
        var yAxMCU= d3.svg.axis()
             .scale(yMCU)
@@ -159,10 +162,10 @@ var focusRelig = ["Protestant", "Catholic"];
 // AXES for Religion dot plot
 
     var xRdot = d3.scale.linear()
-     .range([0, width]);
+     .range([0, dims.religDot.w]);
 
      var yRdot = d3.scale.linear()
-          .range([height,0]);
+          .range([dims.religDot.h, 0]);
 
 
     var zRelig = d3.scale.ordinal()
@@ -176,22 +179,22 @@ var focusRelig = ["Protestant", "Catholic"];
      var yAxRdot= d3.svg.axis()
           .scale(yRdot)
           .ticks(5, "%")
-          .innerTickSize(width)
+          .innerTickSize(dims.religDot.w)
           .orient("left");
 
 
-  // AXES for Religion dot plot
+  // AXES for Religion bar plot
 
       var xRbar = d3.scale.linear()
-       .range([0, width]);
+       .range([0, dims.religBar.w]);
 
        var yRbar = d3.scale.ordinal()
-            .rangeBands([0, height], 0.2, 0);
+            .rangeBands([0, dims.religBar.h], 0.2, 0);
 
        var xAxRbar = d3.svg.axis()
             .scale(xRbar)
             .tickFormat(d3.format(".1s"))
-            .innerTickSize(height)
+            .innerTickSize(dims.religBar.h)
             .orient("top");
 
        var yAxRbar= d3.svg.axis()
@@ -265,7 +268,7 @@ var focusRelig = ["Protestant", "Catholic"];
 
     summ = vis.select("#vis").append("div")
     .attr("id", "fp-summary")
-    .style("max-width", width + "px")
+    .style("max-width", dims.map.w + "px")
     .style("opacity", 0);
 
     mcu = plotG
@@ -446,7 +449,7 @@ filtered2 = mcuData.filter(function(d) {return d.Category == selectedCat })
     .duration(600)
     .attr("class", "dot")
     .attr("cx", xMCU(mcuAvg))
-    .attr("cy",  height/2)
+    .attr("cy",  dims.mcu.h/2)
     .attr("fill", function(d) {return zMCU(mcuAvg)})
     .attr("r", radius*2)
 
@@ -553,7 +556,7 @@ br.selectAll("circle").on("click", function(d,i) {
                 .call(xAxRbar)
                 .attr("class", "x axis")
                 .attr("id", "relig-x")
-                .attr("transform", "translate(0," + height + ")")
+                // .attr("transform", "translate(0," + height + ")")
                 .style("opacity", 1);
 
             religBar.append("g")
@@ -648,7 +651,7 @@ br.selectAll("circle").on("click", function(d,i) {
                 .call(yAxRdot)
                 .attr("class", "y axis")
                 .attr("id", "relig-y")
-                .attr("transform", "translate(" + width + ",0)")
+                // .attr("transform", "translate(" + width + ",0)")
                 .style("opacity", 1);
 
         religDot.selectAll(".dot")
@@ -678,7 +681,7 @@ br.selectAll("circle").on("click", function(d,i) {
               .attr("id", "religDot-annot")
               .attr("class", "annot")
               .text(function(d) {return d.religion})
-              .attr("x", width)
+              .attr("x", dims.religDot.w)
               .attr("dx", 20)
               .attr("y", function(d) {return yRdot(d.pct);})
               // .attr("dy", "0.4em")
@@ -703,7 +706,7 @@ mcu.append("g")
 .call(xAxMCU)
     .attr("class", "x axis")
     .attr("id", "mcu-x")
-    .attr("transform", "translate(0," + height + ")")
+    // .attr("transform", "translate(0," + height + ")")
     .style("opacity", 1);
 
 mcu.append("g")
@@ -737,7 +740,7 @@ var imgs = mcu.selectAll("image")
           .attr("x", d3.max(data, function(element) { return xMCU(element.ave) * 1.03; }))
           .attr("y", function(d) {return yMCU(d.Variable) })
           .attr("height", yMCU.rangeBand()) //y.bandwidth()
-          .attr("transform", "translate(" + width + ",0)")
+          .attr("transform", "translate(" + dims.mcu.w + ",0)")
           .style("opacity", function(d) {return d.Category == "Livelihood Zone" ? 1 : 0})
 
     // MAP: map
@@ -745,7 +748,7 @@ var imgs = mcu.selectAll("image")
        .attr("class", "rw-map")
        .attr("id", "popdensity")
        .attr("xlink:href", function(d) {return "/img/intro/afr5.png"})
-       .attr("width", "100%")
+       .attr("width", dims.map.w)
        .attr("height", "100%")
        .style("opacity", 1);
 
@@ -808,7 +811,7 @@ var imgs = mcu.selectAll("image")
           .attr("id", "tfr-annot")
           .attr("class", "annot")
           .text(function(d) {return d.country})
-          .attr("x", width)
+          .attr("x", dims.tfr.w)
           .attr("dx", 20)
           .attr("y", function(d) {return y(d.tfr);})
           // .attr("dy", "0.4em")
@@ -834,7 +837,7 @@ var imgs = mcu.selectAll("image")
             .attr("class", "source")
             .text("Source: Demographic and Health Surveys")
             .attr("x", 0)
-            .attr("y", height)
+            .attr("y", dims.tfr.h)
             .style("opacity", 1);
 
 // TEXT: Summary ----------
