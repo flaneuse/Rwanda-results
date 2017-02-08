@@ -34,7 +34,7 @@
 // end RESPONSIVENESS (plus call in 'display') ---------------------------------------------------------------
 
 // CONSTANTS -------------------------------------------------------------------
-  var numSlides = 9;
+  var numSlides = 12;
   var radius_bc = 7; // radius of breadcrumbs
   var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
 
@@ -230,22 +230,22 @@ var focusRelig = ["Protestant", "Catholic"];
        tfr = plotG
         .append("g")
           .attr("id", "tfr")
-          .attr("opacity", 0) // set initially to 0.
+          .style("opacity", 0) // set initially to 0.
 
        mcu = plotG
        .append("g")
          .attr("id", "mcu")
-         .attr("opacity", 0)
+         .style("opacity", 0)
 
        religDot = plotG
        .append("g")
          .attr("id", "relig-dot")
-         .attr("opacity", 0)
+         .style("opacity", 0)
 
        religBar = plotG
        .append("g")
          .attr("id", "relig-bar")
-         .attr("opacity", 1)
+         .style("opacity", 0)
 
 // Data processing
 
@@ -815,11 +815,14 @@ var imgs = mcu.selectAll("image")
     activateFunctions[1] = show2;
     activateFunctions[2] = show3;
     activateFunctions[3] = show4;
-    // activateFunctions[4] = show5;
-    // activateFunctions[5] = show6;
-    // activateFunctions[6] = show7;
-    // activateFunctions[7] = show8;
-    // activateFunctions[8] = show9;
+    activateFunctions[4] = show5;
+    activateFunctions[5] = show6;
+    activateFunctions[6] = show7;
+    activateFunctions[7] = show8;
+    activateFunctions[8] = show9;
+    activateFunctions[9] = show10;
+    activateFunctions[10] = show11;
+    activateFunctions[11] = show12;
 
     // updateFunctions are called while
     // in a particular section to update
@@ -827,7 +830,7 @@ var imgs = mcu.selectAll("image")
     // Most sections do not need to be updated
     // for all scrolling and so are set to
     // no-op functions.
-    for(var i = 0; i < 9; i++) {
+    for(var i = 0; i < 12; i++) {
       updateFunctions[i] = function() {};
     }
   };
@@ -835,6 +838,7 @@ var imgs = mcu.selectAll("image")
 
 
 // ACTIVATE FUNCTIONS ----------------------------------------------------------
+// [[ #1 ]] --------------------------------------------------------------------
   function show1() {
     // -- TURN OFF PREVIOUS --
         // NA
@@ -842,6 +846,8 @@ var imgs = mcu.selectAll("image")
     // -- TURN OFF NEXT --
     tfrOff();
     mcuOff();
+    rDotOff();
+    // rBarOff();
 
     // -- TURN ON CURRENT --
     imgG.selectAll("#popdensity")
@@ -851,6 +857,7 @@ var imgs = mcu.selectAll("image")
 
   }
 
+// [[ #2 ]] --------------------------------------------------------------------
   function show2() {
 
 // -- TURN OFF PREVIOUS --
@@ -860,37 +867,132 @@ var imgs = mcu.selectAll("image")
         .style("opacity", 0);
 
 // -- TURN OFF NEXT --
-  mcuOff();
+  summaryOff();
 
 // -- TURN ON CURRENT --
   tfrOn(tDefault);
 
   }
 
+// [[ #3 ]] --------------------------------------------------------------------
   function show3() {
 // -- TURN OFF PREVIOUS --
   tfrOff();
 
 // -- TURN OFF NEXT --
+  religOff();
+
+// -- TURN ON CURRENT --
+  summaryOn(tDefault);
+
+  }
+
+// [[ #4 ]] --------------------------------------------------------------------
+  function show4() {
+// -- TURN OFF PREVIOUS --
+  summaryOff();
+
+// -- TURN OFF NEXT --
   rDotOff();
+
+// -- TURN ON CURRENT --
+  religOn(tDefault);
+  }
+
+// [[ #5 ]] --------------------------------------------------------------------
+  function show5() {
+// -- TURN OFF PREVIOUS --
+  religOff();
+
+// -- TURN OFF NEXT --
+  rBarOff();
+
+// -- TURN ON CURRENT --
+  rDotOn(tDefault);
+  }
+
+// [[ #6 ]] --------------------------------------------------------------------
+  function show6() {
+// -- TURN OFF PREVIOUS --
+  rDotOff();
+
+// -- TURN OFF NEXT --
+
+
+// -- TURN ON CURRENT --
+  rBarOn(tDefault);
+  }
+
+// [[ #7 ]] --------------------------------------------------------------------
+  function show7() {
+// -- TURN OFF PREVIOUS --
+
+
+// -- TURN OFF NEXT --
+  religMapOff();
+
+// -- TURN ON CURRENT --
+
+  }
+
+// [[ #8 ]] --------------------------------------------------------------------
+  function show8() {
+// -- TURN OFF PREVIOUS --
+
+// -- TURN OFF NEXT --
+  mcuMapOff();
+
+// -- TURN ON CURRENT --
+  religMapOn(tDefault);
+  }
+
+
+// [[ #9 ]] --------------------------------------------------------------------
+  function show9() {
+// -- TURN OFF PREVIOUS --
+  religMapOff();
+// -- TURN OFF NEXT --
+  mcuRegrOff();
+
+// -- TURN ON CURRENT --
+  mcuMapOn(tDefault);
+  }
+
+// [[ #10 ]] --------------------------------------------------------------------
+  function show10() {
+// -- TURN OFF PREVIOUS --
+  mcuMapOff();
+
+// -- TURN OFF NEXT --
+
+
+// -- TURN ON CURRENT --
+  mcuRegrOn(tDefault);
+  }
+
+// [[ #11 ]] --------------------------------------------------------------------
+  function show11() {
+// -- TURN OFF PREVIOUS --
+  mcuRegrOff();
+// -- TURN OFF NEXT --
+  mcuOff();
+
+// -- TURN ON CURRENT --
+
+  }
+
+// [[ #12 ]] --------------------------------------------------------------------
+  function show12() {
+// -- TURN OFF PREVIOUS --
+
+// -- TURN OFF NEXT --
+
 
 // -- TURN ON CURRENT --
   mcuOn(tDefault);
 
   }
 
-
-  function show4() {
-// -- TURN OFF PREVIOUS --
-  mcuOff();
-
-// -- TURN OFF NEXT --
-
-
-// -- TURN ON CURRENT --
-  rDotOn(tDefault);
-
-  }
 // end of ACTIVATE FUNCTIONS ---------------------------------------------------
 
 
@@ -963,6 +1065,34 @@ function rBarOn(tDefault) {
 
 function rBarOff() {
   plotG.selectAll("#relig-bar")
+    .transition()
+      .duration(0)
+      .style("opacity", 0);
+}
+
+function summaryOn(tDefault) {
+  imgG.selectAll("#summary")
+    .transition()
+      .duration(tDefault)
+      .style("opacity", 1);
+}
+
+function summaryOff() {
+  imgG.selectAll("#summary")
+    .transition()
+      .duration(0)
+      .style("opacity", 0);
+}
+
+function religOn(tDefault) {
+  plotG.selectAll("#relig")
+    .transition()
+      .duration(tDefault)
+      .style("opacity", 1);
+}
+
+function religOff() {
+  plotG.selectAll("#relig")
     .transition()
       .duration(0)
       .style("opacity", 0);
