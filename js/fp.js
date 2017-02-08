@@ -29,8 +29,7 @@
 
   // constants to define the size
   // and margins of the vis area, based on the outer vars.
-  var margin1 = { top: 50, right: 125, bottom: 25, left: 35 };
-  var margin2 = { top: 75, right: 75, bottom: 25, left: 235 };
+
   var margin = { top: 5, right: 5, bottom: 5, left: 5 };
   var width = maxW - margin.left - margin.right;
   var height = Math.ceil((width * graphic_aspect_height) / graphic_aspect_width) - margin.top - margin.bottom;
@@ -39,6 +38,26 @@
   if(height > maxH) {
     height = maxH;
   }
+
+  // Specific margins for each of the different windows
+  var margins = {
+    tfr:      { top: 50, right: 125, bottom: 25, left: 35 },
+    mcu:      { top: 75, right: 75, bottom: 25, left: 235 },
+    religDot: { top: 75, right: 75, bottom: 25, left: 235 },
+    religBar: { top: 125, right: 75, bottom: 125, left: 35 }
+  };
+
+  var dims = {
+    tfr:      { w: width - margins.tfr.right - margins.tfr.left,
+                h: height - margins.tfr.top - margins.tfr.bottom},
+    mcu:      { w: width - margins.mcu.right - margins.mcu.left,
+                h: height - margins.mcu.top - margins.mcu.bottom},
+    religDot: { w: width - margins.religDot.right - margins.religDot.left,
+                h: height - margins.religDot.top - margins.religDot.bottom},
+    religBar: { w: width - margins.religBar.right - margins.religBar.left,
+                h: height - margins.religBar.top - margins.religBar.bottom}
+  }
+
 
 // end RESPONSIVENESS (plus call in 'display') ---------------------------------------------------------------
 
@@ -93,11 +112,12 @@ var focusRelig = ["Protestant", "Catholic"];
           // define scales (# pixels for each axis)
         /* D3.js VERSION 3
         */
+  // For TFR
         var x = d3.scale.linear()
-             .range([0, width]);
+             .range([0, dims.tfr.w]);
 
        var y = d3.scale.linear()
-            .range([height, 0]);
+            .range([dims.tfr.h, 0]);
 
        var z = d3.scale.ordinal()
         .range(colorPalette)
@@ -111,7 +131,7 @@ var focusRelig = ["Protestant", "Catholic"];
         var yAxTFR = d3.svg.axis()
              .scale(y)
              .orient("left")
-             .innerTickSize(width);
+             .innerTickSize(dims.tfr.w);
 
 // AXES for MCU
        var xMCU = d3.scale.linear()
@@ -220,13 +240,14 @@ var focusRelig = ["Protestant", "Catholic"];
         .append("g")
         .attr("id", "plots");
 
-       svg.attr("width", width + margin.left + margin.right);
-       svg.attr("height", height + margin.top + margin.bottom);
+       svg
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
        // this group element will be used to contain all
        // other elements.
-       plotG = svg.select("#plots")
-         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+       plotG = svg.select("#plots");
 
         // create group for images
         // this group element will be used to contain all
@@ -239,26 +260,30 @@ var focusRelig = ["Protestant", "Catholic"];
     tfr = plotG
     .append("g")
       .attr("id", "tfr")
+      .attr("transform", "translate(" + margins.tfr.left + "," + margins.tfr.top + ")")
       .style("opacity", 0) // set initially to 0.
 
     summ = vis.select("#vis").append("div")
     .attr("id", "fp-summary")
-    .style("max-width", width + margin.left + "px")
+    .style("max-width", width + "px")
     .style("opacity", 0);
 
     mcu = plotG
     .append("g")
      .attr("id", "mcu")
+     .attr("transform", "translate(" + margins.mcu.left + "," + margins.mcu.top + ")")
      .style("opacity", 0);
 
     religDot = plotG
     .append("g")
      .attr("id", "relig-dot")
+     .attr("transform", "translate(" + margins.religDot.left + "," + margins.religDot.top + ")")
      .style("opacity", 0);
 
     religBar = plotG
     .append("g")
      .attr("id", "relig-bar")
+     .attr("transform", "translate(" + margins.religBar.left + "," + margins.religBar.top + ")")
      .style("opacity", 0);
 
 // Data processing
