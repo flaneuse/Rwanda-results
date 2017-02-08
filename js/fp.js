@@ -43,7 +43,7 @@
   var tDefault = 600; // standard transition timing in ms
 
   var colorPalette = ['#5254a3','#ad494a','#e7ba52']; // Vega category20b
-  var colorPaletteLight = ['#637939', '#7b4173', '#e7ba52', '#ad494a', '#5254a3'];
+  var colorPaletteLight = ['#637939', '#7b4173', '#e7ba52', '#ad494a', '#5254a3', '#a7a9ac'];
   // #e7cb94', '#e7969c', '#9c9ede', '#a7a9ac']; // Vega category20b, with some of the lighter colors
 
   // Initial settings for MCU stepper
@@ -51,7 +51,7 @@
   var selectedYear = 2014;
 
 // Religion
-var focusRelig = ["Protestant", "Catholic"];
+var focusRelig = ["Protestant", "Catholic", "national"];
 
 
   // Keep track of which visualization
@@ -147,8 +147,29 @@ var focusRelig = ["Protestant", "Catholic"];
      var yAxRdot= d3.svg.axis()
           .scale(yRdot)
           .ticks(5, "%")
-          .innerTickSize(height)
+          .innerTickSize(width)
           .orient("left");
+
+
+  // AXES for Religion dot plot
+
+      var xRbar = d3.scale.linear()
+       .range([0, width]);
+
+       var yRbar = d3.scale.ordinal()
+            .rangeBands([0, height], 0.2, 0);
+
+       var xAxRbar = d3.svg.axis()
+            .scale(xRbar)
+            .tickFormat(d3.format(".1s"))
+            .innerTickSize(height)
+            .orient("top");
+
+       var yAxRbar= d3.svg.axis()
+            .scale(yRbar)
+            // .tickFormat(d3.format("d"))
+            // .ticks(5)
+            .orient("left");
 
 // line generator
         var line = d3.svg.line() // d3.line for v4
@@ -220,6 +241,11 @@ var focusRelig = ["Protestant", "Catholic"];
        .append("g")
          .attr("id", "relig-dot")
          .attr("opacity", 0)
+
+       religBar = plotG
+       .append("g")
+         .attr("id", "relig-bar")
+         .attr("opacity", 1)
 
 // Data processing
 
@@ -425,6 +451,12 @@ if(selectedCat == "Livelihood Zone") {
 
      xAxRdot.tickValues(xRdot.domain())
 
+     // Religion Bar
+       yRbar.domain(religData.map(function(element) {return element.year}));
+       xRbar.domain([0, d3.max(religData,
+         function(element) { return element.pop; })]);
+
+      //  yAxRbar.tickValues(yRbar.domain())
 
 // MCU
    xMCU.domain([0, d3.max(mcuData, function(element) { return element.ave; })]);
@@ -470,13 +502,50 @@ br.selectAll("circle").on("click", function(d,i) {
    */
   setupVis = function(data, tfrNest, tfrRwanda, religData) {
 
+    // --- RELIGION BAR PLOT ---
+        // x-axis label
+            religBar.append("text")
+                .attr("class", "top-label")
+                .attr("x", 0)
+                .attr("y", -30)
+                .text("percent of population");
+
+            religBar.append("g")
+                .call(xAxRbar)
+                .attr("class", "x axis")
+                .attr("id", "relig-x")
+                .attr("transform", "translate(0," + height + ")")
+                .style("opacity", 1);
+
+            religBar.append("g")
+                    .call(yAxRbar)
+                    .attr("class", "y axis")
+                    .attr("id", "relig-y")
+                    // .attr("transform", "translate(" + width + ",0)")
+                    .style("opacity", 1);
+
+
+            religBar.selectAll(".bar")
+              .data(religData.filter(function(d) {return focusRelig.indexOf(d.religion) > -1;}))
+            .enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", 0)
+                .attr("y", function(d) {return yRbar(d.year);})
+                .attr("width", function(d) {return xRbar(d.pop);})
+                .attr("height", yRbar.rangeBand())
+                // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
+                .attr("fill", function(d) {return zRelig(d.religion);})
+                .style("opacity", function(d) {return focusRelig.indexOf(d.religion) > -1 ? 0.5 : 0.35;});
+
+    // --- end RELIGION BAR PLOT ---
+
 // --- RELIGION DOT PLOT ---
     // x-axis label
-        mcu.append("text")
+        religDot.append("text")
             .attr("class", "top-label")
             .attr("x", 0)
             .attr("y", -30)
-            .text("percent of married women using modern contraception");
+            .text("percent of population");
 
         religDot.append("g")
             .call(xAxRdot)
@@ -832,7 +901,20 @@ function rDotOff() {
     .transition()
       .duration(0)
       .style("opacity", 0);
+}
 
+function rBarOn(tDefault) {
+  plotG.selectAll("#relig-bar")
+    .transition()
+      .duration(tDefault)
+      .style("opacity", 1);
+}
+
+function rBarOff() {
+  plotG.selectAll("#relig-bar")
+    .transition()
+      .duration(0)
+      .style("opacity", 0);
 }
 // end HELPER FUNCTIONS --------------------------------------------------------
 
