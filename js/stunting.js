@@ -12,6 +12,8 @@ var scrollVis = function() {
   var graphic_aspect_width = 4;
   var graphic_aspect_height = 3;
   var padding_right = 10;
+  var padding_bottom = 5;
+  var padding_top = 60;
 
   // window function to get the size of the outermost parent
   var graphic = d3.select("#graphic");
@@ -21,7 +23,7 @@ var scrollVis = function() {
   var sidebarSize = d3.select("#sections").node().getBoundingClientRect();
 
   maxW = graphicSize.width - sidebarSize.width - padding_right;
-  maxH = $(window).height() - 60;
+  maxH = $(window).height() - padding_top - padding_bottom;
 
     // constants to define the size
     // and margins of the vis area, based on the outer vars.
@@ -33,7 +35,7 @@ var scrollVis = function() {
   if(height > maxH) {
     height = maxH;
   }
-  
+
   var numSlides = 9;
   var radius_bc = 7; // radius of breadcrumbs
   var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
