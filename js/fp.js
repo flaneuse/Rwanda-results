@@ -13,7 +13,7 @@
 // Based on iPad w/ 2/3 of max width taken up by vis., 2/3 of max height taken up by vis.: 1024 x 768 --> perserve aspect ratio of iPad
   var graphic_aspect_width = 4;
   var graphic_aspect_height = 5;
-  var padding_right = 10;
+  var padding_right = 20; // for breadcrumbs
 
 // window function to get the size of the outermost parent
   var graphic = d3.select("#graphic");
@@ -22,15 +22,23 @@
   var graphicSize = graphic.node().getBoundingClientRect();
   var sidebarSize = d3.select("#sections").node().getBoundingClientRect();
 
-  w = graphicSize.width - sidebarSize.width - padding_right;
+  maxW = graphicSize.width - sidebarSize.width - padding_right;
+  maxH = $(window).height() - 60;
+
 
   // constants to define the size
   // and margins of the vis area, based on the outer vars.
   var margin1 = { top: 50, right: 125, bottom: 25, left: 35 };
   var margin2 = { top: 75, right: 75, bottom: 25, left: 235 };
-  var margin = margin1;
-  var width = w - margin.left - margin.right;
+  var margin = { top: 5, right: 5, bottom: 5, left: 5 };
+  var width = maxW - margin.left - margin.right;
   var height = Math.ceil((width * graphic_aspect_height) / graphic_aspect_width) - margin.top - margin.bottom;
+
+  // check height is within window
+  if(height > maxH) {
+    height = maxH;
+  }
+
 // end RESPONSIVENESS (plus call in 'display') ---------------------------------------------------------------
 
 // CONSTANTS -------------------------------------------------------------------
@@ -897,7 +905,7 @@ summ.append("div")
     imgG.selectAll("#popdensity")
       .transition()
       .duration(tDefault)
-      .style("opacity", 0);
+      .style("opacity", 1);
 
   }
 

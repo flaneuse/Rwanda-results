@@ -20,14 +20,20 @@ var scrollVis = function() {
   var graphicSize = graphic.node().getBoundingClientRect();
   var sidebarSize = d3.select("#sections").node().getBoundingClientRect();
 
-  w = graphicSize.width - sidebarSize.width - padding_right;
+  maxW = graphicSize.width - sidebarSize.width - padding_right;
+  maxH = $(window).height() - 60;
 
     // constants to define the size
     // and margins of the vis area, based on the outer vars.
   var margin = { top: 40, right: 75, bottom: 15, left: 250 };
-  var width = w - margin.left - margin.right;
-  var height = Math.ceil((w * graphic_aspect_height) / graphic_aspect_width) - margin.top - margin.bottom;
+  var width = maxW - margin.left - margin.right;
+  var height = Math.ceil((maxW * graphic_aspect_height) / graphic_aspect_width) - margin.top - margin.bottom;
 
+  // check height is within window
+  if(height > maxH) {
+    height = maxH;
+  }
+  
   var numSlides = 9;
   var radius_bc = 7; // radius of breadcrumbs
   var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
