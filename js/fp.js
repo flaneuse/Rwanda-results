@@ -44,8 +44,8 @@
     map:      { top: 0, right: 15, bottom: 0, left: 0 },
     tfr:      { top: 65, right: 125, bottom: 25, left: 35 },
     mcu:      { top: 75, right: 75, bottom: 25, left: 235 },
-    religDot: { top: 75, right: 125, bottom: 25, left: 35 },
-    religBar: { top: 125, right: 75, bottom: 125, left: 35 }
+    religDot: { top: 75, right: 125, bottom: 25, left: 75 },
+    religBar: { top: 125, right: 75, bottom: 125, left: 75 }
   };
 
   var dims = {
@@ -637,28 +637,33 @@ br.selectAll("circle").on("click", function(d,i) {
 
 // --- RELIGION DOT PLOT ---
     // x-axis label
-        religDot.append("text")
+        religDot.selectAll(".top-label")
+            .data(religData.filter(function(d) {return d.religion == "Catholic" & d.mostrecent == true;}))
+          .enter().append("text")
             .attr("class", "top-label")
-            .attr("x", 0)
-            .attr("y", 0)
-            .text("percent of population");
+            .attr("x", function(d) {return xRdot(d.year);})
+            .attr("y", function(d) {return yRdot(d.pct);})
+            .attr("dx", -dims.religDot.w*0.35)
+            .attr("dy", -dims.religDot.h*0.15)
+            .text("percent of population")
+            .style("opacity", 1);
 
         religDot.append("g")
             .call(xAxRdot)
-            .attr("class", "x axis")
+            .attr("class", "x axis big")
             .attr("id", "relig-x")
-            // .attr("transform", "translate(0," + height + ")")
+            .attr("transform", "translate(0," + -margins.religDot.top/2 + ")")
             .style("opacity", 1);
 
         religDot.append("g")
                 .call(yAxRdot)
                 .attr("class", "y axis")
                 .attr("id", "relig-y")
-                // .attr("transform", "translate(" + width + ",0)")
+                .attr("transform", "translate(" + dims.religDot.w + ",0)")
                 .style("opacity", 1);
 
         religDot.selectAll(".dot")
-          .data(religData)
+          .data(religData.filter(function(d) {return d.ref == 0;}))
         .enter().append("circle")
             .attr("class", "dot")
             .attr("r", radius*1.5)
@@ -693,7 +698,7 @@ br.selectAll("circle").on("click", function(d,i) {
 
       // TEXT: % religion value
           religDot.selectAll("#Rpct-annot")
-              .data(religData.filter(function(d) {return focusRelig.indexOf(d.religion) > -1;}))
+              .data(religData.filter(function(d) {return focusRelig.indexOf(d.religion) > -1 & d.ref == 0;}))
             .enter().append("text")
               .attr("id", "Rpct-annot")
               .attr("class", "annot")

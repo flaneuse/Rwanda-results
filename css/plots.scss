@@ -15,6 +15,11 @@
   fill: $base-font-color;
 }
 
+.axis.big text {
+  font-size: $large-font-size;
+  fill: $base-font-color;
+}
+
 // .x.axis line {
 //   display: none;
 // }
