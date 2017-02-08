@@ -227,25 +227,30 @@ var focusRelig = ["Protestant", "Catholic"];
 
        imgG = svg.select("#imgs")
 
-       tfr = plotG
-        .append("g")
-          .attr("id", "tfr")
-          .style("opacity", 0) // set initially to 0.
+    tfr = plotG
+    .append("g")
+      .attr("id", "tfr")
+      .style("opacity", 0) // set initially to 0.
 
-       mcu = plotG
-       .append("g")
-         .attr("id", "mcu")
-         .style("opacity", 0)
+    summ = vis.select("#vis").append("div")
+    .attr("id", "fp-summary")
+    .style("max-width", width + margin.left + "px")
+    .style("opacity", 0);
 
-       religDot = plotG
-       .append("g")
-         .attr("id", "relig-dot")
-         .style("opacity", 0)
+    mcu = plotG
+    .append("g")
+     .attr("id", "mcu")
+     .style("opacity", 0);
 
-       religBar = plotG
-       .append("g")
-         .attr("id", "relig-bar")
-         .style("opacity", 0)
+    religDot = plotG
+    .append("g")
+     .attr("id", "relig-dot")
+     .style("opacity", 0);
+
+    religBar = plotG
+    .append("g")
+     .attr("id", "relig-bar")
+     .style("opacity", 0);
 
 // Data processing
 
@@ -798,6 +803,45 @@ var imgs = mcu.selectAll("image")
             .attr("y", height)
             .style("opacity", 1);
 
+// TEXT: Summary ----------
+
+    summ.append("div")
+      .attr("class", "subtitle accent-green")
+      .text("What did we find?");
+
+summ.append("div")
+      .text("For women aged 15 - 49 in a union:")
+      .attr("id", "summary-qualifier")
+      .append("ul")
+        .attr("class", "summary-list")
+
+      var summ1 = summ.selectAll(".summary-list").append("li");
+
+      var summ2 = summ.selectAll(".summary-list").append("li");
+
+      var summ3 = summ.selectAll(".summary-list").append("li");
+
+      summ1.append("a")
+        .text("Protestant women are less likely to use modern contraception")
+        .attr("href", "#protestants")
+        .attr("id", "prot-jump")
+      summ1.append("span")
+        .attr("id", "intro-link")
+        .text(" relative to similar Catholic women, and more likely to want larger families.")
+
+      summ2.append("a")
+        .attr("href", "#geo")
+        .attr("id", "geo-jump")
+        .text("Geography matters:")
+      summ2.append("span")
+        .text(" In the northwest region, one of the most populated in all Rwanda, were more likely to use modern contraception than those in the central area, while women in the southwest were less likely.")
+
+      summ3.append("a")
+        .attr("href", "#demographics")
+        .attr("id", "demo-jump")
+        .text("Desires for more children are prevalent:")
+      summ3.append("span")
+        .text(" Modern contraception use and desires for more children appear constant across socioeconomic and educational backgrounds.")
 
   };
 // end of SETUP VIS ------------------------------------------------------------
@@ -1071,14 +1115,14 @@ function rBarOff() {
 }
 
 function summaryOn(tDefault) {
-  imgG.selectAll("#summary")
+  vis.selectAll("#fp-summary")
     .transition()
       .duration(tDefault)
       .style("opacity", 1);
 }
 
 function summaryOff() {
-  imgG.selectAll("#summary")
+  vis.selectAll("#fp-summary")
     .transition()
       .duration(0)
       .style("opacity", 0);

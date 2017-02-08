@@ -119,6 +119,12 @@ a:hover {
   text-align: center;
 }
 
+.subtitle{
+  font-family: "Lora", serif;
+  text-align: left;
+  font-size: $title-size;
+}
+
 #intro .title{
   font-size: 48px;
     color: #666;
@@ -130,6 +136,8 @@ a:hover {
     color: #999;
     padding-bottom: 10px;
 }
+
+
 
 #intro > .step > .paragraph{
   font-size: 20px;
@@ -159,6 +167,7 @@ a:hover {
     /*font-family: "Lora", serif;*/
     font-size: 22px;
     line-height: 1.25em;
+    list-style-type: circle;
 }
 
 .summary-list > li {
@@ -166,9 +175,15 @@ a:hover {
   padding-bottom: 10px;
 }
 
+#summary-qualifier {
+  color: $grey50K;
+  font-size: $small-font-size;
+}
+
 #bulleted ul {
   list-style-type: circle;
 }
+
 
 #bulleted > li {
     font-size: $base-font-size;
@@ -253,4 +268,10 @@ overflow: hidden;
 #select-cat a {
   color: $base-font-color;
   text-decoration: none;
+}
+
+#fp-summary {
+  position: absolute;
+  top: 0;
+  // max-width: 600px;
 }
