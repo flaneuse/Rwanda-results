@@ -28,7 +28,7 @@
   // and margins of the vis area, based on the outer vars.
   var margin1 = { top: 50, right: 125, bottom: 25, left: 35 };
   var margin2 = { top: 75, right: 75, bottom: 25, left: 235 };
-  var margin = margin2;
+  var margin = margin1;
   var width = w - margin.left - margin.right;
   var height = Math.ceil((width * graphic_aspect_height) / graphic_aspect_width) - margin.top - margin.bottom;
 // end RESPONSIVENESS (plus call in 'display') ---------------------------------------------------------------
@@ -43,11 +43,15 @@
   var tDefault = 600; // standard transition timing in ms
 
   var colorPalette = ['#5254a3','#ad494a','#e7ba52']; // Vega category20b
+  var colorPaletteLight = ['#637939', '#7b4173', '#e7ba52', '#ad494a', '#5254a3'];
+  // #e7cb94', '#e7969c', '#9c9ede', '#a7a9ac']; // Vega category20b, with some of the lighter colors
 
   // Initial settings for MCU stepper
   var selectedCat = "Livelihood Zone";
   var selectedYear = 2014;
 
+// Religion
+var focusRelig = ["Protestant", "Catholic"];
 
 
   // Keep track of which visualization
@@ -123,6 +127,29 @@
             .scale(yMCU)
             .orient("left");
 
+// AXES for Religion dot plot
+
+    var xRdot = d3.scale.linear()
+     .range([0, width]);
+
+     var yRdot = d3.scale.linear()
+          .range([height,0]);
+
+
+    var zRelig = d3.scale.ordinal()
+           .range(colorPaletteLight)
+
+     var xAxRdot = d3.svg.axis()
+          .scale(xRdot)
+          .tickFormat(d3.format("d"))
+          .orient("top");
+
+     var yAxRdot= d3.svg.axis()
+          .scale(yRdot)
+          .ticks(5, "%")
+          .innerTickSize(height)
+          .orient("left");
+
 // line generator
         var line = d3.svg.line() // d3.line for v4
               .x(function(d) { return x(d.year); })
@@ -189,11 +216,16 @@
          .attr("id", "mcu")
          .attr("opacity", 0)
 
+       religDot = plotG
+       .append("g")
+         .attr("id", "relig-dot")
+         .attr("opacity", 0)
+
 // Data processing
 
 
 
-// TFR data
+// TFR data ---------------------------------------------------------------------------
 tfrData = rawData["tfr"];
 
 // convert to numbers
@@ -209,7 +241,7 @@ var tfrNest = d3.nest()
     .key(function(d) {return d.country;})
     .entries(tfrCountries);
 
-// MCU data
+// MCU data ---------------------------------------------------------------------------
     mcuData = rawData["mcu"];
 
     // convert to numbers
@@ -232,14 +264,24 @@ var tfrNest = d3.nest()
       .key(function(d) { return d.Category })
       .entries(mcuData.sort(function(a,b) {return b.order - a.order}));
 
+// Religion census numbers ------------------------------------------------------------
+var religData = rawData["relig"];
 
+// convert to numbers
+religData.forEach(function(d) {
+    d.pct = +d.pct;
+    d.pop = +d.pop;
+    d.year = +d.year;
+});
+
+// Religion pop pyramid ---------------------------------------------------------------------------
 var religAgeData = rawData["religAge"];
 
 // Nest by religion
 var religAgeData = d3.nest()
   .key(function(d) { return d.religion })
   .entries(religAgeData.sort(function(a,b) {return b.order - a.order}));
-console.log(religAgeData)
+// console.log(religAgeData)
 
 // BREADCRUMBS ------------------------------------------------------------
 var breadcrumbs = Array(numSlides).fill(0)
@@ -374,6 +416,16 @@ if(selectedCat == "Livelihood Zone") {
    y.domain([0, d3.max(tfrData, function(element) { return element.tfr; })]);
    z.domain(tfrData.map(function(element) {return element.country}));
 
+   // Religion Dot
+     xRdot.domain([d3.min(religData, function(element) { return element.year; }),
+               d3.max(religData, function(element) { return element.year; })]);
+     yRdot.domain([0, d3.max(religData.filter(function(d) {return d.religion != 'national'}),
+       function(element) { return element.pct; })]);
+     zRelig.domain(religData.map(function(element) {return element.religion}));
+
+     xAxRdot.tickValues(xRdot.domain())
+
+
 // MCU
    xMCU.domain([0, d3.max(mcuData, function(element) { return element.ave; })]);
 
@@ -401,7 +453,7 @@ br.selectAll("circle").on("click", function(d,i) {
 
 
 // Call the function to set up the svg objects
-       setupVis(tfrCountries, tfrNest, tfrRwanda);
+       setupVis(tfrCountries, tfrNest, tfrRwanda, religData);
 
 // Set up the functions to edit the sections.
        setupSections();
@@ -416,13 +468,77 @@ br.selectAll("circle").on("click", function(d,i) {
    * sections of the visualization.
    *
    */
-  setupVis = function(data, tfrNest, tfrRwanda) {
+  setupVis = function(data, tfrNest, tfrRwanda, religData) {
+
+// --- RELIGION DOT PLOT ---
     // x-axis label
         mcu.append("text")
             .attr("class", "top-label")
             .attr("x", 0)
             .attr("y", -30)
             .text("percent of married women using modern contraception");
+
+        religDot.append("g")
+            .call(xAxRdot)
+            .attr("class", "x axis")
+            .attr("id", "relig-x")
+            // .attr("transform", "translate(0," + height + ")")
+            .style("opacity", 1);
+
+        religDot.append("g")
+                .call(yAxRdot)
+                .attr("class", "y axis")
+                .attr("id", "relig-y")
+                .attr("transform", "translate(" + width + ",0)")
+                .style("opacity", 1);
+
+        religDot.selectAll(".dot")
+          .data(religData)
+        .enter().append("circle")
+            .attr("class", "dot")
+            .attr("r", radius*1.5)
+            .attr("cx", function(d) {return xRdot(d.year);})
+            .attr("cy", function(d) {return yRdot(d.pct);})
+            // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
+            .attr("fill", function(d) {return zRelig(d.religion);})
+            .style("opacity", function(d) {return focusRelig.indexOf(d.religion) > -1 ? 1 : 0.35;});
+
+        religDot.selectAll(".slope")
+              .data(religData)
+            .enter().append("line")
+                .attr("class", "slope")
+                // .attr("x1", function(d) {return xRdot(d.year);})
+                // .attr("cy", function(d) {return yRdot(d.pct);})
+                // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
+                .attr("fill", function(d) {return zRelig(d.religion);});
+
+      // TEXT: Religion label
+          religDot.selectAll("#religDot-annot")
+              .data(religData.filter(function(d) {return d.mostrecent == true;}))
+            .enter().append("text")
+              .attr("id", "religDot-annot")
+              .attr("class", "annot")
+              .text(function(d) {return d.religion})
+              .attr("x", width)
+              .attr("dx", 20)
+              .attr("y", function(d) {return yRdot(d.pct);})
+              // .attr("dy", "0.4em")
+              .attr("fill", function(d) {return zRelig(d.religion);})
+              .style("opacity", function(d) {return focusRelig.indexOf(d.religion) > -1 ? 1 : 0.35;});
+
+      // TEXT: % religion value
+          religDot.selectAll("#Rpct-annot")
+              .data(religData.filter(function(d) {return focusRelig.indexOf(d.religion) > -1;}))
+            .enter().append("text")
+              .attr("id", "Rpct-annot")
+              .attr("class", "annot")
+              .text(function(d) {return d3.format(".0%")(d.pct)})
+              .attr("x", function(d) {return xRdot(d.year);})
+              .attr("dy", -20)
+              .attr("y", function(d) {return yRdot(d.pct);})
+              .attr("fill", function(d) {return zRelig(d.religion);})
+              .style("opacity", 1);
+// --- end RELIGION DOT PLOT ---
 
 mcu.append("g")
 .call(xAxMCU)
@@ -578,7 +694,7 @@ var imgs = mcu.selectAll("image")
     activateFunctions[0] = show1;
     activateFunctions[1] = show2;
     activateFunctions[2] = show3;
-    // activateFunctions[3] = show4;
+    activateFunctions[3] = show4;
     // activateFunctions[4] = show5;
     // activateFunctions[5] = show6;
     // activateFunctions[6] = show7;
@@ -611,7 +727,7 @@ var imgs = mcu.selectAll("image")
     imgG.selectAll("#popdensity")
       .transition()
       .duration(tDefault)
-      .style("opacity", 1);
+      .style("opacity", 0);
 
   }
 
@@ -636,10 +752,23 @@ var imgs = mcu.selectAll("image")
   tfrOff();
 
 // -- TURN OFF NEXT --
-
+  rDotOff();
 
 // -- TURN ON CURRENT --
   mcuOn(tDefault);
+
+  }
+
+
+  function show4() {
+// -- TURN OFF PREVIOUS --
+  mcuOff();
+
+// -- TURN OFF NEXT --
+
+
+// -- TURN ON CURRENT --
+  rDotOn(tDefault);
 
   }
 // end of ACTIVATE FUNCTIONS ---------------------------------------------------
@@ -690,6 +819,21 @@ function mcuOff() {
       .style("opacity", 0);
 
 }
+
+function rDotOn(tDefault) {
+  plotG.selectAll("#relig-dot")
+    .transition()
+      .duration(tDefault)
+      .style("opacity", 1);
+}
+
+function rDotOff() {
+  plotG.selectAll("#relig-dot")
+    .transition()
+      .duration(0)
+      .style("opacity", 0);
+
+}
 // end HELPER FUNCTIONS --------------------------------------------------------
 
   /**
@@ -732,7 +876,6 @@ function mcuOff() {
  * @param data - loaded tsv data
  */
 function display(data) {
-  console.log(data);
 
   // Clear out any previously drawn graphics.
   var $vis = $("#vis");
@@ -783,20 +926,23 @@ function readData() {
  }
 
 // Nested data calls to read data, bind to ddata.
-  d3.csv("/data/tfr.csv", function(error, tfr){
-    d3.csv("/data/mcu.csv", function(error, mcu){
+d3.csv("/data/tfr.csv", function(error, tfr){
+  d3.csv("/data/mcu.csv", function(error, mcu){
+    d3.csv("/data/relig.csv", function(error, relig){
       d3.csv("/data/relig_byAge2012.csv", function(error, religAge){
         ddata = {};
         ddata['tfr'] = tfr;
         ddata['mcu'] = mcu;
+        ddata['relig'] = relig;
         ddata['religAge'] = religAge;
 
         console.log(ddata)
         // call function to plot the data
         display(ddata);
-    });
+      });
     });
   });
+});
 
 
 
