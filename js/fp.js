@@ -51,7 +51,7 @@
   var selectedYear = 2014;
 
 // Religion
-var focusRelig = ["Protestant", "Catholic", "national"];
+var focusRelig = ["Protestant", "Catholic"];
 
 
   // Keep track of which visualization
@@ -453,7 +453,7 @@ if(selectedCat == "Livelihood Zone") {
 
      // Religion Bar
        yRbar.domain(religData.map(function(element) {return element.year}));
-       xRbar.domain([0, d3.max(religData,
+       xRbar.domain([0, d3.max(religData.filter(function(d) {return focusRelig.indexOf(d.religion) > -1;}),
          function(element) { return element.pop; })]);
 
       //  yAxRbar.tickValues(yRbar.domain())
@@ -524,9 +524,10 @@ br.selectAll("circle").on("click", function(d,i) {
                     // .attr("transform", "translate(" + width + ",0)")
                     .style("opacity", 1);
 
-
+// Normal bars
             religBar.selectAll(".bar")
-              .data(religData.filter(function(d) {return focusRelig.indexOf(d.religion) > -1;}))
+              .data(religData.filter(function(d) {return d.ref == 0 &
+                focusRelig.indexOf(d.religion) > -1;}))
             .enter().append("rect")
                 .attr("class", "bar")
                 .attr("x", 0)
@@ -535,7 +536,57 @@ br.selectAll("circle").on("click", function(d,i) {
                 .attr("height", yRbar.rangeBand())
                 // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
                 .attr("fill", function(d) {return zRelig(d.religion);})
-                .style("opacity", function(d) {return focusRelig.indexOf(d.religion) > -1 ? 0.5 : 0.35;});
+                .attr("stroke", function(d) {return d.ref == 0 ? zRelig(d.religion) : "none";})
+                .style("stroke-width", 1)
+                .style("fill-opacity", 0.35);
+
+// Highlight diff
+                religBar.selectAll("#bar-diff")
+                  .data(religData.filter(function(d) {return d.ref == 1 &
+                    focusRelig.indexOf(d.religion) > -1;}))
+                .enter().append("rect")
+                    .attr("class", "bar")
+                    .attr("id", "bar-diff")
+                    .attr("x", function(d) {return xRbar(d.pop);})
+                    .attr("y", function(d) {return yRbar(d.year);})
+                    .attr("width", function(d) {return xRbar(d.diff);})
+                    .attr("height", yRbar.rangeBand())
+                    // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
+                    .attr("fill", function(d) {return zRelig(d.religion);})
+                    .attr("stroke", function(d) {return d.ref == 0 ? zRelig(d.religion) : "none";})
+                    .style("stroke-width", 1)
+                    .style("fill-opacity", 0.15);
+
+// Ref line: 2002
+                religBar.selectAll("#bar-ref")
+                  .data(religData.filter(function(d) {return d.ref == 1 &
+                    focusRelig.indexOf(d.religion) > -1;}))
+                .enter().append("line")
+                    .attr("class", "bar")
+                    .attr("id", "bar-ref")
+                    .attr("x1", function(d) {return xRbar(d.pop);})
+                    .attr("y1", function(d) {return yRbar(d.year);})
+                    .attr("x2", function(d) {return xRbar(d.pop);})
+                    .attr("y2", function(d) {return yRbar(d.year) + yRbar.rangeBand();})
+                    // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
+                      .attr("stroke", function(d) {return zRelig(d.religion);})
+                    .style("opacity", 1);
+
+// Ref line: Catholics
+    religBar.selectAll("#cath-ref")
+            .data(religData.filter(function(d) {return d.ref == 0 &
+              d.religion == "Catholic";}))
+          .enter().append("line")
+              // .attr("class", "bar")
+              .attr("id", "cath-ref")
+              .attr("x1", function(d) {return xRbar(d.pop);})
+              .attr("y1", function(d) {return yRbar(d.year);})
+              .attr("x2", function(d) {return xRbar(d.pop);})
+              .attr("y2", function(d) {return yRbar(d.year) + yRbar.rangeBand();})
+              // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
+                .attr("stroke", function(d) {return zRelig(d.religion);})
+                .attr("stroke-width", 4)
+              .style("opacity", 1);
 
     // --- end RELIGION BAR PLOT ---
 
