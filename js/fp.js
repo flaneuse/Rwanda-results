@@ -45,7 +45,7 @@
     tfr:      { top: 65, right: 125, bottom: 25, left: 35 },
     mcu:      { top: 75, right: 75, bottom: 25, left: 235 },
     religDot: { top: 75, right: 125, bottom: 25, left: 75 },
-    religBar: { top: 125, right: 100, bottom: 125, left: 75 }
+    religBar: { top: 125, right: 100, bottom: 125, left: 5 }
   };
 
   var dims = {
@@ -286,11 +286,6 @@ var focusRelig = ["Protestant", "Catholic"];
      .attr("transform", "translate(" + margins.religDot.left + "," + margins.religDot.top + ")")
      .style("opacity", 0);
 
-    // religBar = plotG
-    // .append("g")
-    //  .attr("id", "relig-bar")
-    // //  .attr("transform", "translate(" + margins.religBar.left + "," + margins.religBar.top + ")")
-    //  .style("opacity", 0);
 
 // Data processing
 
@@ -562,14 +557,13 @@ br.selectAll("circle").on("click", function(d,i) {
     d3.select("#vis").selectAll("#relig-bar")
       .data(religNest)
     .enter().append("div")
-      .style("display", "inline-block")
+      .attr("class", "sm-mult")
       .attr("id", "relig-bar")
       .style("position", "absolute")
-      .style("top", 0)
-      // .style("left", "0px")
+      .style("opacity", 0)
       .style("left", function(d,i) {return i*(width/2) + "px";})
-      .style("width", width/2 + "px")
-     .style("height", height + "px")
+      .style("width", width / 2 + "px")
+      .style("height", height + "px")
     .append("svg")
       .attr("width", width / 2)
       .attr("height", height)
@@ -577,16 +571,16 @@ br.selectAll("circle").on("click", function(d,i) {
       .attr("transform", "translate(" + margins.religBar.left + "," + margins.religBar.top + ")")
       .each(multiple);
 
-      function multiple(symbol){
+      function multiple(popByRelig){
         var svg = d3.select(this);
 
-        // console.log(symbol)
+        // console.log(popByRelig)
 
         xRbar.range([0, dims.religBar.w/2]);
 
 
         svg.selectAll(".top-label")
-          .data(symbol.values)
+          .data(popByRelig.values)
         .enter().append("text")
           .attr("class", "top-label")
           .attr("x", 0)
@@ -611,7 +605,7 @@ br.selectAll("circle").on("click", function(d,i) {
 
 // Normal bars
           svg.selectAll(".bar")
-                        .data(symbol.values.filter(function(d) {return d.ref == 0 &
+                        .data(popByRelig.values.filter(function(d) {return d.ref == 0 &
                           focusRelig.indexOf(d.religion) > -1;}))
           .enter().append("rect")
               .attr("class", "bar")
@@ -627,7 +621,7 @@ br.selectAll("circle").on("click", function(d,i) {
 
               // Highlight diff
           svg.selectAll("#bar-diff")
-            .data(symbol.values.filter(function(d) {return d.ref == 1 &
+            .data(popByRelig.values.filter(function(d) {return d.ref == 1 &
               focusRelig.indexOf(d.religion) > -1;}))
           .enter().append("rect")
               .attr("class", "bar")
@@ -644,7 +638,7 @@ br.selectAll("circle").on("click", function(d,i) {
 
 // Ref line: 2002
               svg.selectAll("#bar-ref")
-                .data(symbol.values.filter(function(d) {return d.ref == 1 &
+                .data(popByRelig.values.filter(function(d) {return d.ref == 1 &
                   focusRelig.indexOf(d.religion) > -1;}))
               .enter().append("line")
                   .attr("class", "bar")
@@ -659,7 +653,7 @@ br.selectAll("circle").on("click", function(d,i) {
 
 // Ref line: Catholics
   svg.selectAll("#cath-ref")
-          .data(symbol.values.filter(function(d) {return d.ref == 1}))
+          .data(popByRelig.values.filter(function(d) {return d.ref == 1}))
         .enter().append("line")
             // .attr("class", "bar")
             .attr("id", "cath-ref")
@@ -1261,14 +1255,14 @@ function rDotOff() {
 }
 
 function rBarOn(tDefault) {
-  plotG.selectAll("#relig-bar")
+  vis.selectAll("#relig-bar")
     .transition()
       .duration(tDefault)
       .style("opacity", 1);
 }
 
 function rBarOff() {
-  plotG.selectAll("#relig-bar")
+  vis.selectAll("#relig-bar")
     .transition()
       .duration(0)
       .style("opacity", 0);
