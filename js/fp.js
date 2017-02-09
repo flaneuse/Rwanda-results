@@ -44,7 +44,7 @@
     map:      { top: 0, right: 15, bottom: 0, left: 0 },
     tfr:      { top: 65, right: 125, bottom: 0, left: 35 },
     mcu:      { top: 75, right: 75, bottom: 0, left: 235 },
-    religDot: { top: 75, right: 125, bottom: 0, left: 75 },
+    religDot: { top: 75, right: 125, bottom: 25, left: 75 },
     religBar: { top: 125, right: 100, bottom: 75, left: 5 }
   };
 
@@ -365,6 +365,12 @@ var religAgeData = d3.nest()
   .entries(religAgeData.sort(function(a,b) {return b.order - a.order}));
 // console.log(religAgeData)
 
+
+// Religion pct for dot plot ---------------------------------------------------------------------------
+var religPctData = rawData["religPct"];
+
+
+
 // BREADCRUMBS ------------------------------------------------------------
 var breadcrumbs = Array(numSlides).fill(0)
 breadcrumbs[0] = 1 // Set the initial page to 1.
@@ -540,7 +546,7 @@ br.selectAll("circle").on("click", function(d,i) {
 
 
 // Call the function to set up the svg objects
-       setupVis(tfrCountries, tfrNest, tfrRwanda, religData, religNest);
+       setupVis(tfrCountries, tfrNest, tfrRwanda, religData, religNest, religPctData);
 
 // Set up the functions to edit the sections.
        setupSections();
@@ -555,7 +561,7 @@ br.selectAll("circle").on("click", function(d,i) {
    * sections of the visualization.
    *
    */
-  setupVis = function(data, tfrNest, tfrRwanda, religData, religNest) {
+  setupVis = function(data, tfrNest, tfrRwanda, religData, religNest, religPctData) {
 
     // --- SOURCE ---
     // TEXT: source
@@ -762,54 +768,88 @@ source.append("text")
                 .attr("transform", "translate(" + dims.religDot.w + ",0)")
                 .style("opacity", 1);
 
-        religDot.selectAll(".dot")
-          .data(religData.filter(function(d) {return d.ref == 0;}))
+religDot.selectAll(".slope")
+    .data(religPctData)
+  .enter().append("line")
+      .attr("class", "slope")
+      .attr("x1", function(d) {return xRdot(2002);})
+      .attr("x2", function(d) {return xRdot(2002);})
+      .attr("y1", function(d) {return yRdot(d.pct2002);})
+      .attr("y2", function(d) {return yRdot(d.pct2002);})
+      .attr("stroke", function(d) {return zRelig(d.religion);})
+      .style("opacity", function(d) {return focusRelig.indexOf(d.religion) > -1 ? 1 : 0.35;});
+
+// 2002 dots
+        religDot.selectAll("#relig2002")
+          .data(religPctData)
         .enter().append("circle")
             .attr("class", "dot")
+            .attr("id", "relig2002")
             .attr("r", radius*1.5)
-            .attr("cx", function(d) {return xRdot(d.year);})
-            .attr("cy", function(d) {return yRdot(d.pct);})
+            .attr("cx", function(d) {return xRdot(2002);})
+            .attr("cy", function(d) {return yRdot(d.pct2002);})
             // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
             .attr("fill", function(d) {return zRelig(d.religion);})
             .style("opacity", function(d) {return focusRelig.indexOf(d.religion) > -1 ? 1 : 0.35;});
 
-        religDot.selectAll(".slope")
-              .data(religData)
-            .enter().append("line")
-                .attr("class", "slope")
-                // .attr("x1", function(d) {return xRdot(d.year);})
-                // .attr("cy", function(d) {return yRdot(d.pct);})
+// 2012 dots. Initially set to be at 2002 values.
+            religDot.selectAll("#relig2012")
+              .data(religPctData)
+            .enter().append("circle")
+                .attr("class", "dot")
+                .attr("id", "relig2012")
+                .attr("r", radius*1.5)
+                .attr("cx", function(d) {return xRdot(2002);})
+                .attr("cy", function(d) {return yRdot(d.pct2002);})
                 // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
-                .attr("fill", function(d) {return zRelig(d.religion);});
+                .attr("fill", function(d) {return zRelig(d.religion);})
+                .style("opacity", function(d) {return focusRelig.indexOf(d.religion) > -1 ? 1 : 0.35;});
+
+
 
       // TEXT: Religion label
           religDot.selectAll("#religDot-annot")
-              .data(religData.filter(function(d) {return d.mostrecent == true;}))
+              .data(religPctData)
             .enter().append("text")
               .attr("id", "religDot-annot")
               .attr("class", "annot")
               .text(function(d) {return d.religion})
-              .attr("x", dims.religDot.w)
+              .attr("x", function(d) {return d.pct2002;})
               .attr("dx", 20)
-              .attr("y", function(d) {return yRdot(d.pct);})
+              .attr("y", function(d) {return yRdot(d.pct2002);})
               // .attr("dy", "0.4em")
               .attr("fill", function(d) {return zRelig(d.religion);})
               .style("opacity", function(d) {return focusRelig.indexOf(d.religion) > -1 ? 1 : 0.35;});
 
-      // TEXT: % religion value
+      // TEXT: % religion value (init.)
           religDot.selectAll("#Rpct-annot")
-              .data(religData.filter(function(d) {return focusRelig.indexOf(d.religion) > -1 & d.ref == 0;}))
+              .data(religPctData.filter(function(d) {return focusRelig.indexOf(d.religion) > -1;}))
             .enter().append("text")
               .attr("id", "Rpct-annot")
               .attr("class", "annot")
-              .text(function(d) {return d3.format(".0%")(d.pct)})
-              .attr("x", function(d) {return xRdot(d.year);})
+              .text(function(d) {return d3.format(".0%")(d.pct2002)})
+              .attr("x", function(d) {return xRdot(2002);})
               .attr("dy", -20)
-              .attr("y", function(d) {return yRdot(d.pct);})
+              .attr("y", function(d) {return yRdot(d.pct2002);})
               .attr("fill", function(d) {return zRelig(d.religion);})
               .style("opacity", 1);
-// --- end RELIGION DOT PLOT ---
 
+    // TEXT: % religion value
+    religDot.selectAll("#Rpct-annot2012")
+        .data(religPctData.filter(function(d) {return focusRelig.indexOf(d.religion) > -1;}))
+      .enter().append("text")
+        .attr("id", "Rpct-annot2012")
+        .attr("class", "annot")
+        .text(function(d) {return d3.format(".0%")(d.pct2002)})
+        .attr("x", function(d) {return xRdot(2002);})
+        .attr("dy", -20)
+        .attr("y", function(d) {return yRdot(d.pct2002);})
+        .attr("fill", function(d) {return zRelig(d.religion);})
+        .style("opacity", 1);
+// --- end RELIGION DOT PLOT ---------------------------------------------------
+
+
+// --- MCU stepper ---
 mcu.append("g")
 .call(xAxMCU)
     .attr("class", "x axis")
@@ -835,10 +875,7 @@ mcu.append("g")
       // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
       .attr("fill", function(d) {return zMCU(d.ave);});
 
-
-
       // image
-
 var imgs = mcu.selectAll("image")
           .data(lz)
         .enter().append("image")
@@ -850,6 +887,7 @@ var imgs = mcu.selectAll("image")
           .attr("height", yMCU.rangeBand()) //y.bandwidth()
           .attr("transform", "translate(" + dims.mcu.w + ",0)")
           .style("opacity", function(d) {return d.Category == "Livelihood Zone" ? 1 : 0})
+// end MCU stepper -------------------------------------------------------------
 
     // MAP: map
    imgG.append("image")
@@ -1258,12 +1296,50 @@ function mcuOff() {
 }
 
 function rDotOn(tDefault) {
+
+
   plotG.selectAll("#relig-dot")
     .transition()
       .duration(tDefault)
       .style("opacity", 1);
 
+  plotG.selectAll(".slope")
+  .transition("tSlope")
+    .duration(tDefault*3)
+    .delay(tDefault*2)
+      .attr("x2", function(d) {return xRdot(2012);})
+      .attr("y2", function(d) {return yRdot(d.pct2012);});
+
+
+  plotG.selectAll("#relig2012")
+  .transition("tSlope")
+    .duration(tDefault*3)
+    .delay(tDefault*2)
+    .attr("cx", function(d) {return xRdot(2012);})
+    .attr("cy", function(d) {return yRdot(d.pct2012);});
+
+  plotG.selectAll("#religDot-annot")
+  .transition("tSlope")
+  .duration(tDefault*3)
+  .delay(tDefault*2)
+      .attr("x", function(d) {return xRdot(2012)})
+      .attr("dx", 20)
+      .attr("y", function(d) {return yRdot(d.pct2012);});
+
   sourceOn("Rwanda Population & Housing Census 2002 & 2012", tDefault)
+
+  plotG.selectAll("#Rpct-annot2012")
+      .text(function(d) {return d3.format(".0%")(d.pct2012)})
+      .attr("x", function(d) {return xRdot(2012);})
+      .attr("dy", -20)
+      .attr("y", function(d) {return yRdot(d.pct2012);})
+      .style("opacity", 0)
+    .transition("tSlope")
+      .duration(tDefault*3)
+      .delay(tDefault*4)
+      .style("opacity", 1);
+
+      // .data(religData.filter(function(d) {return focusRelig.indexOf(d.religion) > -1 & d.ref == 0}))
 }
 
 function rDotOff() {
@@ -1416,22 +1492,25 @@ d3.csv("/data/tfr.csv", function(error, tfr){
   d3.csv("/data/mcu.csv", function(error, mcu){
     d3.csv("/data/relig.csv", function(error, relig){
       d3.csv("/data/relig_byAge2012.csv", function(error, religAge){
+        d3.csv("/data/religPct.csv", function(error, religPct){
         ddata = {};
         ddata['tfr'] = tfr;
         ddata['mcu'] = mcu;
         ddata['relig'] = relig;
         ddata['religAge'] = religAge;
+        ddata['religPct'] = religPct;
 
         console.log(ddata)
         // call function to plot the data
         display(ddata);
       });
+          });
     });
   });
 });
 
 
-
+// Delay function for asynchronous loading of data
 //   var def = new $.Deferred();
 //
 //   d3.csv("/data/fp.csv", function(error, data1){
