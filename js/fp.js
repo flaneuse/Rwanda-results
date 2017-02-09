@@ -44,7 +44,7 @@
     map:      { top: 0, right: 15, bottom: 0, left: 0 },
     tfr:      { top: 65, right: 125, bottom: 0, left: 35 },
     mcu:      { top: 75, right: 75, bottom: 0, left: 235 },
-    religDot: { top: 75, right: 125, bottom: 25, left: 75 },
+    religSlope: { top: 75, right: 125, bottom: 25, left: 75 },
     religBar: { top: 125, right: 100, bottom: 75, left: 5 }
   };
 
@@ -55,8 +55,8 @@
                 h: height - margins.tfr.top - margins.tfr.bottom},
     mcu:      { w: width - margins.mcu.right - margins.mcu.left,
                 h: height - margins.mcu.top - margins.mcu.bottom},
-    religDot: { w: width - margins.religDot.right - margins.religDot.left,
-                h: height - margins.religDot.top - margins.religDot.bottom},
+    religSlope: { w: width - margins.religSlope.right - margins.religSlope.left,
+                h: height - margins.religSlope.top - margins.religSlope.bottom},
     religBar: { w: width - margins.religBar.right - margins.religBar.left,
                 h: height - margins.religBar.top - margins.religBar.bottom}
   }
@@ -163,25 +163,25 @@ var focusRelig = ["Protestant", "Catholic"];
 
 // AXES for Religion dot plot
 
-    var xRdot = d3.scale.linear()
-     .range([0, dims.religDot.w]);
+    var xRslope = d3.scale.linear()
+     .range([0, dims.religSlope.w]);
 
-     var yRdot = d3.scale.linear()
-          .range([dims.religDot.h, 0]);
+     var yRslope = d3.scale.linear()
+          .range([dims.religSlope.h, 0]);
 
 
     var zRelig = d3.scale.ordinal()
            .range(colorPaletteLight)
 
-     var xAxRdot = d3.svg.axis()
-          .scale(xRdot)
+     var xAxRslope = d3.svg.axis()
+          .scale(xRslope)
           .tickFormat(d3.format("d"))
           .orient("top");
 
-     var yAxRdot= d3.svg.axis()
-          .scale(yRdot)
+     var yAxRslope= d3.svg.axis()
+          .scale(yRslope)
           .ticks(5, "%")
-          .innerTickSize(dims.religDot.w)
+          .innerTickSize(dims.religSlope.w)
           .orient("left");
 
 
@@ -281,10 +281,10 @@ var focusRelig = ["Protestant", "Catholic"];
        .attr("transform", "translate(" + margins.mcu.left + "," + margins.mcu.top + ")")
        .style("opacity", 0);
 
-    religDot = plotG
+    religSlope = plotG
       .append("g")
        .attr("id", "relig-dot")
-       .attr("transform", "translate(" + margins.religDot.left + "," + margins.religDot.top + ")")
+       .attr("transform", "translate(" + margins.religSlope.left + "," + margins.religSlope.top + ")")
        .style("opacity", 0);
 
 
@@ -505,13 +505,13 @@ if(selectedCat == "Livelihood Zone") {
    z.domain(tfrData.map(function(element) {return element.country}));
 
    // Religion Dot
-     xRdot.domain([d3.min(religData, function(element) { return element.year; }),
+     xRslope.domain([d3.min(religData, function(element) { return element.year; }),
                d3.max(religData, function(element) { return element.year; })]);
-     yRdot.domain([0, d3.max(religData.filter(function(d) {return d.religion != 'national'}),
+     yRslope.domain([0, d3.max(religData.filter(function(d) {return d.religion != 'national'}),
        function(element) { return element.pct; })]);
      zRelig.domain(religData.map(function(element) {return element.religion}));
 
-     xAxRdot.tickValues(xRdot.domain())
+     xAxRslope.tickValues(xRslope.domain())
 
      // Religion Bar
        yRbar.domain(religData.map(function(element) {return element.year}));
@@ -741,66 +741,66 @@ source.append("text")
 
     // --- end RELIGION BAR PLOT ---
 
-// --- RELIGION DOT PLOT ---
+// --- RELIGION SLOPE PLOT ---
     // x-axis label
-        religDot.selectAll(".top-label")
+        religSlope.selectAll(".top-label")
             .data(religData.filter(function(d) {return d.religion == "Catholic" & d.mostrecent == true;}))
           .enter().append("text")
             .attr("class", "top-label")
-            .attr("x", function(d) {return xRdot(d.year);})
-            .attr("y", function(d) {return yRdot(d.pct);})
-            .attr("dx", -dims.religDot.w*0.35)
-            .attr("dy", -dims.religDot.h*0.15)
+            .attr("x", function(d) {return xRslope(d.year);})
+            .attr("y", function(d) {return yRslope(d.pct);})
+            .attr("dx", -dims.religSlope.w*0.35)
+            .attr("dy", -dims.religSlope.h*0.15)
             .text("percent of population")
             .style("opacity", 1);
 
-        religDot.append("g")
-            .call(xAxRdot)
+        religSlope.append("g")
+            .call(xAxRslope)
             .attr("class", "x axis big")
             .attr("id", "relig-x")
-            .attr("transform", "translate(0," + -margins.religDot.top/2 + ")")
+            .attr("transform", "translate(0," + -margins.religSlope.top/2 + ")")
             .style("opacity", 1);
 
-        religDot.append("g")
-                .call(yAxRdot)
+        religSlope.append("g")
+                .call(yAxRslope)
                 .attr("class", "y axis")
                 .attr("id", "relig-y")
-                .attr("transform", "translate(" + dims.religDot.w + ",0)")
+                .attr("transform", "translate(" + dims.religSlope.w + ",0)")
                 .style("opacity", 1);
 
-religDot.selectAll(".slope")
+religSlope.selectAll(".slope")
     .data(religPctData)
   .enter().append("line")
       .attr("class", "slope")
-      .attr("x1", function(d) {return xRdot(2002);})
-      .attr("x2", function(d) {return xRdot(2002);})
-      .attr("y1", function(d) {return yRdot(d.pct2002);})
-      .attr("y2", function(d) {return yRdot(d.pct2002);})
+      .attr("x1", function(d) {return xRslope(2002);})
+      .attr("x2", function(d) {return xRslope(2002);})
+      .attr("y1", function(d) {return yRslope(d.pct2002);})
+      .attr("y2", function(d) {return yRslope(d.pct2002);})
       .attr("stroke", function(d) {return zRelig(d.religion);})
       .style("opacity", function(d) {return focusRelig.indexOf(d.religion) > -1 ? 1 : 0.35;});
 
 // 2002 dots
-        religDot.selectAll("#relig2002")
+        religSlope.selectAll("#relig2002")
           .data(religPctData)
         .enter().append("circle")
             .attr("class", "dot")
             .attr("id", "relig2002")
             .attr("r", radius*1.5)
-            .attr("cx", function(d) {return xRdot(2002);})
-            .attr("cy", function(d) {return yRdot(d.pct2002);})
+            .attr("cx", function(d) {return xRslope(2002);})
+            .attr("cy", function(d) {return yRslope(d.pct2002);})
             // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
             .attr("fill", function(d) {return zRelig(d.religion);})
             .style("opacity", function(d) {return focusRelig.indexOf(d.religion) > -1 ? 1 : 0.35;});
 
 // 2012 dots. Initially set to be at 2002 values.
-            religDot.selectAll("#relig2012")
+            religSlope.selectAll("#relig2012")
               .data(religPctData)
             .enter().append("circle")
                 .attr("class", "dot")
                 .attr("id", "relig2012")
                 .attr("r", radius*1.5)
-                .attr("cx", function(d) {return xRdot(2002);})
-                .attr("cy", function(d) {return yRdot(d.pct2002);})
+                .attr("cx", function(d) {return xRslope(2002);})
+                .attr("cy", function(d) {return yRslope(d.pct2002);})
                 // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
                 .attr("fill", function(d) {return zRelig(d.religion);})
                 .style("opacity", function(d) {return focusRelig.indexOf(d.religion) > -1 ? 1 : 0.35;});
@@ -808,42 +808,42 @@ religDot.selectAll(".slope")
 
 
       // TEXT: Religion label
-          religDot.selectAll("#religDot-annot")
+          religSlope.selectAll("#religSlope-annot")
               .data(religPctData)
             .enter().append("text")
-              .attr("id", "religDot-annot")
+              .attr("id", "religSlope-annot")
               .attr("class", "annot")
               .text(function(d) {return d.religion})
               .attr("x", function(d) {return d.pct2002;})
               .attr("dx", 20)
-              .attr("y", function(d) {return yRdot(d.pct2002);})
+              .attr("y", function(d) {return yRslope(d.pct2002);})
               // .attr("dy", "0.4em")
               .attr("fill", function(d) {return zRelig(d.religion);})
               .style("opacity", function(d) {return focusRelig.indexOf(d.religion) > -1 ? 1 : 0.35;});
 
       // TEXT: % religion value (init.)
-          religDot.selectAll("#Rpct-annot")
+          religSlope.selectAll("#Rpct-annot")
               .data(religPctData.filter(function(d) {return focusRelig.indexOf(d.religion) > -1;}))
             .enter().append("text")
               .attr("id", "Rpct-annot")
               .attr("class", "annot")
               .text(function(d) {return d3.format(".0%")(d.pct2002)})
-              .attr("x", function(d) {return xRdot(2002);})
+              .attr("x", function(d) {return xRslope(2002);})
               .attr("dy", -20)
-              .attr("y", function(d) {return yRdot(d.pct2002);})
+              .attr("y", function(d) {return yRslope(d.pct2002);})
               .attr("fill", function(d) {return zRelig(d.religion);})
               .style("opacity", 1);
 
     // TEXT: % religion value
-    religDot.selectAll("#Rpct-annot2012")
+    religSlope.selectAll("#Rpct-annot2012")
         .data(religPctData.filter(function(d) {return focusRelig.indexOf(d.religion) > -1;}))
       .enter().append("text")
         .attr("id", "Rpct-annot2012")
         .attr("class", "annot")
         .text(function(d) {return d3.format(".0%")(d.pct2002)})
-        .attr("x", function(d) {return xRdot(2002);})
+        .attr("x", function(d) {return xRslope(2002);})
         .attr("dy", -20)
-        .attr("y", function(d) {return yRdot(d.pct2002);})
+        .attr("y", function(d) {return yRslope(d.pct2002);})
         .attr("fill", function(d) {return zRelig(d.religion);})
         .style("opacity", 1);
 // --- end RELIGION DOT PLOT ---------------------------------------------------
@@ -1075,7 +1075,7 @@ summ.append("div")
     // -- TURN OFF NEXT --
     tfrOff();
     mcuOff();
-    rDotOff();
+    RslopeOff();
     // rBarOff();
 
     // -- TURN ON CURRENT --
@@ -1126,7 +1126,7 @@ summ.append("div")
   summaryOff();
 
 // -- TURN OFF NEXT --
-  rDotOff();
+  RslopeOff();
 
 // -- TURN ON CURRENT --
   religOn(tDefault);
@@ -1141,13 +1141,13 @@ summ.append("div")
   rBarOff();
 
 // -- TURN ON CURRENT --
-  rDotOn(tDefault);
+  RslopeOn(tDefault);
   }
 
 // [[ #6 ]] --------------------------------------------------------------------
   function show6() {
 // -- TURN OFF PREVIOUS --
-  rDotOff();
+  RslopeOff();
 
 // -- TURN OFF NEXT --
 
@@ -1295,7 +1295,7 @@ function mcuOff() {
 
 }
 
-function rDotOn(tDefault) {
+function RslopeOn(tDefault) {
 
 
   plotG.selectAll("#relig-dot")
@@ -1307,32 +1307,32 @@ function rDotOn(tDefault) {
   .transition("tSlope")
     .duration(tDefault*3)
     .delay(tDefault*2)
-      .attr("x2", function(d) {return xRdot(2012);})
-      .attr("y2", function(d) {return yRdot(d.pct2012);});
+      .attr("x2", function(d) {return xRslope(2012);})
+      .attr("y2", function(d) {return yRslope(d.pct2012);});
 
 
   plotG.selectAll("#relig2012")
   .transition("tSlope")
     .duration(tDefault*3)
     .delay(tDefault*2)
-    .attr("cx", function(d) {return xRdot(2012);})
-    .attr("cy", function(d) {return yRdot(d.pct2012);});
+    .attr("cx", function(d) {return xRslope(2012);})
+    .attr("cy", function(d) {return yRslope(d.pct2012);});
 
-  plotG.selectAll("#religDot-annot")
+  plotG.selectAll("#religSlope-annot")
   .transition("tSlope")
   .duration(tDefault*3)
   .delay(tDefault*2)
-      .attr("x", function(d) {return xRdot(2012)})
+      .attr("x", function(d) {return xRslope(2012)})
       .attr("dx", 20)
-      .attr("y", function(d) {return yRdot(d.pct2012);});
+      .attr("y", function(d) {return yRslope(d.pct2012);});
 
   sourceOn("Rwanda Population & Housing Census 2002 & 2012", tDefault)
 
   plotG.selectAll("#Rpct-annot2012")
       .text(function(d) {return d3.format(".0%")(d.pct2012)})
-      .attr("x", function(d) {return xRdot(2012);})
+      .attr("x", function(d) {return xRslope(2012);})
       .attr("dy", -20)
-      .attr("y", function(d) {return yRdot(d.pct2012);})
+      .attr("y", function(d) {return yRslope(d.pct2012);})
       .style("opacity", 0)
     .transition("tSlope")
       .duration(tDefault*3)
@@ -1340,7 +1340,7 @@ function rDotOn(tDefault) {
       .style("opacity", 1);
 }
 
-function rDotOff() {
+function RslopeOff() {
   plotG.selectAll("#relig-dot")
     .transition()
       .duration(0)
@@ -1351,32 +1351,32 @@ function rDotOff() {
       .transition("tSlope")
         .duration(0)
         .delay(0)
-          .attr("x2", function(d) {return xRdot(2002);})
-          .attr("y2", function(d) {return yRdot(d.pct2002);});
+          .attr("x2", function(d) {return xRslope(2002);})
+          .attr("y2", function(d) {return yRslope(d.pct2002);});
 
 
       plotG.selectAll("#relig2012")
       .transition("tSlope")
         .duration(0)
         .delay(0)
-        .attr("cx", function(d) {return xRdot(2002);})
-        .attr("cy", function(d) {return yRdot(d.pct2002);});
+        .attr("cx", function(d) {return xRslope(2002);})
+        .attr("cy", function(d) {return yRslope(d.pct2002);});
 
-      plotG.selectAll("#religDot-annot")
+      plotG.selectAll("#religSlope-annot")
       .transition("tSlope")
       .duration(0)
       .delay(0)
-          .attr("x", function(d) {return xRdot(2002)})
+          .attr("x", function(d) {return xRslope(2002)})
           .attr("dx", 20)
-          .attr("y", function(d) {return yRdot(d.pct2002);});
+          .attr("y", function(d) {return yRslope(d.pct2002);});
 
       // sourceOn("Rwanda Population & Housing Census 2002 & 2012", tDefault)
 
       // plotG.selectAll("#Rpct-annot2012")
       //     .text(function(d) {return d3.format(".0%")(d.pct2012)})
-      //     .attr("x", function(d) {return xRdot(2012);})
+      //     .attr("x", function(d) {return xRslope(2012);})
       //     .attr("dy", -20)
-      //     .attr("y", function(d) {return yRdot(d.pct2012);})
+      //     .attr("y", function(d) {return yRslope(d.pct2012);})
       //     .style("opacity", 0)
       //   .transition("tSlope")
       //     .duration(tDefault*3)
