@@ -30,7 +30,7 @@
   // constants to define the size
   // and margins of the vis area, based on the outer vars.
 
-  var margin = { top: 5, right: 5, bottom: 5, left: 5 };
+  var margin = { top: 5, right: 5, bottom: 35, left: 5 };
   var width = maxW - margin.left - margin.right;
   var height = Math.ceil((width * graphic_aspect_height) / graphic_aspect_width) - margin.top - margin.bottom;
 
@@ -42,10 +42,10 @@
   // Specific margins for each of the different windows
   var margins = {
     map:      { top: 0, right: 15, bottom: 0, left: 0 },
-    tfr:      { top: 65, right: 125, bottom: 25, left: 35 },
-    mcu:      { top: 75, right: 75, bottom: 25, left: 235 },
-    religDot: { top: 75, right: 125, bottom: 25, left: 75 },
-    religBar: { top: 125, right: 100, bottom: 125, left: 5 }
+    tfr:      { top: 65, right: 125, bottom: 0, left: 35 },
+    mcu:      { top: 75, right: 75, bottom: 0, left: 235 },
+    religDot: { top: 75, right: 125, bottom: 0, left: 75 },
+    religBar: { top: 125, right: 100, bottom: 75, left: 5 }
   };
 
   var dims = {
@@ -288,11 +288,15 @@ var focusRelig = ["Protestant", "Catholic"];
        .style("opacity", 0);
 
 
-    source = svg
-      .append("g")
-      .attr("id", "source")
+    svg.append("svg")
+      .attr("width", width + margin.left + margin.right)
+      // .attr("height", margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + (height + 10) + ")")
+        .attr("id", "source")
       .style("opacity", 1)
 
+      source = svg.selectAll("#source");
 
 // Data processing
 
@@ -554,11 +558,58 @@ br.selectAll("circle").on("click", function(d,i) {
   setupVis = function(data, tfrNest, tfrRwanda, religData, religNest) {
 
     // --- SOURCE ---
-    source.append("text")
-      .attr("class", "source-text")
-      .attr("x", 0)
-      .attr("y", 0)
-      .attr("text")
+    // TEXT: source
+
+
+source.append("rect")
+  .attr("class", "source-bg")
+  .attr("x", 0)
+  .attr("y", 0)
+  .attr("width", width - padding_right)
+  .attr("height", margin.bottom)
+
+  source.append("line")
+        .attr("class", "source-div")
+        .attr("x1", 0)
+        .attr("x2", width - padding_right)
+        .attr("y1", 0)
+        .attr("y2", 0)
+        .style("opacity", 1);
+
+  source.append("image")
+      .attr("id", "usaid-logo")
+      .attr("xlink:href", function(d) {return "/img/USAID-Rwanda-logo.png"})
+      .attr("x", "10px")
+      .attr("width", "20%")
+      .attr("height", margin.bottom)
+      .style("opacity", 1);
+
+  source.append("image")
+          .attr("id", "gc-logo")
+          .attr("xlink:href", function(d) {return "/img/geocenter.png"})
+          .attr("x", "80%")
+          .attr("y", "5px")
+          .attr("width", "12%")
+          // .attr("height", margin.bottom)
+          .style("opacity", 1);
+
+  source.append("text")
+      .attr("class", "source")
+      .attr("id", "email")
+      .attr("x", "92%")
+      .attr("y", margin.bottom - 10)
+      .style("text-anchor", "end")
+      .style("alignment-baseline", "baseline")
+      .text("geocenter@usaid.gov")
+      .style("opacity", 1);
+
+source.append("text")
+  .attr("class", "source")
+  .attr("id", "source-text")
+  .attr("x", "25%")
+  .attr("y", margin.bottom/2)
+  .style("opacity", 1);
+
 
     // --- RELIGION BAR PLOT ---
     // console.log(religNest)
@@ -995,6 +1046,8 @@ summ.append("div")
       .duration(tDefault)
       .style("opacity", 1);
 
+      sourceOn("World Pop 2015", tDefault)
+
   }
 
 // [[ #2 ]] --------------------------------------------------------------------
@@ -1005,6 +1058,8 @@ summ.append("div")
       .transition()
         .duration(0)
         .style("opacity", 0);
+
+
 
 // -- TURN OFF NEXT --
   summaryOff();
@@ -1142,11 +1197,29 @@ function updateBreadcrumbs(idx) {
      .style("fill-opacity", function(d,i) {return i==idx ? 0.6:0.1;});
 }
 
+function sourceOn(text, tDefault) {
+  vis.selectAll("#source")
+    .transition()
+      .duration(tDefault)
+      .style("opacity", 1);
+
+  source.selectAll("#source-text").text("SOURCE: " + text);
+}
+
+function sourceOff() {
+  vis.selectAll("#source")
+    .transition()
+      .duration(0)
+      .style("opacity", 0);
+}
+
 function tfrOn(tDefault) {
   plotG.selectAll("#tfr")
     .transition()
       .duration(tDefault)
       .style("opacity", 1);
+
+  sourceOn("Demographic and Health Surveys", tDefault)
 }
 
 function tfrOff() {
@@ -1167,6 +1240,8 @@ function mcuOn(tDefault) {
     .transition()
       .duration(tDefault)
       .style("opacity", 1);
+
+  sourceOn("Rwanda Demographic and Health Surveys 2010 & 2014/2015", tDefault)
 }
 
 function mcuOff() {
@@ -1187,6 +1262,8 @@ function rDotOn(tDefault) {
     .transition()
       .duration(tDefault)
       .style("opacity", 1);
+
+  sourceOn("Rwanda Population & Housing Census 2002 & 2012", tDefault)
 }
 
 function rDotOff() {
@@ -1201,6 +1278,8 @@ function rBarOn(tDefault) {
     .transition()
       .duration(tDefault)
       .style("opacity", 1);
+
+  sourceOn("Rwanda Population & Housing Census 2002 & 2012", tDefault)
 }
 
 function rBarOff() {
@@ -1215,6 +1294,8 @@ function summaryOn(tDefault) {
     .transition()
       .duration(tDefault)
       .style("opacity", 1);
+
+  sourceOff()
 }
 
 function summaryOff() {
@@ -1229,6 +1310,8 @@ function religOn(tDefault) {
     .transition()
       .duration(tDefault)
       .style("opacity", 1);
+
+  sourceOn("Rwanda Population & Housing Census 2002 & 2012", tDefault)
 }
 
 function religOff() {

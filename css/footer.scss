@@ -43,3 +43,23 @@
   padding: 0;
   vertical-align: middle;
 }
+
+// Tramp stamp for bottom of figures --------------------------------------------
+.source-bg {
+  fill: $grey15K;
+  shape-rendering: crispEdges;
+}
+
+.source-div {
+  stroke: $accent-main;
+  stroke-width: 2px;
+  shape-rendering: crispEdges;
+}
+.source {
+  font-family: $base-font-family;
+  font-weight: base-weight;
+  font-size: 11px;
+  text-anchor: start;
+  alignment-baseline: middle;
+  fill: $grey75K;
+}
