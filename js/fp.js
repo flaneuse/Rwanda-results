@@ -924,7 +924,7 @@ mcuRelig.append("g")
         .attr("y", yMCUrelig.rangeBand()/3)
         // .attr("y", y.bandwidth())
         .attr("dx", 10)
-        .text(function(d) {console.log(d);return "national average: " + d3.format(".0%")(d.natl)})
+        .text(function(d) {return "national average: " + d3.format(".0%")(d.natl)})
         .style("opacity", 1);
 
         // TEXT: protestant annotation
@@ -1197,7 +1197,7 @@ summ.append("div")
     // -- TURN OFF NEXT --
     tfrOff();
     mcuOff();
-    RslopeOff();
+    // RslopeOff();
     // rBarOff();
 
     // -- TURN ON CURRENT --
@@ -1547,34 +1547,55 @@ function religOn(tDefault) {
   sourceOn("Rwanda Population & Housing Census 2002 & 2012", tDefault)
 
   // lollipop connectors
-    mcuRelig.selectAll("#mcu-lolli")
+mcuRelig.selectAll("#mcu-lolli")
+.transition("changeNatl")
+  .duration(tDefault * 1)
+  .delay(tDefault * 2)
+      .attr("x1", function(d) {return xMCUrelig(d.natl);})
+      .attr("x2", function(d) {return xMCUrelig(d.ave);});
+
+// dot avg.
+mcuRelig.selectAll("#mcu-relig")
+.transition("changeNatl")
+  .duration(tDefault* 1)
+  .delay(tDefault * 2)
+    .attr("cx", function(d) {return xMCUrelig(d.ave);})
+    .attr("fill", function(d) {return zMCU(d.ave);}); // Keep constant so consistent w/ later results.
+
+    mcuRelig.selectAll(".val-labels")
     .transition("changeNatl")
-      .duration(tDefault * 2)
+      .duration(tDefault)
       .delay(tDefault * 2)
-          .attr("x1", function(d) {return xMCUrelig(d.natl);})
-          .attr("x2", function(d) {return xMCUrelig(d.ave);});
-
-
-  // dot avg.
-    mcuRelig.selectAll("#mcu-relig")
-    .transition("changeNatl")
-      .duration(tDefault * 2)
-      .delay(tDefault * 2)
-        .attr("cx", function(d) {return xMCUrelig(d.ave);})
-        .attr("fill", function(d) {return zMCU(d.ave);}); // Keep constant so consistent w/ later results.
-
-        mcuRelig.selectAll(".val-labels")
-        .transition("changeNatl")
-          .duration(tDefault)
-          .delay(tDefault * 3)
-              .style("opacity", 1);
+          .style("opacity", 1);
 }
 
 function religOff() {
-  plotG.selectAll("#relig")
+  plotG.selectAll("#mcuRelig")
     .transition()
       .duration(0)
       .style("opacity", 0);
+
+      // lollipop connectors
+    mcuRelig.selectAll("#mcu-lolli")
+    .transition("changeNatl")
+      .duration(0)
+      .delay(0)
+          .attr("x1", function(d) {return xMCUrelig(d.natl);})
+          .attr("x2", function(d) {return xMCUrelig(d.natl);});
+
+    // dot avg.
+    mcuRelig.selectAll("#mcu-relig")
+    .transition()
+      .duration(0)
+      .delay(0)
+        .attr("cx", function(d) {return xMCUrelig(d.natl);})
+        .attr("fill", function(d) {return zMCU(d.natl);}); // Keep constant so consistent w/ later results.
+
+        mcuRelig.selectAll(".val-labels")
+        .transition()
+          .duration(0)
+          .delay(0)
+              .style("opacity", 0);
 }
 // end HELPER FUNCTIONS --------------------------------------------------------
 
