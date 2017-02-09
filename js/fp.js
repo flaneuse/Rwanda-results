@@ -289,7 +289,7 @@ var focusRelig = ["Protestant", "Catholic"];
     religBar = plotG
     .append("g")
      .attr("id", "relig-bar")
-     .attr("transform", "translate(" + margins.religBar.left + "," + margins.religBar.top + ")")
+    //  .attr("transform", "translate(" + margins.religBar.left + "," + margins.religBar.top + ")")
      .style("opacity", 0);
 
 // Data processing
@@ -344,6 +344,12 @@ religData.forEach(function(d) {
     d.pop = +d.pop;
     d.year = +d.year;
 });
+
+var religNest = d3.nest()
+  .key(function(d) { return d.religion })
+  .entries(religData.filter(function(d) {return focusRelig.indexOf(d.religion) > -1})
+          .sort(function(a,b) {return b.order - a.order}));
+console.log(religNest)
 
 // Religion pop pyramid ---------------------------------------------------------------------------
 var religAgeData = rawData["religAge"];
@@ -501,7 +507,6 @@ if(selectedCat == "Livelihood Zone") {
        xRbar.domain([0, d3.max(religData.filter(function(d) {return focusRelig.indexOf(d.religion) > -1;}),
          function(element) { return element.pop; })]);
 
-      //  yAxRbar.tickValues(yRbar.domain())
 
 // MCU
    xMCU.domain([0, d3.max(mcuData, function(element) { return element.ave; })]);
@@ -530,7 +535,7 @@ br.selectAll("circle").on("click", function(d,i) {
 
 
 // Call the function to set up the svg objects
-       setupVis(tfrCountries, tfrNest, tfrRwanda, religData);
+       setupVis(tfrCountries, tfrNest, tfrRwanda, religData, religNest);
 
 // Set up the functions to edit the sections.
        setupSections();
@@ -545,93 +550,185 @@ br.selectAll("circle").on("click", function(d,i) {
    * sections of the visualization.
    *
    */
-  setupVis = function(data, tfrNest, tfrRwanda, religData) {
+  setupVis = function(data, tfrNest, tfrRwanda, religData, religNest) {
 
     // --- RELIGION BAR PLOT ---
-        // x-axis label
-            religBar.append("text")
-                .attr("class", "top-label")
-                .attr("x", 0)
-                .attr("y", -margins.religBar.top)
-                .text("percent of population");
+    // console.log(religNest)
+    // religBar.data(religNest)
+    // .enter().append("svg")
+    // .attr("width", dims.religBar.w / 2)
+    // .attr("height", dims.religBar.h)
 
-            religBar.append("g")
-                .call(xAxRbar)
-                .attr("class", "x axis")
-                .attr("id", "relig-x")
-                .attr("transform", "translate(0," + xaxisOffset + ")")
+
+    d3.select("#relig-bar").selectAll("div")
+      .data(religNest)
+    .enter().append("div")
+      .style("display", "inline-block")
+      .style("width", width/2 + "px")
+     .style("height", height + "px")
+    .append("svg")
+      .attr("width", width / 2)
+      .attr("height", height)
+    .append("g")
+      .attr("transform", "translate(" + margins.religBar.left + "," + margins.religBar.top + ")")
+      .each(multiple);
+
+      function multiple(symbol){
+        var svg = d3.select(this);
+
+        console.log(symbol)
+
+        xRbar.range([0, dims.religBar.w/2]);
+
+        svg.append("text")
+            .attr("class", "top-label")
+            .attr("x", 0)
+            .attr("y", -margins.religBar.top)
+            .text("percent of population");
+
+        svg.append("g")
+            .call(xAxRbar)
+            .attr("class", "x axis")
+            .attr("id", "relig-x")
+            .attr("transform", "translate(0," + xaxisOffset + ")")
+            .style("opacity", 1);
+
+        svg.append("g")
+                .call(yAxRbar)
+                .attr("class", "y axis")
+                .attr("id", "relig-y")
+                // .attr("transform", "translate(" + width + ",0)")
                 .style("opacity", 1);
 
-            religBar.append("g")
-                    .call(yAxRbar)
-                    .attr("class", "y axis")
-                    .attr("id", "relig-y")
-                    // .attr("transform", "translate(" + width + ",0)")
-                    .style("opacity", 1);
-
 // Normal bars
-            religBar.selectAll(".bar")
-              .data(religData.filter(function(d) {return d.ref == 0 &
-                focusRelig.indexOf(d.religion) > -1;}))
-            .enter().append("rect")
-                .attr("class", "bar")
-                .attr("x", 0)
-                .attr("y", function(d) {return yRbar(d.year);})
-                .attr("width", function(d) {return xRbar(d.pop);})
-                .attr("height", yRbar.rangeBand())
-                // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
-                .attr("fill", function(d) {return zRelig(d.religion);})
-                .attr("stroke", function(d) {return d.ref == 0 ? zRelig(d.religion) : "none";})
-                .style("stroke-width", 1)
-                .style("fill-opacity", 0.35);
+          svg.selectAll(".bar")
+                        .data(symbol.values.filter(function(d) {return d.ref == 0 &
+                          focusRelig.indexOf(d.religion) > -1;}))
+          .enter().append("rect")
+              .attr("class", "bar")
+              .attr("x", 0)
+              .attr("y", function(d) {return yRbar(d.year);})
+              .attr("width", function(d) {return xRbar(d.pop);})
+              .attr("height", yRbar.rangeBand())
+              // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
+              .attr("fill", function(d) {return zRelig(d.religion);})
+              .attr("stroke", function(d) {return d.ref == 0 ? zRelig(d.religion) : "none";})
+              .style("stroke-width", 1)
+              .style("fill-opacity", 0.35);
 
-// Highlight diff
-                religBar.selectAll("#bar-diff")
-                  .data(religData.filter(function(d) {return d.ref == 1 &
-                    focusRelig.indexOf(d.religion) > -1;}))
-                .enter().append("rect")
-                    .attr("class", "bar")
-                    .attr("id", "bar-diff")
-                    .attr("x", function(d) {return xRbar(d.pop);})
-                    .attr("y", function(d) {return yRbar(d.year);})
-                    .attr("width", function(d) {return xRbar(d.diff);})
-                    .attr("height", yRbar.rangeBand())
-                    // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
-                    .attr("fill", function(d) {return zRelig(d.religion);})
-                    .attr("stroke", function(d) {return d.ref == 0 ? zRelig(d.religion) : "none";})
-                    .style("stroke-width", 1)
-                    .style("fill-opacity", 0.15);
+              // Highlight diff
+          svg.selectAll("#bar-diff")
+            .data(symbol.values.filter(function(d) {return d.ref == 1 &
+              focusRelig.indexOf(d.religion) > -1;}))
+          .enter().append("rect")
+              .attr("class", "bar")
+              .attr("id", "bar-diff")
+              .attr("x", function(d) {return xRbar(d.pop);})
+              .attr("y", function(d) {return yRbar(d.year);})
+              .attr("width", function(d) {return xRbar(d.diff);})
+              .attr("height", yRbar.rangeBand())
+              // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
+              .attr("fill", function(d) {return zRelig(d.religion);})
+              .attr("stroke", function(d) {return d.ref == 0 ? zRelig(d.religion) : "none";})
+              .style("stroke-width", 1)
+              .style("fill-opacity", 0.15);
 
 // Ref line: 2002
-                religBar.selectAll("#bar-ref")
-                  .data(religData.filter(function(d) {return d.ref == 1 &
-                    focusRelig.indexOf(d.religion) > -1;}))
-                .enter().append("line")
-                    .attr("class", "bar")
-                    .attr("id", "bar-ref")
-                    .attr("x1", function(d) {return xRbar(d.pop);})
-                    .attr("y1", function(d) {return yRbar(d.year);})
-                    .attr("x2", function(d) {return xRbar(d.pop);})
-                    .attr("y2", function(d) {return yRbar(d.year) + yRbar.rangeBand();})
-                    // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
-                      .attr("stroke", function(d) {return zRelig(d.religion);})
-                    .style("opacity", 1);
+              svg.selectAll("#bar-ref")
+                .data(symbol.values.filter(function(d) {return d.ref == 1 &
+                  focusRelig.indexOf(d.religion) > -1;}))
+              .enter().append("line")
+                  .attr("class", "bar")
+                  .attr("id", "bar-ref")
+                  .attr("x1", function(d) {return xRbar(d.pop);})
+                  .attr("y1", function(d) {return yRbar(d.year);})
+                  .attr("x2", function(d) {return xRbar(d.pop);})
+                  .attr("y2", function(d) {return yRbar(d.year) + yRbar.rangeBand();})
+                  // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
+                    .attr("stroke", function(d) {return zRelig(d.religion);})
+                  .style("opacity", 1);
 
 // Ref line: Catholics
-    religBar.selectAll("#cath-ref")
-            .data(religData.filter(function(d) {return d.ref == 0 &
-              d.religion == "Catholic";}))
-          .enter().append("line")
-              // .attr("class", "bar")
-              .attr("id", "cath-ref")
-              .attr("x1", function(d) {return xRbar(d.pop);})
-              .attr("y1", function(d) {return yRbar(d.year);})
-              .attr("x2", function(d) {return xRbar(d.pop);})
-              .attr("y2", function(d) {return yRbar(d.year) + yRbar.rangeBand();})
-              // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
-                .attr("stroke", function(d) {return zRelig(d.religion);})
-                .attr("stroke-width", 4)
-              .style("opacity", 1);
+  svg.selectAll("#cath-ref")
+          .data(symbol.values.filter(function(d) {return d.ref == 1}))
+        .enter().append("line")
+            // .attr("class", "bar")
+            .attr("id", "cath-ref")
+            .attr("x1", function(d) {return xRbar(d.catholic);})
+            .attr("y1", function(d) {return yRbar(d.year);})
+            .attr("x2", function(d) {return xRbar(d.catholic);})
+            .attr("y2", function(d) {return yRbar(d.year) + yRbar.rangeBand();})
+            // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
+              .attr("stroke", function(d) {return zRelig("Catholic");})
+              .attr("stroke-width", 4)
+            .style("opacity", 1);
+      }
+
+
+//
+// // Normal bars
+//             religBar.selectAll(".bar")
+//               .data(religData.filter(function(d) {return d.ref == 0 &
+//                 focusRelig.indexOf(d.religion) > -1;}))
+//             .enter().append("rect")
+//                 .attr("class", "bar")
+//                 .attr("x", 0)
+//                 .attr("y", function(d) {return yRbar(d.year);})
+//                 .attr("width", function(d) {return xRbar(d.pop);})
+//                 .attr("height", yRbar.rangeBand())
+//                 // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
+//                 .attr("fill", function(d) {return zRelig(d.religion);})
+//                 .attr("stroke", function(d) {return d.ref == 0 ? zRelig(d.religion) : "none";})
+//                 .style("stroke-width", 1)
+//                 .style("fill-opacity", 0.35);
+//
+// // Highlight diff
+//                 religBar.selectAll("#bar-diff")
+//                   .data(religData.filter(function(d) {return d.ref == 1 &
+//                     focusRelig.indexOf(d.religion) > -1;}))
+//                 .enter().append("rect")
+//                     .attr("class", "bar")
+//                     .attr("id", "bar-diff")
+//                     .attr("x", function(d) {return xRbar(d.pop);})
+//                     .attr("y", function(d) {return yRbar(d.year);})
+//                     .attr("width", function(d) {return xRbar(d.diff);})
+//                     .attr("height", yRbar.rangeBand())
+//                     // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
+//                     .attr("fill", function(d) {return zRelig(d.religion);})
+//                     .attr("stroke", function(d) {return d.ref == 0 ? zRelig(d.religion) : "none";})
+//                     .style("stroke-width", 1)
+//                     .style("fill-opacity", 0.15);
+//
+// // Ref line: 2002
+//                 religBar.selectAll("#bar-ref")
+//                   .data(religData.filter(function(d) {return d.ref == 1 &
+//                     focusRelig.indexOf(d.religion) > -1;}))
+//                 .enter().append("line")
+//                     .attr("class", "bar")
+//                     .attr("id", "bar-ref")
+//                     .attr("x1", function(d) {return xRbar(d.pop);})
+//                     .attr("y1", function(d) {return yRbar(d.year);})
+//                     .attr("x2", function(d) {return xRbar(d.pop);})
+//                     .attr("y2", function(d) {return yRbar(d.year) + yRbar.rangeBand();})
+//                     // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
+//                       .attr("stroke", function(d) {return zRelig(d.religion);})
+//                     .style("opacity", 1);
+//
+// // Ref line: Catholics
+//     religBar.selectAll("#cath-ref")
+//             .data(religData.filter(function(d) {return d.ref == 0 &
+//               d.religion == "Catholic";}))
+//           .enter().append("line")
+//               // .attr("class", "bar")
+//               .attr("id", "cath-ref")
+//               .attr("x1", function(d) {return xRbar(d.pop);})
+//               .attr("y1", function(d) {return yRbar(d.year);})
+//               .attr("x2", function(d) {return xRbar(d.pop);})
+//               .attr("y2", function(d) {return yRbar(d.year) + yRbar.rangeBand();})
+//               // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
+//                 .attr("stroke", function(d) {return zRelig(d.religion);})
+//                 .attr("stroke-width", 4)
+//               .style("opacity", 1);
 
     // --- end RELIGION BAR PLOT ---
 
