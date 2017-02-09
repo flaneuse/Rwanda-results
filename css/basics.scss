@@ -10,6 +10,11 @@ body {
   font-weight: $base-weight;
 }
 
+.big-text {
+  font-size: $large-font-size;
+  padding: $large-pad * 2;
+}
+
 /*Row containing ALL the elements (sections, vis., etc.)*/
 #graphic {
   padding-top: 60px;
