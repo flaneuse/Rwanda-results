@@ -44,6 +44,7 @@
     map:      { top: 0, right: 15, bottom: 0, left: 0 },
     tfr:      { top: 65, right: 125, bottom: 0, left: 35 },
     mcu:      { top: 75, right: 75, bottom: 0, left: 235 },
+    mcuRelig: { top: 75, right: 75, bottom: 0, left: 100 },
     religSlope: { top: 75, right: 125, bottom: 25, left: 75 },
     religBar: { top: 125, right: 100, bottom: 75, left: 5 }
   };
@@ -55,6 +56,8 @@
                 h: height - margins.tfr.top - margins.tfr.bottom},
     mcu:      { w: width - margins.mcu.right - margins.mcu.left,
                 h: height - margins.mcu.top - margins.mcu.bottom},
+    mcuRelig: { w: width - margins.mcuRelig.right - margins.mcuRelig.left,
+                h: height - margins.mcuRelig.top - margins.mcuRelig.bottom},
     religSlope: { w: width - margins.religSlope.right - margins.religSlope.left,
                 h: height - margins.religSlope.top - margins.religSlope.bottom},
     religBar: { w: width - margins.religBar.right - margins.religBar.left,
@@ -147,9 +150,10 @@ var focusRelig = ["Protestant", "Catholic"];
 
        var zMCU = d3.scale.linear()
        // .range(colorPalette)
-         .range(colorbrewer.Spectral[11])
+         .range(["#ffffbf", "#2388bd"])
+        //  .range([colorbrewer.Spectral[11][5], colorbrewer.Spectral[11][10]])
          .interpolate(d3.interpolateHcl)
-            .domain([0.1, 0.2]);
+        .domain([0.23, 0.65]);
 
        var xAxMCU = d3.svg.axis()
             .scale(xMCU)
@@ -159,6 +163,24 @@ var focusRelig = ["Protestant", "Catholic"];
 
        var yAxMCU= d3.svg.axis()
             .scale(yMCU)
+            .orient("left");
+
+// AXES for MCU Religion
+       var xMCUrelig = d3.scale.linear()
+            .range([0, dims.mcuRelig.w]);
+
+       var yMCUrelig = d3.scale.ordinal()
+            .rangeBands([0, dims.mcuRelig.h], 0.2, 0);
+
+
+       var xAxMCUrelig = d3.svg.axis()
+            .scale(xMCUrelig)
+            .orient("top")
+            .ticks(5, "%")
+            .innerTickSize(-dims.mcuRelig.h);
+
+       var yAxMCUrelig= d3.svg.axis()
+            .scale(yMCUrelig)
             .orient("left");
 
 // AXES for Religion dot plot
@@ -211,12 +233,6 @@ var focusRelig = ["Protestant", "Catholic"];
               .x(function(d) { return x(d.year); })
               .y(function(d) { return y(d.tfr); });
 
-// lollipop generator
-    // var lollipop = d3.svg.line() // d3.line for v4
-    //   .x1(function(d) { return x(0); })
-    //   .x2(function(d) { return x(d.ave); })
-    //   .y1(function(d) { return y(d.Variable); })
-    //   .y2(function(d) { return y(d.Variable); });
 
   // When scrolling to a new section
   // the activation function for that
@@ -280,6 +296,12 @@ var focusRelig = ["Protestant", "Catholic"];
        .attr("id", "mcu")
        .attr("transform", "translate(" + margins.mcu.left + "," + margins.mcu.top + ")")
        .style("opacity", 0);
+
+    mcuRelig = plotG
+         .append("g")
+          .attr("id", "mcuRelig")
+          .attr("transform", "translate(" + margins.mcuRelig.left + "," + margins.mcuRelig.top + ")")
+          .style("opacity", 0);
 
     religSlope = plotG
       .append("g")
@@ -529,9 +551,18 @@ if(selectedCat == "Livelihood Zone") {
        .sort(function(a,b) {return b.ave - a.ave})
        .map(function(element) {return element.Variable})
      );
+
 };
      // Initialize y-domain.
      updateY(mcuData, selectedCat, selectedYear);
+
+   xMCUrelig.domain([0, d3.max(mcuData, function(element) { return element.ave; })]);
+
+  yMCUrelig.domain(mcuData
+       .filter(function(d) {return d.Category == "Religion"})
+       .filter(function(d) {return d.year == selectedYear})
+       .sort(function(a,b) {return a.ave - b.ave}) // ascending sort
+       .map(function(element) {return element.Variable}));
 
 // EVENT: on clicking breadcrumb, change the page. -----------------------------
 br.selectAll("circle").on("click", function(d,i) {
@@ -848,6 +879,97 @@ religSlope.selectAll(".slope")
         .style("opacity", 1);
 // --- end RELIGION DOT PLOT ---------------------------------------------------
 
+// --- RELIGION MCU PLOT ---
+mcuRelig.selectAll(".top-label")
+    .data(religData.filter(function(d) {return d.religion == "Catholic" & d.mostrecent == true;}))
+  .enter().append("text")
+    .attr("class", "top-label")
+    .attr("y", -margins.mcuRelig.top/2)
+    .attr("x", margins.mcuRelig.left)
+    .text("percent of women 15-49 in a union using modern contraception")
+    .style("opacity", 1);
+
+mcuRelig.append("g")
+.call(xAxMCUrelig)
+    .attr("class", "x axis")
+    .attr("id", "mcuRelig-x")
+    .style("opacity", 1);
+
+mcuRelig.append("g")
+.call(yAxMCUrelig)
+  .attr("class","y axis")
+  .attr("id", "mcuRelig-y")
+  .style("opacity", 1);
+
+  // LINE: natl. avg.
+      mcuRelig.selectAll("#natl")
+             .data(mcuData.filter(function(d) {return d.Category == "National" & d.year == selectedYear;}))
+           .enter().append("line")
+             .attr("class", "natl")
+             .attr("id", "natl")
+             .attr("y1", 0)
+             .attr("y2", dims.mcuRelig.h)
+             .attr("x1", function(d) {return xMCUrelig(d.natl)})
+             .attr("x2", function(d) {return xMCUrelig(d.natl)})
+             .style("stroke-dasharray", ("5, 10"))
+             .style("opacity", 1);
+
+  // TEXT: national annotation
+  mcuRelig.selectAll("#natl-annot-right")
+        .data(mcuData.filter(function(d) {return d.Category == "National" & d.year == selectedYear;}))
+      .enter().append("text")
+        .attr("class", "natl-annot-right")
+         .attr("id", "natl-annot")
+        .attr("x", function(d) {return xMCUrelig(d.natl)})
+        .attr("y", yMCUrelig.rangeBand()/3)
+        // .attr("y", y.bandwidth())
+        .attr("dx", 10)
+        .text(function(d) {console.log(d);return "national average: " + d3.format(".0%")(d.natl)})
+        .style("opacity", 1);
+
+        // TEXT: protestant annotation
+        mcuRelig.selectAll(".val-labels")
+              .data(mcuData.filter(function(d) {return d.Variable == "Protestant" & d.year == selectedYear;}))
+            .enter().append("text")
+              .attr("class", "val-labels")
+               .attr("id", "val-annot")
+              .attr("x", function(d) {return xMCUrelig(d.ave)})
+              .attr("y", function(d) {return yMCUrelig(d.Variable) + yMCUrelig.rangeBand()/2})
+              // .attr("y", y.bandwidth())
+              .attr("dx", -40)
+              .text(function(d) {return d3.format(".0%")(d.ave)})
+              .style("opacity", 0)
+              .style("font-size", 18)
+              .attr("fill", function(d) {return zMCU(d.natl);}); // Keep constant so consistent w/ later results.
+
+// lollipop connectors
+  mcuRelig.selectAll("#mcu-lolli")
+    .data(mcuData.filter(function(d) {return d.Category == "Religion" & d.year == selectedYear;}))
+  .enter().append("line")
+        .attr("id", "mcu-lolli")
+        .attr("x1", function(d) {return xMCUrelig(d.natl);})
+        .attr("x2", function(d) {return xMCUrelig(d.natl);})
+        .attr("y1", function(d) {return yMCUrelig(d.Variable) + yMCUrelig.rangeBand()/2;})
+        .attr("y2", function(d) {return yMCUrelig(d.Variable) + yMCUrelig.rangeBand()/2;})
+        .style("opacity", 1);
+
+
+// dot avg.
+  mcuRelig.selectAll("#mcu-relig")
+    .data(mcuData.filter(function(d) {return d.Category == "Religion" & d.year == selectedYear;}))
+  .enter().append("circle")
+      .attr("class", "dot")
+      .attr("id", "mcu-relig")
+      .attr("r", radius*1.5)
+      .attr("cx", function(d) {return xMCUrelig(d.natl);})
+      .attr("cy", function(d) {return yMCUrelig(d.Variable) + yMCUrelig.rangeBand()/2})
+      // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
+      .attr("fill", function(d) {return zMCU(d.natl);}); // Keep constant so consistent w/ later results.
+
+
+
+
+// --- end RELIGION MCU PLOT --------------------------------------------------
 
 // --- MCU stepper ---
 mcu.append("g")
@@ -1417,12 +1539,35 @@ function summaryOff() {
 }
 
 function religOn(tDefault) {
-  plotG.selectAll("#relig")
+  plotG.selectAll("#mcuRelig")
     .transition()
       .duration(tDefault)
       .style("opacity", 1);
 
   sourceOn("Rwanda Population & Housing Census 2002 & 2012", tDefault)
+
+  // lollipop connectors
+    mcuRelig.selectAll("#mcu-lolli")
+    .transition("changeNatl")
+      .duration(tDefault * 2)
+      .delay(tDefault * 2)
+          .attr("x1", function(d) {return xMCUrelig(d.natl);})
+          .attr("x2", function(d) {return xMCUrelig(d.ave);});
+
+
+  // dot avg.
+    mcuRelig.selectAll("#mcu-relig")
+    .transition("changeNatl")
+      .duration(tDefault * 2)
+      .delay(tDefault * 2)
+        .attr("cx", function(d) {return xMCUrelig(d.ave);})
+        .attr("fill", function(d) {return zMCU(d.ave);}); // Keep constant so consistent w/ later results.
+
+        mcuRelig.selectAll(".val-labels")
+        .transition("changeNatl")
+          .duration(tDefault)
+          .delay(tDefault * 3)
+              .style("opacity", 1);
 }
 
 function religOff() {

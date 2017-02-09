@@ -137,6 +137,12 @@
   // shape-rendering: crispEdges;
 }
 
+#mcu-lolli {
+  stroke-width: 1.5;
+  stroke: $grey75K;
+  // shape-rendering: crispEdges;
+}
+
 // annotations ------------------------------------------------------------------------
 .annot {
   font-family: $base-font-family;
@@ -162,6 +168,10 @@
 
 .natl-annot {
   text-anchor: end;
+}
+
+.natl-annot-right {
+  text-anchor: start;
 }
 
 .natl-annot2010 {
