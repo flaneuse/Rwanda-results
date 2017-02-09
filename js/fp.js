@@ -269,22 +269,29 @@ var focusRelig = ["Protestant", "Catholic"];
       .attr("transform", "translate(" + margins.tfr.left + "," + margins.tfr.top + ")")
       .style("opacity", 0) // set initially to 0.
 
-    summ = vis.select("#vis").append("div")
-    .attr("id", "fp-summary")
-    .style("max-width", dims.map.w + "px")
-    .style("opacity", 0);
+    summ = vis.select("#vis")
+      .append("div")
+        .attr("id", "fp-summary")
+        .style("max-width", dims.map.w + "px")
+        .style("opacity", 0);
 
     mcu = plotG
-    .append("g")
-     .attr("id", "mcu")
-     .attr("transform", "translate(" + margins.mcu.left + "," + margins.mcu.top + ")")
-     .style("opacity", 0);
+      .append("g")
+       .attr("id", "mcu")
+       .attr("transform", "translate(" + margins.mcu.left + "," + margins.mcu.top + ")")
+       .style("opacity", 0);
 
     religDot = plotG
-    .append("g")
-     .attr("id", "relig-dot")
-     .attr("transform", "translate(" + margins.religDot.left + "," + margins.religDot.top + ")")
-     .style("opacity", 0);
+      .append("g")
+       .attr("id", "relig-dot")
+       .attr("transform", "translate(" + margins.religDot.left + "," + margins.religDot.top + ")")
+       .style("opacity", 0);
+
+
+    source = svg
+      .append("g")
+      .attr("id", "source")
+      .style("opacity", 1)
 
 
 // Data processing
@@ -546,6 +553,13 @@ br.selectAll("circle").on("click", function(d,i) {
    */
   setupVis = function(data, tfrNest, tfrRwanda, religData, religNest) {
 
+    // --- SOURCE ---
+    source.append("text")
+      .attr("class", "source-text")
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("text")
+
     // --- RELIGION BAR PLOT ---
     // console.log(religNest)
     // religBar.data(religNest)
@@ -667,71 +681,6 @@ br.selectAll("circle").on("click", function(d,i) {
             .style("opacity", 1);
       }
 
-
-//
-// // Normal bars
-//             religBar.selectAll(".bar")
-//               .data(religData.filter(function(d) {return d.ref == 0 &
-//                 focusRelig.indexOf(d.religion) > -1;}))
-//             .enter().append("rect")
-//                 .attr("class", "bar")
-//                 .attr("x", 0)
-//                 .attr("y", function(d) {return yRbar(d.year);})
-//                 .attr("width", function(d) {return xRbar(d.pop);})
-//                 .attr("height", yRbar.rangeBand())
-//                 // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
-//                 .attr("fill", function(d) {return zRelig(d.religion);})
-//                 .attr("stroke", function(d) {return d.ref == 0 ? zRelig(d.religion) : "none";})
-//                 .style("stroke-width", 1)
-//                 .style("fill-opacity", 0.35);
-//
-// // Highlight diff
-//                 religBar.selectAll("#bar-diff")
-//                   .data(religData.filter(function(d) {return d.ref == 1 &
-//                     focusRelig.indexOf(d.religion) > -1;}))
-//                 .enter().append("rect")
-//                     .attr("class", "bar")
-//                     .attr("id", "bar-diff")
-//                     .attr("x", function(d) {return xRbar(d.pop);})
-//                     .attr("y", function(d) {return yRbar(d.year);})
-//                     .attr("width", function(d) {return xRbar(d.diff);})
-//                     .attr("height", yRbar.rangeBand())
-//                     // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
-//                     .attr("fill", function(d) {return zRelig(d.religion);})
-//                     .attr("stroke", function(d) {return d.ref == 0 ? zRelig(d.religion) : "none";})
-//                     .style("stroke-width", 1)
-//                     .style("fill-opacity", 0.15);
-//
-// // Ref line: 2002
-//                 religBar.selectAll("#bar-ref")
-//                   .data(religData.filter(function(d) {return d.ref == 1 &
-//                     focusRelig.indexOf(d.religion) > -1;}))
-//                 .enter().append("line")
-//                     .attr("class", "bar")
-//                     .attr("id", "bar-ref")
-//                     .attr("x1", function(d) {return xRbar(d.pop);})
-//                     .attr("y1", function(d) {return yRbar(d.year);})
-//                     .attr("x2", function(d) {return xRbar(d.pop);})
-//                     .attr("y2", function(d) {return yRbar(d.year) + yRbar.rangeBand();})
-//                     // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
-//                       .attr("stroke", function(d) {return zRelig(d.religion);})
-//                     .style("opacity", 1);
-//
-// // Ref line: Catholics
-//     religBar.selectAll("#cath-ref")
-//             .data(religData.filter(function(d) {return d.ref == 0 &
-//               d.religion == "Catholic";}))
-//           .enter().append("line")
-//               // .attr("class", "bar")
-//               .attr("id", "cath-ref")
-//               .attr("x1", function(d) {return xRbar(d.pop);})
-//               .attr("y1", function(d) {return yRbar(d.year);})
-//               .attr("x2", function(d) {return xRbar(d.pop);})
-//               .attr("y2", function(d) {return yRbar(d.year) + yRbar.rangeBand();})
-//               // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
-//                 .attr("stroke", function(d) {return zRelig(d.religion);})
-//                 .attr("stroke-width", 4)
-//               .style("opacity", 1);
 
     // --- end RELIGION BAR PLOT ---
 
@@ -948,14 +897,7 @@ tfr.append("text")
           .attr("fill", function(d) {return z(d.country);})
           .style("opacity", 1);
 
-          // TEXT: source
-      tfr.append("text")
-            .attr("id", "source")
-            .attr("class", "source")
-            .text("Source: Demographic and Health Surveys")
-            .attr("x", 0)
-            .attr("y", dims.tfr.h)
-            .style("opacity", 1);
+
 
 // TEXT: Summary ----------
 
@@ -1124,7 +1066,7 @@ summ.append("div")
 // [[ #7 ]] --------------------------------------------------------------------
   function show7() {
 // -- TURN OFF PREVIOUS --
-
+  rBarOff();
 
 // -- TURN OFF NEXT --
   religMapOff();
