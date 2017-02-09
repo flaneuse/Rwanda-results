@@ -45,7 +45,7 @@
     tfr:      { top: 65, right: 125, bottom: 25, left: 35 },
     mcu:      { top: 75, right: 75, bottom: 25, left: 235 },
     religDot: { top: 75, right: 125, bottom: 25, left: 75 },
-    religBar: { top: 125, right: 75, bottom: 125, left: 75 }
+    religBar: { top: 125, right: 100, bottom: 125, left: 75 }
   };
 
   var dims = {
@@ -286,11 +286,11 @@ var focusRelig = ["Protestant", "Catholic"];
      .attr("transform", "translate(" + margins.religDot.left + "," + margins.religDot.top + ")")
      .style("opacity", 0);
 
-    religBar = plotG
-    .append("g")
-     .attr("id", "relig-bar")
-    //  .attr("transform", "translate(" + margins.religBar.left + "," + margins.religBar.top + ")")
-     .style("opacity", 0);
+    // religBar = plotG
+    // .append("g")
+    //  .attr("id", "relig-bar")
+    // //  .attr("transform", "translate(" + margins.religBar.left + "," + margins.religBar.top + ")")
+    //  .style("opacity", 0);
 
 // Data processing
 
@@ -346,10 +346,9 @@ religData.forEach(function(d) {
 });
 
 var religNest = d3.nest()
-  .key(function(d) { return d.religion })
-  .entries(religData.filter(function(d) {return focusRelig.indexOf(d.religion) > -1})
-          .sort(function(a,b) {return b.order - a.order}));
-console.log(religNest)
+  .key(function(d) { return d.religion;})
+  .sortKeys(d3.descending)
+  .entries(religData.filter(function(d) {return focusRelig.indexOf(d.religion) > -1}));
 
 // Religion pop pyramid ---------------------------------------------------------------------------
 var religAgeData = rawData["religAge"];
@@ -560,10 +559,15 @@ br.selectAll("circle").on("click", function(d,i) {
     // .attr("height", dims.religBar.h)
 
 
-    d3.select("#relig-bar").selectAll("div")
+    d3.select("#vis").selectAll("#relig-bar")
       .data(religNest)
     .enter().append("div")
       .style("display", "inline-block")
+      .attr("id", "relig-bar")
+      .style("position", "absolute")
+      .style("top", 0)
+      // .style("left", "0px")
+      .style("left", function(d,i) {return i*(width/2) + "px";})
       .style("width", width/2 + "px")
      .style("height", height + "px")
     .append("svg")
@@ -576,15 +580,20 @@ br.selectAll("circle").on("click", function(d,i) {
       function multiple(symbol){
         var svg = d3.select(this);
 
-        console.log(symbol)
+        // console.log(symbol)
 
         xRbar.range([0, dims.religBar.w/2]);
 
-        svg.append("text")
-            .attr("class", "top-label")
-            .attr("x", 0)
-            .attr("y", -margins.religBar.top)
-            .text("percent of population");
+
+        svg.selectAll(".top-label")
+          .data(symbol.values)
+        .enter().append("text")
+          .attr("class", "top-label")
+          .attr("x", 0)
+          .attr("y", -margins.religBar.top/2)
+          .style("font-size", "18px")
+          .attr("fill", function(d) {return zRelig(d.religion);})
+          .text(function(d) {return d.religion + " population";});
 
         svg.append("g")
             .call(xAxRbar)
