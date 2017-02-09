@@ -1338,8 +1338,6 @@ function rDotOn(tDefault) {
       .duration(tDefault*3)
       .delay(tDefault*4)
       .style("opacity", 1);
-
-      // .data(religData.filter(function(d) {return focusRelig.indexOf(d.religion) > -1 & d.ref == 0}))
 }
 
 function rDotOff() {
@@ -1347,6 +1345,43 @@ function rDotOff() {
     .transition()
       .duration(0)
       .style("opacity", 0);
+
+
+      plotG.selectAll(".slope")
+      .transition("tSlope")
+        .duration(0)
+        .delay(0)
+          .attr("x2", function(d) {return xRdot(2002);})
+          .attr("y2", function(d) {return yRdot(d.pct2002);});
+
+
+      plotG.selectAll("#relig2012")
+      .transition("tSlope")
+        .duration(0)
+        .delay(0)
+        .attr("cx", function(d) {return xRdot(2002);})
+        .attr("cy", function(d) {return yRdot(d.pct2002);});
+
+      plotG.selectAll("#religDot-annot")
+      .transition("tSlope")
+      .duration(0)
+      .delay(0)
+          .attr("x", function(d) {return xRdot(2002)})
+          .attr("dx", 20)
+          .attr("y", function(d) {return yRdot(d.pct2002);});
+
+      // sourceOn("Rwanda Population & Housing Census 2002 & 2012", tDefault)
+
+      // plotG.selectAll("#Rpct-annot2012")
+      //     .text(function(d) {return d3.format(".0%")(d.pct2012)})
+      //     .attr("x", function(d) {return xRdot(2012);})
+      //     .attr("dy", -20)
+      //     .attr("y", function(d) {return yRdot(d.pct2012);})
+      //     .style("opacity", 0)
+      //   .transition("tSlope")
+      //     .duration(tDefault*3)
+      //     .delay(tDefault*4)
+      //     .style("opacity", 1);
 }
 
 function rBarOn(tDefault) {
