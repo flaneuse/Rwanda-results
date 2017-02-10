@@ -736,11 +736,12 @@ source.append("text")
               .attr("fill", function(d) {return zRelig(d.religion);})
               .attr("stroke", function(d) {return d.ref == 0 ? zRelig(d.religion) : "none";})
               .style("stroke-width", 1)
-              .style("fill-opacity", 0.15);
+              .style("fill-opacity", 0.2);
 
 // Ref line: 2002
               svg.selectAll("#bar-ref")
                 .data(popByRelig.values.filter(function(d) {return d.ref == 1 &
+                  d.year == 2012 &
                   focusRelig.indexOf(d.religion) > -1;}))
               .enter().append("line")
                   .attr("class", "bar")
@@ -755,16 +756,16 @@ source.append("text")
 
 // Ref line: Catholics
   svg.selectAll("#cath-ref")
-          .data(popByRelig.values.filter(function(d) {return d.ref == 1}))
+          .data(popByRelig.values.filter(function(d) {return d.ref == 0}))
         .enter().append("line")
             // .attr("class", "bar")
             .attr("id", "cath-ref")
-            .attr("x1", function(d) {return xRbar(d.catholic);})
+            .attr("x1", function(d) {return xRbar(d.pop);})
             .attr("y1", function(d) {return yRbar(d.year);})
-            .attr("x2", function(d) {return xRbar(d.catholic);})
+            .attr("x2", function(d) {return xRbar(d.pop);})
             .attr("y2", function(d) {return yRbar(d.year) + yRbar.rangeBand();})
             // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
-              .attr("stroke", function(d) {return zRelig("Catholic");})
+            .attr("stroke", function(d) {return zRelig(d.religion);})
               .attr("stroke-width", 4)
             .style("opacity", 1);
       }
