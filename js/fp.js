@@ -1551,7 +1551,7 @@ function religOn(tDefault) {
 mcuRelig.selectAll("#mcu-lolli")
 .transition("changeNatl")
   .duration(tDefault * 1)
-  .delay(tDefault * 2)
+  .delay(tDefault)
       .attr("x1", function(d) {return xMCUrelig(d.natl);})
       .attr("x2", function(d) {return xMCUrelig(d.ave);});
 
@@ -1559,7 +1559,7 @@ mcuRelig.selectAll("#mcu-lolli")
 mcuRelig.selectAll("#mcu-relig")
 .transition("changeNatl")
   .duration(tDefault* 1)
-  .delay(tDefault * 2)
+  .delay(tDefault)
     .attr("cx", function(d) {return xMCUrelig(d.ave);})
     .attr("fill", function(d) {return zMCU(d.ave);}); // Keep constant so consistent w/ later results.
 
