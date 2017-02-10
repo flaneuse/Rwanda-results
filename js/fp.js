@@ -505,7 +505,7 @@ filtered2 = mcuData.filter(function(d) {return d.Category == selectedCat })
 
     mcuDots
     .enter().append("circle")
-        .attr("fill", function(d) {return zMCU(mcuAvg)})
+        .style("fill", function(d) {return zMCU(mcuAvg)})
 
     // remove extra dots
     mcuDots.exit().remove();
@@ -516,7 +516,7 @@ filtered2 = mcuData.filter(function(d) {return d.Category == selectedCat })
     .attr("class", "dot")
     .attr("cx", xMCU(mcuAvg))
     .attr("cy",  dims.mcu.h/2)
-    .attr("fill", function(d) {return zMCU(mcuAvg)})
+    .style("fill", function(d) {return zMCU(mcuAvg)})
     .attr("r", radius*2)
 
 
@@ -525,7 +525,7 @@ filtered2 = mcuData.filter(function(d) {return d.Category == selectedCat })
       .attr("cx", function(d) {return xMCU(d.ave);})
       .attr("cy", function(d) {return yMCU(d.Variable) + yMCU.rangeBand()/2})
       // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
-      .attr("fill", function(d) {return zMCU(d.ave);});
+      .style("fill", function(d) {return zMCU(d.ave);});
 
 // Turn on or off lz maps & update position
 if(selectedCat == "Livelihood Zone") {
@@ -680,8 +680,9 @@ source.append("rect")
 
     // --- RELIGION BAR PLOT ---
 
-    d3.select("#vis").selectAll("#relig-bar")
-      .data(religNest)
+    religBar = d3.select("#vis").selectAll("#relig-bar");
+
+  religBar.data(religNest)
     .enter().append("div")
       .attr("class", "sm-mult")
       .attr("id", "relig-bar")
@@ -704,13 +705,13 @@ source.append("rect")
 
 
         svg.selectAll(".top-label")
-          .data(popByRelig.values)
+          .data(popByRelig.values.filter(function(d,i) {return i == 0;}))
         .enter().append("text")
           .attr("class", "top-label")
           .attr("x", 0)
           .attr("y", -margins.religBar.top/2)
           .style("font-size", "18px")
-          .attr("fill", function(d) {return zRelig(d.religion);})
+          .style("fill", function(d) {return zRelig(d.religion);})
           .text(function(d) {return d.religion + " population";});
 
         svg.append("g")
@@ -738,7 +739,7 @@ source.append("rect")
               .attr("width", function(d) {return xRbar(d.pop);})
               .attr("height", yRbar.rangeBand())
               // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
-              .attr("fill", function(d) {return zRelig(d.religion);})
+              .style("fill", function(d) {return zRelig(d.religion);})
               .attr("stroke", function(d) {return d.ref == 0 ? zRelig(d.religion) : "none";})
               .style("stroke-width", 1)
               .style("fill-opacity", 0.35);
@@ -755,7 +756,7 @@ source.append("rect")
               .attr("width", function(d) {return xRbar(d.diff);})
               .attr("height", yRbar.rangeBand())
               // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
-              .attr("fill", function(d) {return zRelig(d.religion);})
+              .style("fill", function(d) {return zRelig(d.religion);})
               .attr("stroke", function(d) {return d.ref == 0 ? zRelig(d.religion) : "none";})
               .style("stroke-width", 1)
               .style("fill-opacity", 0.2);
@@ -798,8 +799,9 @@ source.append("rect")
 
 // --- RELIGION BY AGE BAR PLOT ---
 
-    d3.select("#vis").selectAll("#relig-age")
-      .data(religAgeData)
+  d3.select("#vis")
+    .selectAll("#relig-age")
+    .data(religAgeData)
     .enter().append("div")
       .attr("class", "sm-mult")
       .attr("id", function(d) {return "relig-age_" + d.key;})
@@ -831,7 +833,7 @@ source.append("rect")
           .attr("x", -margins.religAge.left)
           .attr("y", -margins.religAge.top/2)
           .style("font-size", "18px")
-          .attr("fill", function(d) {return zRelig(d.religion);})
+          .style("fill", function(d) {return zRelig(d.religion);})
           .text(function(d) {return "percent of " + d.religion + " population";});
 
 if(popByRelig.key == "Protestant") {
@@ -862,7 +864,7 @@ if(popByRelig.key == "Protestant") {
               .attr("width", function(d) { return xRage(d.pct);})
               .attr("height", yRage.rangeBand())
               // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
-              .attr("fill", function(d) {return zRelig(d.religion);})
+              .style("fill", function(d) {return zRelig(d.religion);})
               .attr("stroke", function(d) {return d.ref == 0 ? zRelig(d.religion) : "none";})
               .style("stroke-width", 1)
               .style("fill-opacity", 0.5);
@@ -917,7 +919,6 @@ religSlope.selectAll(".slope")
         .attr("cx", function(d) {return xRslope(2002);})
         .attr("cy", function(d) {return yRslope(d.pct2002);})
         // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
-        .attr("fill", function(d) {return zRelig(d.religion);})
         .style("opacity", 1);
 
 // 2002 dots
@@ -930,7 +931,7 @@ religSlope.selectAll(".slope")
             .attr("cx", function(d) {return xRslope(2002);})
             .attr("cy", function(d) {return yRslope(d.pct2002);})
             // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
-            .attr("fill", function(d) {return zRelig(d.religion);})
+            .style("fill", function(d) {return zRelig(d.religion);})
             .style("opacity", function(d) {return focusRelig.indexOf(d.religion) > -1 ? 1 : 0.35;});
 
 // 2012 dots. Initially set to be at 2002 values.
@@ -943,7 +944,6 @@ religSlope.selectAll(".slope")
               .attr("cx", function(d) {return xRslope(2002);})
               .attr("cy", function(d) {return yRslope(d.pct2002);})
               // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
-              .attr("fill", function(d) {return zRelig(d.religion);})
               .style("opacity", 1);
 
 // 2012 dots. Initially set to be at 2002 values.
@@ -956,7 +956,7 @@ religSlope.selectAll(".slope")
                 .attr("cx", function(d) {return xRslope(2002);})
                 .attr("cy", function(d) {return yRslope(d.pct2002);})
                 // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
-                .attr("fill", function(d) {return zRelig(d.religion);})
+                .style("fill", function(d) {return zRelig(d.religion);})
                 .style("opacity", function(d) {return focusRelig.indexOf(d.religion) > -1 ? 1 : 0.35;});
 
 
@@ -972,7 +972,7 @@ religSlope.selectAll(".slope")
               .attr("dx", 20)
               .attr("y", function(d) {return yRslope(d.pct2002);})
               // .attr("dy", "0.4em")
-              .attr("fill", function(d) {return zRelig(d.religion);})
+              .style("fill", function(d) {return zRelig(d.religion);})
               .style("opacity", function(d) {return focusRelig.indexOf(d.religion) > -1 ? 1 : 0.35;});
 
       // TEXT: % religion value (init.)
@@ -985,7 +985,7 @@ religSlope.selectAll(".slope")
               .attr("x", function(d) {return xRslope(2002);})
               .attr("dy", -20)
               .attr("y", function(d) {return yRslope(d.pct2002);})
-              .attr("fill", function(d) {return zRelig(d.religion);})
+              .style("fill", function(d) {return zRelig(d.religion);})
               .style("opacity", 1);
 
     // TEXT: % religion value
@@ -998,7 +998,7 @@ religSlope.selectAll(".slope")
         .attr("x", function(d) {return xRslope(2002);})
         .attr("dy", -20)
         .attr("y", function(d) {return yRslope(d.pct2002);})
-        .attr("fill", function(d) {return zRelig(d.religion);})
+        .style("fill", function(d) {return zRelig(d.religion);})
         .style("opacity", 1);
 // --- end RELIGION DOT PLOT ---------------------------------------------------
 
@@ -1064,7 +1064,7 @@ mcuRelig.append("g")
               .text(function(d) {return d3.format(".0%")(d.ave)})
               .style("opacity", 0)
               .style("font-size", 18)
-              .attr("fill", function(d) {return zMCU(d.natl);}); // Keep constant so consistent w/ later results.
+              .style("fill", function(d) {return zMCU(d.natl);}); // Keep constant so consistent w/ later results.
 
 // lollipop connectors
   mcuRelig.selectAll("#mcu-lolli")
@@ -1088,7 +1088,7 @@ mcuRelig.append("g")
       .attr("cx", function(d) {return xMCUrelig(d.natl);})
       .attr("cy", function(d) {return yMCUrelig(d.Variable) + yMCUrelig.rangeBand()/2})
       // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
-      .attr("fill", function(d) {return zMCU(d.natl);}); // Keep constant so consistent w/ later results.
+      .style("fill", function(d) {return zMCU(d.natl);}); // Keep constant so consistent w/ later results.
 
 
 
@@ -1119,7 +1119,7 @@ mcu.append("g")
       .attr("cx", function(d) {return xMCU(d.ave);})
       .attr("cy", function(d) {return yMCU(d.Variable) + yMCU.rangeBand()/2})
       // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
-      .attr("fill", function(d) {return zMCU(d.ave);});
+      .style("fill", function(d) {return zMCU(d.ave);});
 
       // image
 var imgs = mcu.selectAll("image")
@@ -1216,7 +1216,7 @@ tfr.append("text")
           .attr("dx", 20)
           .attr("y", function(d) {return y(d.tfr);})
           // .attr("dy", "0.4em")
-          .attr("fill", function(d) {return z(d.country);})
+          .style("fill", function(d) {return z(d.country);})
           .style("opacity", 1);
 
   // TEXT: TFR at final value
@@ -1229,7 +1229,7 @@ tfr.append("text")
           .attr("x", function(d) {return x(d.year);})
           .attr("dy", -20)
           .attr("y", function(d) {return y(d.tfr);})
-          .attr("fill", function(d) {return z(d.country);})
+          .style("fill", function(d) {return z(d.country);})
           .style("opacity", 1);
 
 
@@ -1663,6 +1663,7 @@ function rBarOff() {
 
 
 function rAgeOn(tDefault) {
+// turn on stuff
   vis.selectAll("#relig-age_Catholic")
     .transition()
       .duration(tDefault)
@@ -1673,11 +1674,27 @@ function rAgeOn(tDefault) {
           .duration(tDefault)
           .style("opacity", 1);
 
+// overlay bars
   vis.selectAll("#relig-age_Catholic")
-    .transition()
+    .transition("overlay-bars")
       .delay(tDefault*2)
       .duration(tDefault*3)
       .style("left", "0px");
+
+// change title
+  vis.selectAll("#relig-age_Protestant").select("svg").select("g").select(".top-label")
+        .transition("overlay-bars")
+          .delay(tDefault*2)
+          .duration(tDefault)
+          .text("percent of population")
+          .style("fill", "#555");
+
+  vis.selectAll("#relig-age_Catholic").select("svg").select("g").select(".top-label")
+      .transition("overlay-bars")
+        .delay(tDefault*2)
+        .duration(tDefault*3)
+        .text("");
+
 
   sourceOn("Rwanda Population & Housing Census 2002 & 2012", tDefault)
 }
@@ -1693,6 +1710,20 @@ function rAgeOff() {
         .transition()
           .duration(0)
           .style("opacity", 0);
+
+  vis.selectAll("#relig-age_Protestant").select("svg").select("g").select(".top-label")
+  .transition()
+    .delay(0)
+    .duration(0)
+      .style("fill", function(d) {return zRelig(d.key);})
+      .text(function(d) {return "percent of " + d.key + " population";});
+
+  vis.selectAll("#relig-age_Catholic").select("svg").select("g").select(".top-label")
+      .transition()
+        .delay(0)
+        .duration(0)
+        .style("fill", function(d) {return zRelig(d.key);})
+        .text(function(d) {return "percent of " + d.key + " population";});
 }
 
 function summaryOn(tDefault) {
@@ -1733,7 +1764,7 @@ mcuRelig.selectAll("#mcu-relig")
   .duration(tDefault* 1)
   .delay(tDefault)
     .attr("cx", function(d) {return xMCUrelig(d.ave);})
-    .attr("fill", function(d) {return zMCU(d.ave);}); // Keep constant so consistent w/ later results.
+    .style("fill", function(d) {return zMCU(d.ave);}); // Keep constant so consistent w/ later results.
 
     mcuRelig.selectAll(".val-labels")
     .transition("changeNatl")
@@ -1762,7 +1793,7 @@ function religOff() {
       .duration(0)
       .delay(0)
         .attr("cx", function(d) {return xMCUrelig(d.natl);})
-        .attr("fill", function(d) {return zMCU(d.natl);}); // Keep constant so consistent w/ later results.
+        .style("fill", function(d) {return zMCU(d.natl);}); // Keep constant so consistent w/ later results.
 
         mcuRelig.selectAll(".val-labels")
         .transition()
