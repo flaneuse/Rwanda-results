@@ -46,8 +46,8 @@
     mcu:      { top: 75, right: 75, bottom: 0, left: 235 },
     mcuRelig: { top: 75, right: 75, bottom: 0, left: 100 },
     religSlope: { top: 75, right: 125, bottom: 25, left: 75 },
-    religBar: { top: 125, right: 100, bottom: 75, left: 45 },
-    religAge: { top: 125, right: 100, bottom: 75, left: 105 }
+    religBar: { top: 125, right: 100, bottom: 0, left: 45 },
+    religAge: { top: 125, right: 100, bottom: 5, left: 75 }
   };
 
   var dims = {
@@ -802,12 +802,13 @@ source.append("rect")
       .data(religAgeData)
     .enter().append("div")
       .attr("class", "sm-mult")
-      .attr("id", "relig-age")
+      .attr("id", function(d) {return "relig-age_" + d.key;})
       .style("position", "absolute")
       .style("opacity", 0)
       .style("left", function(d,i) {return i*(width/2) + "px";})
       .style("width", width / 2 + "px")
       .style("height", height + "px")
+      .style("opacity", 0)
     .append("svg")
       .attr("width", width / 2)
       .attr("height", height)
@@ -815,6 +816,7 @@ source.append("rect")
       .attr("transform", "translate(" + margins.religAge.left + "," + margins.religAge.top + ")")
       .each(multipleAge);
 
+// Function to repeat over the plot.
       function multipleAge(popByRelig){
         var svg = d3.select(this);
 
@@ -826,29 +828,32 @@ source.append("rect")
           .data(popByRelig.values.filter(function(d,i) {return i == 0;}))
         .enter().append("text")
           .attr("class", "top-label")
-          .attr("x", 0)
+          .attr("x", -margins.religAge.left)
           .attr("y", -margins.religAge.top/2)
           .style("font-size", "18px")
           .attr("fill", function(d) {return zRelig(d.religion);})
           .text(function(d) {return "percent of " + d.religion + " population";});
 
-        svg.append("g")
-            .call(xAxRage)
-            .attr("class", "x axis")
-            .attr("id", "religAge-x")
-            .attr("transform", "translate(0," + xaxisOffset + ")")
-            .style("opacity", 1);
+if(popByRelig.key == "Protestant") {
+  svg.append("g")
+          .call(yAxRage)
+          .attr("class", "y axis")
+          .attr("id", "religAge-y")
+          // .attr("transform", "translate(" + width + ",0)")
+          .style("opacity", 1);
+}
 
-        svg.append("g")
-                .call(yAxRage)
-                .attr("class", "y axis")
-                .attr("id", "religAge-y")
-                // .attr("transform", "translate(" + width + ",0)")
-                .style("opacity", 1);
+      svg.append("g")
+        .call(xAxRage)
+        .attr("class", "x axis")
+        .attr("id", "religAge-x")
+        .attr("transform", "translate(0," + xaxisOffset + ")")
+        .style("opacity", 1);
+
 
 // Normal bars
           svg.selectAll("#age-bar")
-                        .data(popByRelig.values)
+              .data(popByRelig.values)
           .enter().append("rect")
               .attr("class", "bar")
               .attr("id", "age-bar")
@@ -860,7 +865,7 @@ source.append("rect")
               .attr("fill", function(d) {return zRelig(d.religion);})
               .attr("stroke", function(d) {return d.ref == 0 ? zRelig(d.religion) : "none";})
               .style("stroke-width", 1)
-              .style("fill-opacity", 0.35);
+              .style("fill-opacity", 0.5);
       }
     // --- end RELIGION BY AGE BAR PLOT ---
 
@@ -872,8 +877,8 @@ source.append("rect")
             .attr("class", "top-label")
             .attr("x", function(d) {return xRslope(d.year);})
             .attr("y", function(d) {return yRslope(d.pct);})
-            .attr("dx", -dims.religSlope.w*0.35)
-            .attr("dy", -dims.religSlope.h*0.15)
+            .attr("dx", -dims.religSlope.w * 0.35)
+            .attr("dy", -dims.religSlope.h * 0.15)
             .text("percent of population")
             .style("opacity", 1);
 
@@ -1391,7 +1396,7 @@ summ.append("div")
   RslopeOff();
 
 // -- TURN OFF NEXT --
-
+  rAgeOff(tDefault);
 
 // -- TURN ON CURRENT --
   rBarOn(tDefault);
@@ -1415,10 +1420,10 @@ summ.append("div")
   rAgeOff();
 
 // -- TURN OFF NEXT --
-  mcuMapOff();
+  // mcuMapOff();
 
 // -- TURN ON CURRENT --
-  religMapOn(tDefault);
+  // religMapOn(tDefault);
   }
 
 
@@ -1658,19 +1663,36 @@ function rBarOff() {
 
 
 function rAgeOn(tDefault) {
-  vis.selectAll("#relig-age")
+  vis.selectAll("#relig-age_Catholic")
     .transition()
       .duration(tDefault)
       .style("opacity", 1);
+
+  vis.selectAll("#relig-age_Protestant")
+        .transition()
+          .duration(tDefault)
+          .style("opacity", 1);
+
+  vis.selectAll("#relig-age_Catholic")
+    .transition()
+      .delay(tDefault*2)
+      .duration(tDefault*3)
+      .style("left", "0px");
 
   sourceOn("Rwanda Population & Housing Census 2002 & 2012", tDefault)
 }
 
 function rAgeOff() {
-  vis.selectAll("#relig-age")
+  vis.selectAll("#relig-age_Catholic")
     .transition()
       .duration(0)
+      .style("left", (width/2) + "px")
       .style("opacity", 0);
+
+  vis.selectAll("#relig-age_Protestant")
+        .transition()
+          .duration(0)
+          .style("opacity", 0);
 }
 
 function summaryOn(tDefault) {
