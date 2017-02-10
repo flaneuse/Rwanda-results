@@ -46,7 +46,8 @@
     mcu:      { top: 75, right: 75, bottom: 0, left: 235 },
     mcuRelig: { top: 75, right: 75, bottom: 0, left: 100 },
     religSlope: { top: 75, right: 125, bottom: 25, left: 75 },
-    religBar: { top: 125, right: 100, bottom: 75, left: 5 }
+    religBar: { top: 125, right: 100, bottom: 75, left: 45 },
+    religAge: { top: 125, right: 100, bottom: 75, left: 105 }
   };
 
   var dims = {
@@ -61,7 +62,9 @@
     religSlope: { w: width - margins.religSlope.right - margins.religSlope.left,
                 h: height - margins.religSlope.top - margins.religSlope.bottom},
     religBar: { w: width - margins.religBar.right - margins.religBar.left,
-                h: height - margins.religBar.top - margins.religBar.bottom}
+                h: height - margins.religBar.top - margins.religBar.bottom},
+    religAge: { w: width - margins.religAge.right - margins.religAge.left,
+                h: height - margins.religAge.top - margins.religAge.bottom}
   }
 console.log(dims)
 
@@ -207,26 +210,47 @@ var focusRelig = ["Protestant", "Catholic"];
           .orient("left");
 
 
-  // AXES for Religion bar plot
+  // AXES for Religion by age bar plot
 
-      var xRbar = d3.scale.linear()
-       .range([0, dims.religBar.w]);
+      var xRage = d3.scale.linear()
+       .range([0, dims.religAge.w]);
 
-       var yRbar = d3.scale.ordinal()
-            .rangeBands([0, dims.religBar.h], 0.2, 0.2);
+       var yRage = d3.scale.ordinal()
+            .rangeBands([0, dims.religAge.h], 0.2, 0.2);
 
-       var xAxRbar = d3.svg.axis()
-            .scale(xRbar)
-            .tickFormat(d3.format(".1s"))
-            .ticks(4)
-            .innerTickSize(-dims.religBar.h + xaxisOffset)
+       var xAxRage = d3.svg.axis()
+            .scale(xRage)
+            // .tickFormat(d3.format(".1s"))
+            .ticks(4, "%")
+            .innerTickSize(-dims.religAge.h + xaxisOffset)
             .orient("top");
 
-       var yAxRbar= d3.svg.axis()
-            .scale(yRbar)
+       var yAxRage = d3.svg.axis()
+            .scale(yRage)
             // .tickFormat(d3.format("d"))
             // .ticks(5)
             .orient("left");
+
+    // AXES for Religion bar plot
+
+        var xRbar = d3.scale.linear()
+         .range([0, dims.religBar.w]);
+
+         var yRbar = d3.scale.ordinal()
+              .rangeBands([0, dims.religBar.h], 0.2, 0.2);
+
+         var xAxRbar = d3.svg.axis()
+              .scale(xRbar)
+              .tickFormat(d3.format(".1s"))
+              .ticks(4)
+              .innerTickSize(-dims.religBar.h + xaxisOffset)
+              .orient("top");
+
+         var yAxRbar= d3.svg.axis()
+              .scale(yRbar)
+              // .tickFormat(d3.format("d"))
+              // .ticks(5)
+              .orient("left");
 
 // line generator
         var line = d3.svg.line() // d3.line for v4
@@ -382,10 +406,10 @@ var religNest = d3.nest()
 var religAgeData = rawData["religAge"];
 
 // Nest by religion
-var religAgeData = d3.nest()
+var religAgeNest = d3.nest()
   .key(function(d) { return d.religion })
   .entries(religAgeData.sort(function(a,b) {return b.order - a.order}));
-// console.log(religAgeData)
+
 
 
 // Religion pct for dot plot ---------------------------------------------------------------------------
@@ -540,6 +564,11 @@ if(selectedCat == "Livelihood Zone") {
        xRbar.domain([0, d3.max(religData.filter(function(d) {return focusRelig.indexOf(d.religion) > -1;}),
          function(element) { return element.pop; })]);
 
+    // Religion by Age Bar
+       yRage.domain(religAgeData.map(function(element) {return element.age_label}));
+       xRage.domain([0, d3.max(religAgeData.filter(function(d) {return focusRelig.indexOf(d.religion) > -1;}),
+         function(element) { return element.pct; })]);
+
 
 // MCU
    xMCU.domain([0, d3.max(mcuData, function(element) { return element.ave; })]);
@@ -577,7 +606,7 @@ br.selectAll("circle").on("click", function(d,i) {
 
 
 // Call the function to set up the svg objects
-       setupVis(tfrCountries, tfrNest, tfrRwanda, religData, religNest, religPctData);
+       setupVis(tfrCountries, tfrNest, tfrRwanda, religData, religNest, religPctData, religAgeNest);
 
 // Set up the functions to edit the sections.
        setupSections();
@@ -592,7 +621,7 @@ br.selectAll("circle").on("click", function(d,i) {
    * sections of the visualization.
    *
    */
-  setupVis = function(data, tfrNest, tfrRwanda, religData, religNest, religPctData) {
+  setupVis = function(data, tfrNest, tfrRwanda, religData, religNest, religPctData, religAgeData) {
 
     // --- SOURCE ---
     // TEXT: source
@@ -640,21 +669,16 @@ source.append("rect")
       .text("geocenter@usaid.gov")
       .style("opacity", 1);
 
-source.append("text")
-  .attr("class", "source")
-  .attr("id", "source-text")
-  .attr("x", "25%")
-  .attr("y", margin.bottom/2)
-  .style("opacity", 1);
+  source.append("text")
+    .attr("class", "source")
+    .attr("id", "source-text")
+    .attr("x", "25%")
+    .attr("y", margin.bottom/2)
+    .style("opacity", 1);
 
+    // end SOURCE ----------------------------------------------------------------
 
     // --- RELIGION BAR PLOT ---
-    // console.log(religNest)
-    // religBar.data(religNest)
-    // .enter().append("svg")
-    // .attr("width", dims.religBar.w / 2)
-    // .attr("height", dims.religBar.h)
-
 
     d3.select("#vis").selectAll("#relig-bar")
       .data(religNest)
@@ -675,8 +699,6 @@ source.append("text")
 
       function multiple(popByRelig){
         var svg = d3.select(this);
-
-        // console.log(popByRelig)
 
         xRbar.range([0, dims.religBar.w/2]);
 
@@ -772,6 +794,75 @@ source.append("text")
 
 
     // --- end RELIGION BAR PLOT ---
+
+
+// --- RELIGION BY AGE BAR PLOT ---
+
+    d3.select("#vis").selectAll("#relig-age")
+      .data(religAgeData)
+    .enter().append("div")
+      .attr("class", "sm-mult")
+      .attr("id", "relig-age")
+      .style("position", "absolute")
+      .style("opacity", 0)
+      .style("left", function(d,i) {return i*(width/2) + "px";})
+      .style("width", width / 2 + "px")
+      .style("height", height + "px")
+    .append("svg")
+      .attr("width", width / 2)
+      .attr("height", height)
+    .append("g")
+      .attr("transform", "translate(" + margins.religAge.left + "," + margins.religAge.top + ")")
+      .each(multipleAge);
+
+      function multipleAge(popByRelig){
+        var svg = d3.select(this);
+
+
+        xRage.range([0, dims.religAge.w/2]);
+
+
+        svg.selectAll(".top-label")
+          .data(popByRelig.values.filter(function(d,i) {return i == 0;}))
+        .enter().append("text")
+          .attr("class", "top-label")
+          .attr("x", 0)
+          .attr("y", -margins.religAge.top/2)
+          .style("font-size", "18px")
+          .attr("fill", function(d) {return zRelig(d.religion);})
+          .text(function(d) {return "percent of " + d.religion + " population";});
+
+        svg.append("g")
+            .call(xAxRage)
+            .attr("class", "x axis")
+            .attr("id", "religAge-x")
+            .attr("transform", "translate(0," + xaxisOffset + ")")
+            .style("opacity", 1);
+
+        svg.append("g")
+                .call(yAxRage)
+                .attr("class", "y axis")
+                .attr("id", "religAge-y")
+                // .attr("transform", "translate(" + width + ",0)")
+                .style("opacity", 1);
+
+// Normal bars
+          svg.selectAll("#age-bar")
+                        .data(popByRelig.values)
+          .enter().append("rect")
+              .attr("class", "bar")
+              .attr("id", "age-bar")
+              .attr("x", 0)
+              .attr("y", function(d) {return yRage(d.age_label);})
+              .attr("width", function(d) { return xRage(d.pct);})
+              .attr("height", yRage.rangeBand())
+              // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
+              .attr("fill", function(d) {return zRelig(d.religion);})
+              .attr("stroke", function(d) {return d.ref == 0 ? zRelig(d.religion) : "none";})
+              .style("stroke-width", 1)
+              .style("fill-opacity", 0.35);
+      }
+    // --- end RELIGION BY AGE BAR PLOT ---
 
 // --- RELIGION SLOPE PLOT ---
     // x-axis label
@@ -1312,15 +1403,16 @@ summ.append("div")
   rBarOff();
 
 // -- TURN OFF NEXT --
-  religMapOff();
+  // religMapOff();
 
 // -- TURN ON CURRENT --
-
+  rAgeOn(tDefault);
   }
 
 // [[ #8 ]] --------------------------------------------------------------------
   function show8() {
 // -- TURN OFF PREVIOUS --
+  rAgeOff();
 
 // -- TURN OFF NEXT --
   mcuMapOff();
@@ -1559,6 +1651,23 @@ function rBarOn(tDefault) {
 
 function rBarOff() {
   vis.selectAll("#relig-bar")
+    .transition()
+      .duration(0)
+      .style("opacity", 0);
+}
+
+
+function rAgeOn(tDefault) {
+  vis.selectAll("#relig-age")
+    .transition()
+      .duration(tDefault)
+      .style("opacity", 1);
+
+  sourceOn("Rwanda Population & Housing Census 2002 & 2012", tDefault)
+}
+
+function rAgeOff() {
+  vis.selectAll("#relig-age")
     .transition()
       .duration(0)
       .style("opacity", 0);
