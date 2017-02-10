@@ -1674,27 +1674,30 @@ function rAgeOn(tDefault) {
           .duration(tDefault)
           .style("opacity", 1);
 
+// remove Catholic text
+  vis.selectAll("#relig-age_Catholic").select("svg").select("g").select(".top-label")
+                    .transition("overlay-bars")
+                      .delay(tDefault*2)
+                      .duration(tDefault*3)
+                      .text("");
+
 // overlay bars
   vis.selectAll("#relig-age_Catholic")
     .transition("overlay-bars")
       .delay(tDefault*2)
       .duration(tDefault*3)
-      .style("left", "0px");
+      .style("left", "0px")
+      .each("end", function(){
+
 
 // change title
   vis.selectAll("#relig-age_Protestant").select("svg").select("g").select(".top-label")
         .transition("overlay-bars")
-          .delay(tDefault*2)
+          .delay(0)
           .duration(tDefault)
           .text("percent of population")
           .style("fill", "#555");
-
-  vis.selectAll("#relig-age_Catholic").select("svg").select("g").select(".top-label")
-      .transition("overlay-bars")
-        .delay(tDefault*2)
-        .duration(tDefault*3)
-        .text("");
-
+})
 
   sourceOn("Rwanda Population & Housing Census 2002 & 2012", tDefault)
 }
