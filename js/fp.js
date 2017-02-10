@@ -303,16 +303,23 @@ var focusRelig = ["Protestant", "Catholic"];
 
        imgG = svg.select("#imgs")
 
+// Full frame, to be used for images / maps or summary text.
+       fullG = vis.select("#vis")
+         .append("div")
+           .attr("id", "max-frame")
+           .style("max-width", dims.map.w + "px");
+
+// Individual pages
     tfr = plotG
     .append("g")
       .attr("id", "tfr")
       .attr("transform", "translate(" + margins.tfr.left + "," + margins.tfr.top + ")")
       .style("opacity", 0) // set initially to 0.
 
-    summ = vis.select("#vis")
+    summ = fullG
       .append("div")
         .attr("id", "fp-summary")
-        .style("max-width", dims.map.w + "px")
+        .attr("class", "full-frame")
         .style("opacity", 0);
 
     mcu = plotG

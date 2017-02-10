@@ -5,6 +5,9 @@
   // padding-right: 15px; /* normal 15 px + 25 px for breadcrumbs.*/
 }
 
+.full-frame{
+  max-width: inherit; // inherit from parent to be responsive.
+}
 body {
   font-family: $base-font-family;
   font-weight: $base-weight;
