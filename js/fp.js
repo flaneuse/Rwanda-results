@@ -811,6 +811,19 @@ religSlope.selectAll(".slope")
       .attr("stroke", function(d) {return zRelig(d.religion);})
       .style("opacity", function(d) {return focusRelig.indexOf(d.religion) > -1 ? 1 : 0.35;});
 
+// 2002 dot mask
+    religSlope.selectAll("#relig2002-mask")
+      .data(religPctData)
+    .enter().append("circle")
+        .attr("class", "dot_mask")
+        .attr("id", "relig2002-mask")
+        .attr("r", radius*1.5)
+        .attr("cx", function(d) {return xRslope(2002);})
+        .attr("cy", function(d) {return yRslope(d.pct2002);})
+        // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
+        .attr("fill", function(d) {return zRelig(d.religion);})
+        .style("opacity", 1);
+
 // 2002 dots
         religSlope.selectAll("#relig2002")
           .data(religPctData)
@@ -823,6 +836,19 @@ religSlope.selectAll(".slope")
             // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
             .attr("fill", function(d) {return zRelig(d.religion);})
             .style("opacity", function(d) {return focusRelig.indexOf(d.religion) > -1 ? 1 : 0.35;});
+
+// 2012 dots. Initially set to be at 2002 values.
+          religSlope.selectAll("#relig2012-mask")
+            .data(religPctData)
+          .enter().append("circle")
+              .attr("class", "dot_mask")
+              .attr("id", "relig2012-mask")
+              .attr("r", radius*1.5)
+              .attr("cx", function(d) {return xRslope(2002);})
+              .attr("cy", function(d) {return yRslope(d.pct2002);})
+              // .attr("cy", function(d) {return y(d.Variable) + y.bandwidth()/2;})
+              .attr("fill", function(d) {return zRelig(d.religion);})
+              .style("opacity", 1);
 
 // 2012 dots. Initially set to be at 2002 values.
             religSlope.selectAll("#relig2012")
@@ -1430,7 +1456,7 @@ function RslopeOn(tDefault) {
   plotG.selectAll(".slope")
   .transition("tSlope")
     .duration(tDefault*3)
-    .delay(tDefault*2)
+    .delay(tDefault)
       .attr("x2", function(d) {return xRslope(2012);})
       .attr("y2", function(d) {return yRslope(d.pct2012);});
 
@@ -1438,14 +1464,21 @@ function RslopeOn(tDefault) {
   plotG.selectAll("#relig2012")
   .transition("tSlope")
     .duration(tDefault*3)
-    .delay(tDefault*2)
+    .delay(tDefault)
     .attr("cx", function(d) {return xRslope(2012);})
     .attr("cy", function(d) {return yRslope(d.pct2012);});
+
+    plotG.selectAll("#relig2012-mask")
+    .transition("tSlope")
+      .duration(tDefault*3)
+      .delay(tDefault)
+      .attr("cx", function(d) {return xRslope(2012);})
+      .attr("cy", function(d) {return yRslope(d.pct2012);});
 
   plotG.selectAll("#religSlope-annot")
   .transition("tSlope")
   .duration(tDefault*3)
-  .delay(tDefault*2)
+  .delay(tDefault)
       .attr("x", function(d) {return xRslope(2012)})
       .attr("dx", 20)
       .attr("y", function(d) {return yRslope(d.pct2012);});
@@ -1485,6 +1518,13 @@ function RslopeOff() {
         .delay(0)
         .attr("cx", function(d) {return xRslope(2002);})
         .attr("cy", function(d) {return yRslope(d.pct2002);});
+
+        plotG.selectAll("#relig2012-mask")
+        .transition("tSlope")
+          .duration(0)
+          .delay(0)
+          .attr("cx", function(d) {return xRslope(2002);})
+          .attr("cy", function(d) {return yRslope(d.pct2002);});
 
       plotG.selectAll("#religSlope-annot")
       .transition("tSlope")
