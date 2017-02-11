@@ -8,6 +8,7 @@
 .full-frame{
   max-width: inherit; // inherit from parent to be responsive.
 }
+
 body {
   font-family: $base-font-family;
   font-weight: $base-weight;
@@ -20,7 +21,7 @@ body {
 
 /*Row containing ALL the elements (sections, vis., etc.)*/
 #graphic {
-  padding-top: 60px;
+  // padding-top: 60px;
 }
 
 /*Sections with the scrolling text on the side*/
@@ -64,7 +65,7 @@ body {
 #vis, #max-frame {
   display: inline-flex;
   position: fixed; /* --> non-responsiveness w.r.t. bootstrap template, but needed to correctly be placed. */
-  // top: 60px;
+  top: 60px;
   z-index: 1;
   margin-left: 0;
   padding: 0;
