@@ -1223,7 +1223,7 @@ tfr.append("text")
        .attr("d", function(d) { return line(d.values); })
        .attr("id", "tfr-line")
        .style("stroke", function(d) { return z(d.key);})
-       .style("opacity", 1);
+       .style("opacity", function(d) {return d.key == "Rwanda" ? 1 : 0.5;});
 
     // CIRCLES: TFR over time
     tfr.selectAll("#tfr-mask")
@@ -1247,7 +1247,7 @@ tfr.append("text")
         .style("fill", function(d) {return z(d.country);})
         .style("stroke", function(d) {return z(d.country);})
         .style("stroke-opacity", 1)
-        .style("fill-opacity", 0.5);
+       .style("fill-opacity", function(d) {return d.country == "Rwanda" ? 0.5 : 0.25;});
 
   // TEXT: Country label
       tfr.selectAll("#tfr-annot")
@@ -1274,7 +1274,7 @@ tfr.append("text")
           .attr("dy", -20)
           .attr("y", function(d) {return y(d.tfr);})
           .style("fill", function(d) {return z(d.country);})
-          .style("opacity", 1);
+          .style("opacity", function(d) {return d.key == "Rwanda" ? 1 : 0.5;});
 
 
 
@@ -1475,7 +1475,7 @@ summ.append("div")
   function show9() {
 // -- TURN OFF PREVIOUS --
   religMapOff();
-  
+
 // -- TURN OFF NEXT --
   mcuRegrOff();
 
