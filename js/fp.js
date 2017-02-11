@@ -66,7 +66,19 @@
     religAge: { w: width - margins.religAge.right - margins.religAge.left,
                 h: height - margins.religAge.top - margins.religAge.bottom}
   }
-console.log(dims)
+
+  annotations = {
+    relig_map: [{class: "prot-annot", id:"prot-a1",
+                  x: 10, y: 10, w: "30%",
+                  text: "The Protestant population in the northeast has expanded dramatically in the past decade"},
+                  {class: "prot-annot", id:"prot-a2",
+                  x: 60, y: height * 0.7, w: "30%",
+                  text: "Protestants have typically lived along Lake Kivu"},
+                  {class: "cath-annot", id:"cath-a1",
+                  x: width/2 + 50, y: 10, w: "30%",
+                  text: "Catholics are concentrated in the central portion of the country"}]
+
+                }
 
 // end RESPONSIVENESS (plus call in 'display') ---------------------------------------------------------------
 
@@ -329,21 +341,13 @@ var focusRelig = ["Protestant", "Catholic"];
       .style("opacity", 0);
 
 
-      annotations = [{class: "prot-annot", id:"prot-a1",
-                      x: 10, y: 10, w: "30%",
-                      text: "The Protestant population in the northeast has expanded dramatically in the past decade"},
-                      {class: "prot-annot", id:"prot-a2",
-                      x: 60, y: height * 0.7, w: "30%",
-                      text: "Protestants have typically lived along Lake Kivu"},
-                      {class: "cath-annot", id:"cath-a1",
-                      x: width/2 + 50, y: 10, w: "30%",
-                      text: "Catholics are concentrated in the central portion of the country"}]
+
 
 
 var ncharBreak = 40;
 
       fullG.selectAll("#s")
-        .data(annotations)
+        .data(annotations.relig_map)
         .enter().append("div")
         .attr("class", function(d) {return d.class;})
         .attr("id", function(d) {return d.id;})
