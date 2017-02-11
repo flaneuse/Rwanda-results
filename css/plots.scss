@@ -189,12 +189,14 @@
   border-left: #7b4173 solid 3px;
   padding-left: $base-pad;
   margin-left: 20px;
+  position: absolute;
 }
 
 .cath-annot {
   border-left: #637939 solid 3px;
   padding-left: $base-pad;
   margin-left: $large-pad;
+  position: absolute;
 }
 // maps ------------------------------------------------------------------------
 .rw-map {
