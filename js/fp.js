@@ -322,6 +322,11 @@ var focusRelig = ["Protestant", "Catholic"];
         .attr("class", "full-frame")
         .style("opacity", 0);
 
+    fullG.append("div")
+      .attr("id", "relig-map")
+      .html(	"<div id='g-07_RWA_religion-Artboard_2' class='g-artboard g-artboard-v3 ' data-min-width='595'><div id='g-07_RWA_religion-Artboard_2-graphic'><img id='g-ai0-0' class='g-aiImg' src='07_RWA_religion-Artboard_2.png'/><div id='g-ai0-1' class='g-scale_-_religion g-aiAbs' style='top:2.5855%;left:2.6167%;width:22.9632%;'>				<p class='g-aiPstyle0'>PERCENT catholic</p>			</div>			<div id='g-ai0-2' class='g-year_label g-aiAbs' style='top:2.7702%;left:88.671%;width:6.7227%;'>				<p class='g-aiPstyle1'>2002</p>			</div>			<div id='g-ai0-3' class='g-scale_-_religion g-aiAbs' style='top:7.7565%;left:1.9975%;'>				<p class='g-aiPstyle2'>0%</p>			</div>			<div id='g-ai0-4' class='g-scale_-_religion g-aiAbs' style='top:7.7565%;left:6.8365%;'>				<p class='g-aiPstyle2'>25%</p>			</div>			<div id='g-ai0-5' class='g-scale_-_religion g-aiAbs' style='top:7.7565%;left:12.2235%;'>				<p class='g-aiPstyle2'>50%</p>			</div>			<div id='g-ai0-6' class='g-scale_-_religion g-aiAbs' style='top:7.7565%;left:17.6105%;'>				<p class='g-aiPstyle2'>75%</p>			</div>			<div id='g-ai0-7' class='g-label_-_countries g-aiAbs' style='top:9.9726%;left:53.1387%;width:14.9564%;margin-left:-7.4782%;'>				<p class='g-aiPstyle3'>uganda</p>			</div>			<div id='g-ai0-8' class='g-label_-_countries g-aiAbs' style='top:16.8057%;left:21.1569%;width:22.6969%;margin-left:-11.3484%;'>				<p class='g-aiPstyle4'>Democratic Republic of the Congo</p>			</div>			<div id='g-ai0-9' class='g-label_-_parks g-aiAbs' style='top:31.7647%;left:86.2297%;width:6.6393%;margin-left:-3.3197%;'>				<p class='g-aiPstyle5'>Akagera National Park</p>			</div>			<div id='g-ai0-10' class='g-label_-_kivu g-aiAbs' style='top:41.7373%;left:18.4574%;width:10.8331%;margin-left:-5.4165%;'>				<p class='g-aiPstyle6'>Lake kivu</p>			</div>			<div id='g-ai0-11' class='g-label_-_parks g-aiAbs' style='top:72.7633%;left:24.1316%;width:11.3796%;margin-left:-5.6898%;'>				<p class='g-aiPstyle5'>Nyungwe National Park</p>			</div>			<div id='g-ai0-12' class='g-label_-_countries g-aiAbs' style='top:74.6101%;left:63.1091%;width:16.8471%;margin-left:-8.4236%;'>				<p class='g-aiPstyle3'>burundi</p>			</div>			<div id='g-ai0-13' class='g-label_-_countries g-aiAbs' style='top:74.6101%;left:87.2549%;width:16.99%;margin-left:-8.495%;'>				<p class='g-aiPstyle3'>tanzania</p>			</div>			<div id='g-ai0-14' class='g-scale_-_dimensions g-aiAbs' style='top:91.0465%;left:68.0692%;'>				<p class='g-aiPstyle7'>0</p>			</div>			<div id='g-ai0-15' class='g-scale_-_dimensions g-aiAbs' style='top:91.0465%;left:75.2117%;'>				<p class='g-aiPstyle7'>20</p>			</div>			<div id='g-ai0-16' class='g-scale_-_dimensions g-aiAbs' style='top:91.0465%;left:82.8417%;'>				<p class='g-aiPstyle7'>40</p>			</div>			<div id='g-ai0-17' class='g-scale_-_dimensions g-aiAbs' style='top:91.0465%;left:90.4715%;'>				<p class='g-aiPstyle7'>60 km</p>			</div>		</div>	</div>")
+      .style("opacity", 0);
+
     mcu = plotG
       .append("g")
        .attr("id", "mcu")
@@ -1430,7 +1435,7 @@ summ.append("div")
   // mcuMapOff();
 
 // -- TURN ON CURRENT --
-  // religMapOn(tDefault);
+  religMapOn(tDefault);
   }
 
 
@@ -1811,6 +1816,16 @@ function religOff() {
           .delay(0)
               .style("opacity", 0);
 }
+
+function religMapOn(tDefault) {
+  fullG.selectAll("#relig-map")
+    .transition()
+      .duration(tDefault)
+      .style("opacity", 1);
+
+  sourceOn("Rwanda Population & Housing Census 2002 & 2012", tDefault)
+}
+
 // end HELPER FUNCTIONS --------------------------------------------------------
 
   /**

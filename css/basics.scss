@@ -61,10 +61,10 @@ body {
   height: 300px;
 }
 
-#vis {
-  display: inline-block;
+#vis, #max-frame {
+  display: inline-flex;
   position: fixed; /* --> non-responsiveness w.r.t. bootstrap template, but needed to correctly be placed. */
-  top: 60px;
+  // top: 60px;
   z-index: 1;
   margin-left: 0;
   padding: 0;
