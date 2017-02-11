@@ -185,9 +185,20 @@
   fill: #555;
 }
 
+.prot-annot {
+  border-left: #7b4173 solid 3px;
+  padding-left: $base-pad;
+  margin-left: 20px;
+}
+
+.cath-annot {
+  border-left: #637939 solid 3px;
+  padding-left: $base-pad;
+  margin-left: $large-pad;
+}
 // maps ------------------------------------------------------------------------
 .rw-map {
   display: block;
-margin-left: auto;
-margin-right: auto
+  margin-left: auto;
+  margin-right: auto
 }
