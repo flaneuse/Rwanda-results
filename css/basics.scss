@@ -106,6 +106,13 @@ strong {
   text-shadow: 1px 1px #fff;
 }
 
+mark {
+  padding-left: 0.15em;
+  padding-right: 0.15em;
+  padding-top: 0;
+  padding-bottom: 0;
+  background-color: rgba(0, 163, 224, 0.12);
+}
 // -- standard links --
 a{
   color: $accent-main;
