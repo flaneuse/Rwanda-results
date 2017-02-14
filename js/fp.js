@@ -258,7 +258,7 @@ var focusRelig = ["Protestant", "Catholic"];
      var yAxRslope= d3.svg.axis()
           .scale(yRslope)
           .ticks(5, "%")
-          .innerTickSize(dims.religSlope.w)
+          .innerTickSize(-dims.religSlope.w)
           .orient("left");
 
 
@@ -1079,7 +1079,7 @@ if(popByRelig.key == "Protestant") {
                 .call(yAxRslope)
                 .attr("class", "y axis")
                 .attr("id", "relig-y")
-                .attr("transform", "translate(" + dims.religSlope.w + ",0)")
+                .attr("transform", "translate(" + (40-margins.religSlope.left) + ",0)")
                 .style("opacity", 1);
 
 religSlope.selectAll(".slope")
