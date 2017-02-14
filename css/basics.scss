@@ -13,6 +13,13 @@
   // top: $top-padding;
 }
 
+#fp-summary {
+  max-width: inherit; // inherit from parent to be responsive.
+  display: inline-block;
+  position: fixed;
+  // max-width: 600px;
+}
+
 body {
   font-family: $base-font-family;
   font-weight: $base-weight;
