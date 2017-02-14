@@ -77,7 +77,11 @@
                   text: "Protestants have typically lived along Lake Kivu"},
                   {class: "cath-annot", id:"cath-a1",
                   x: width/2 + 50, y: 10, w: "30%",
-                  text: "Catholics are concentrated in the central portion of the country"}]
+                  text: "Catholics are concentrated in the central portion of the country"}],
+
+          all: [{class: "prot-annot", id:"prot-a1",
+                x: 10, y: 10, w: "20%",
+                text: "Annotation annotation annotation"}]
                 }
 
 // swoopy arrow annotations
@@ -322,6 +326,19 @@ var focusRelig = ["Protestant", "Catholic"];
            .attr("id", "max-frame")
            .style("max-width", dims.map.w + "px");
 
+// TEMP ANNOTATIONS
+           vis.selectAll("annots")
+             .data(annotations.all)
+             .enter().append("div")
+             .attr("class", function(d) {return d.class;})
+             .attr("id", function(d) {return d.id;})
+             .text(function(d) {return d.text;})
+                     // .tspans(function(d) {return d3.wordwrap(d.text, ncharBreak);})
+             .style("width", function(d) {return d.w;})
+             .style("left", function(d) {return d.x + "px";})
+             .style("top", function(d) {return d.y + "px";})
+             .style("position", "absolute")
+             .style("opacity", 1);
 // Basic swoopy arrow
            var swoopy = swoopyArrow()
              .angle(Math.PI/3)
