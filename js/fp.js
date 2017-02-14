@@ -307,13 +307,6 @@ var focusRelig = ["Protestant", "Catholic"];
        // other elements.
        plotG = svg.select("#plots");
 
-        // create group for images
-        // this group element will be used to contain all
-        // big image elements (mostly maps; could also be used for static visualizations).
-        svg.append("g")
-          .attr("id", "imgs");
-
-       imgG = svg.select("#imgs")
 
 // Full frame, to be used for images / maps or summary text.
        fullG = vis.select("#vis")
