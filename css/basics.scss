@@ -200,6 +200,25 @@ a:hover {
     list-style-type: circle;
 }
 
+#sources {
+    padding-top: 10px;
+    padding-bottom: 5px;
+    border-top: 1px solid $accent-main;
+    border-bottom: 1px solid $accent-main;
+    font-size: $footnote-size;
+    line-height: $footnote-size * 2;
+}
+
+.source{
+  padding-right: $base-pad;
+}
+
+#footnote-title {
+  text-transform: uppercase;
+  font-size: $small-font-size;
+  line-height: $small-font-size * 2;
+}
+
 .summary-list > li {
   padding-top: 10px;
   padding-bottom: 10px;
