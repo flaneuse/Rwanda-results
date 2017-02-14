@@ -198,6 +198,16 @@
   margin-left: $large-pad;
   position: absolute;
 }
+
+// swoopy arrows.
+path.arrow, #arrowhead {
+  fill: none;
+  stroke: $grey75K;
+}
+path.arrow.light {
+  opacity: .1;
+}
+
 // maps ------------------------------------------------------------------------
 .rw-map {
   display: block;
