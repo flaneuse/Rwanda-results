@@ -6,6 +6,11 @@
 #intro-max {
   position: fixed;
   top: $top-padding;
-  padding-left: 35px;
+  padding-left: 5px;
   z-index: 100;
+}
+
+.intro-full{
+  position: fixed;
+  // left: 0;
 }

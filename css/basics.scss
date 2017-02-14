@@ -56,6 +56,16 @@ body {
   line-height: 1.2em;
 }
 
+.intro{
+  display: inline-block;
+  position: fixed; /* --> non-responsiveness w.r.t. bootstrap template, but needed to correctly be placed. */
+  top: $top-padding;
+  z-index: 1;
+  margin-left: 0;
+  padding: 0;
+  left:0;
+}
+
 .paragraph {
   margin-bottom: 20px;
 }
@@ -257,6 +267,7 @@ a:hover {
 // INTERACTION -----------------------------------------------------------------
 #breadcrumbs {
   cursor: pointer;
+  z-index: 200;
 }
 
 
