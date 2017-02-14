@@ -1,16 +1,91 @@
 .g-scrolly-text{
   background: rgba(255, 255, 255, 0.5);
   font-size: $large-font-size;
+  font-family: $base-font-family;
+  font-weight: $base-weight;
+  color: $grey75K;
+}
+
+
+.g-pop-explain {
+  font-family:Lato,sans-serif;
+  font-size:18px;
+  line-height:21px;
+  font-weight:300;
+  color:#636466;
 }
 
 #intro-max {
   position: fixed;
   top: $top-padding;
   padding-left: 5px;
-  z-index: 100;
+  // z-index: 100;
 }
 
 .intro-full{
   position: fixed;
   // left: 0;
 }
+
+// ---------
+// From ai2html:
+.g-artboard {
+  margin:0 auto;
+}
+
+
+#g-Africa_base_final-afr-map{
+  position:relative;
+  overflow:hidden;
+}
+.g-aiAbs{
+  position:absolute;
+}
+.g-aiImg{
+  display:block;
+  width:100% !important;
+}
+
+#g-Africa_base_final-afr-map .g-aiPstyle1 {
+  font-family:Lato,sans-serif;
+  font-size:18px;
+  line-height:21px;
+  font-weight:300;
+  color:#636466;
+}
+
+#g-Africa_base_final-afr-map .g-aiPstyle3 {
+  font-family:Lato,sans-serif;
+  font-size:18px;
+  line-height:21px;
+  font-weight:300;
+  text-align:right;
+  color:#636466;
+}
+.g-aiPtransformed p { white-space: nowrap; }
+
+#g-Africa_base_final-afr-map{
+  position:relative;
+  overflow:hidden;
+}
+.g-aiAbs{
+  position:absolute;
+}
+.g-aiImg{
+  display:block;
+  width:100% !important;
+}
+#g-Africa_base_final-afr-map p{
+  font-family:nyt-franklin,arial,helvetica,sans-serif;
+  font-size:13px;
+  line-height:18px;
+  margin:0;
+}
+#g-Africa_base_final-afr-map .g-aiPstyle0 {
+  font-family:Lato,sans-serif;
+  font-size:14px;
+  line-height:17px;
+  font-weight:300;
+  color:#636466;
+}
+.g-aiPtransformed p { white-space: nowrap; }
