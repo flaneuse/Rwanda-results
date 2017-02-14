@@ -268,10 +268,11 @@ top: 0px;
 }
 
 .row#clicky {
-  position: fixed;
+  position: relative;
   display: block;
   right: $large-pad;
   height: $clicky-height;
+  top: -$top-padding;
 }
 
 #clicky .button:hover{

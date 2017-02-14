@@ -43,7 +43,7 @@
   var margins = {
     map:      { top: 0, right: 15, bottom: 0, left: 0 },
     tfr:      { top: 65, right: 125, bottom: 0, left: 35 },
-    mcu:      { top: 75, right: 75, bottom: 0, left: 235 },
+    mcu:      { top: 125, right: 75, bottom: 0, left: 235 },
     mcuRelig: { top: 75, right: 75, bottom: 0, left: 100 },
     religSlope: { top: 75, right: 125, bottom: 25, left: 75 },
     religBar: { top: 175, right: 100, bottom: 75, left: 45 },
@@ -115,9 +115,7 @@ var focusRelig = ["Protestant", "Catholic"];
 
 // INITIALIZE SELECTORS -------------------------------------------------------------------
   var vis = d3.select("#graphic");
-  var nav = d3.select("#clicky").append("ul")
-    .attr("id", "select-cat")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
 
   // main svg used for visualization
   var svg = null;
@@ -320,6 +318,12 @@ var focusRelig = ["Protestant", "Catholic"];
       .attr("id", "tfr")
       .attr("transform", "translate(" + margins.tfr.left + "," + margins.tfr.top + ")")
       .style("opacity", 0) // set initially to 0.
+
+    var nav = fullG.append("div")
+        .attr("id", "clicky")
+        .style("opacity", 0)
+        .append("ul")
+        .attr("id", "select-cat");
 
     summ = fullG
       .append("div")
@@ -540,7 +544,7 @@ br = svg.selectAll("#breadcrumbs");
            // Clicky buttons at top.
              nav.selectAll("ul")
                .style("width", "20px")
-               .data(nested)
+               .data(nested.filter(function(d) {return d.key != "National"}))
              .enter().append("li").append("a")
                .attr("id", function(d) {return d.key;})
                .attr("class", "button")
@@ -1607,7 +1611,7 @@ function tfrOff() {
 }
 
 function mcuOn(tDefault) {
-  nav.selectAll("a")
+  fullG.selectAll("#clicky")
     .transition()
     .duration(tDefault)
     .style("opacity", 1);
@@ -1621,7 +1625,7 @@ function mcuOn(tDefault) {
 }
 
 function mcuOff() {
-  nav.selectAll("a")
+  fullG.selectAll("#clicky")
     .transition()
     .duration(0)
     .style("opacity", 0);
