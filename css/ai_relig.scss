@@ -17,13 +17,21 @@
 }
 
 // dual panel side-by-side maps
-#g-protestant-map, #g-catholic-map, #g-mcu2010-map, #g-mcu2014-map, #g-mcu_regr-MCU-regr2010, #g-mcu_regr-MCU-regr2014{
+#g-protestant-map, #g-catholic-map, #g-mcu_regr-MCU-regr2010, #g-mcu_regr-MCU-regr2014{
   display: inline-block;
   top: 100px;
   width: 49%;
 }
 
-#g-catholic-map, #g-mcu2014-map, #g-mcu_regr-MCU-regr2014 {
+// overlapped maps
+.overlapped {
+  position: fixed;
+  top: 0;
+  // max-width: inherit;
+  // display: inline-block;
+}
+
+#g-catholic-map, #g-mcu_regr-MCU-regr2014 {
 float: right;
 }
 
