@@ -1387,11 +1387,12 @@ tfr.append("text")
         .style("fill", function(d) {return z(d.country);})
         .style("stroke", function(d) {return z(d.country);})
         .style("stroke-opacity", 1)
-       .style("fill-opacity", function(d) { return 1;})
-    //      if(d.country == "Rwanda" & d.year == 2010) { return 1;
-    //    } else if(d.country == "Rwanda"){ return 0.5;
-    //  } else {
-      //  return 0.25;});
+       .style("fill-opacity", function(d) { if(d.country == "Rwanda" & d.year >= 2010) { return 0.8;
+       } else if(d.country == "Rwanda") {
+         return 0.45;
+       } else {
+         return 0.15;}});
+
 
   // TEXT: Country label
       tfr.selectAll("#tfr-annot")
@@ -1405,7 +1406,7 @@ tfr.append("text")
           .attr("y", function(d) {return y(d.tfr);})
           // .attr("dy", "0.4em")
           .style("fill", function(d) {return z(d.country);})
-          .style("opacity", 1);
+          .style("opacity", function(d) {return d.country == "Rwanda" ? 1 : 0.65;});
 
   // TEXT: TFR at final value
       tfr.selectAll("#val-annot")
@@ -1415,10 +1416,10 @@ tfr.append("text")
           .attr("class", "annot")
           .text(function(d) {return d.tfr})
           .attr("x", function(d) {return x(d.year);})
-          .attr("dy", -20)
+          .attr("dy", function(d) {return d.country == "Kenya" ? 20 : -20;})
           .attr("y", function(d) {return y(d.tfr);})
           .style("fill", function(d) {return z(d.country);})
-          .style("opacity", function(d) {return d.key == "Rwanda" ? 1 : 0.5;});
+          .style("opacity", function(d) {return d.country == "Rwanda" ? 1 : 0.5;});
 
 
 
