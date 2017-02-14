@@ -23,7 +23,7 @@ var links = [
   {name: "introduction", order: 0, link: "/index.html"},
   {name: "family planning", order: 2, link:"/fp.html"},
   {name: "malnutrition", order: 3, link:"/stunting.html"},
-  {name: "nutrition", order: 4, link:"/nutrition.html"},
+  {name: "diet", order: 4, link:"/diet.html"},
   {name: "about", order: 5, link:"/about.html"},
   {name: "summary", order: 1, link:"/summary.html"}
 ];
