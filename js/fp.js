@@ -1192,8 +1192,7 @@ mcuRelig.selectAll(".top-label")
   .enter().append("text")
     .attr("class", "top-label")
     .attr("y", -margins.mcuRelig.top/2)
-    .attr("x", margins.mcuRelig.left)
-    .text("percent of women 15-49 in a union using modern contraception")
+    .text("percent of women 15-49 married or in a union using modern contraception")
     .style("opacity", 1);
 
 mcuRelig.append("g")
@@ -1430,7 +1429,7 @@ tfr.append("text")
       .text("What did we find?");
 
 summ.append("div")
-      .text("For women aged 15 - 49 in a union:")
+      .text("For women aged 15 - 49 married or in a union:")
       .attr("id", "summary-qualifier")
       .append("ul")
         .attr("class", "summary-list")
