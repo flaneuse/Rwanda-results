@@ -24,12 +24,13 @@
 //   display: none;
 // }
 .y.axis line {
-  display:none;
+  // display:none;
 }
 
-.y.axis #tfr-y line{
-  stroke: $grey25K;
-  stroke-width: 10;
+.y.axis line{
+  stroke: #ded;
+  stroke-dasharray: 10;
+  stroke-width: 1;
   shape-rendering: crispEdges;
 }
 

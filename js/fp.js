@@ -42,7 +42,7 @@
   // Specific margins for each of the different windows
   var margins = {
     map:      { top: 0, right: 15, bottom: 0, left: 0 },
-    tfr:      { top: 65, right: 125, bottom: 0, left: 35 },
+    tfr:      { top: 65, right: 125, bottom: 25, left: 50 },
     mcu:      { top: 75, right: 75, bottom: 0, left: 235 },
     mcuRelig: { top: 75, right: 75, bottom: 0, left: 100 },
     religSlope: { top: 75, right: 125, bottom: 25, left: 75 },
@@ -194,7 +194,7 @@ var focusRelig = ["Protestant", "Catholic"];
         var yAxTFR = d3.svg.axis()
              .scale(y)
              .orient("left")
-             .innerTickSize(dims.tfr.w);
+             .innerTickSize(-dims.tfr.w);
 
 // AXES for MCU
        var xMCU = d3.scale.linear()
@@ -1348,7 +1348,7 @@ tfr.append("text")
     .call(yAxTFR)
         .attr("class","y axis")
         .attr("id", "tfr-y")
-            .attr("transform", "translate(" + margins.tfr.left + "," + margins.tfr.top + ")")
+        .attr("transform", "translate(" + (20-margins.tfr.left) + ",0)")
         .style("opacity", 1);
 
 
@@ -1416,7 +1416,7 @@ tfr.append("text")
           .attr("class", "annot")
           .text(function(d) {return d.tfr})
           .attr("x", function(d) {return x(d.year);})
-          .attr("dy", function(d) {return d.country == "Kenya" ? 20 : -20;})
+          .attr("dy", function(d) {return d.country == "Kenya" & d.mostrecent == 1 ? 20 : -20;})
           .attr("y", function(d) {return y(d.tfr);})
           .style("fill", function(d) {return z(d.country);})
           .style("opacity", function(d) {return d.country == "Rwanda" ? 1 : 0.5;});
