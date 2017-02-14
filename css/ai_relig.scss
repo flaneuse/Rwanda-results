@@ -4,15 +4,26 @@
 
 .g-artboard {
   height:inherit;
+  // display: inline-block;
+  margin: auto;
+  width: 100%;
+  position: absolute;
+  left: 0;
 }
 
-#g-07_RWA_religion-protestant-map, #g-07_RWA_religion-catholic-map {
+
+#g-Rwanda_base_final-popdensity{
+
+}
+
+// dual panel side-by-side maps
+#g-protestant-map, #g-catholic-map, #g-mcu2010-map, #g-mcu2014-map, #g-mcu_regr-MCU-regr2010, #g-mcu_regr-MCU-regr2014{
   display: inline-block;
   top: 100px;
   width: 49%;
 }
 
-#g-07_RWA_religion-catholic-map {
+#g-catholic-map, #g-mcu2014-map, #g-mcu_regr-MCU-regr2014 {
 float: right;
 }
 

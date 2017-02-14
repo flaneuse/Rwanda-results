@@ -5,8 +5,12 @@
   // padding-right: 15px; /* normal 15 px + 25 px for breadcrumbs.*/
 }
 
+
 .full-frame{
   max-width: inherit; // inherit from parent to be responsive.
+  display: inline-block;
+  position: fixed;
+  // top: $top-padding;
 }
 
 body {
@@ -62,10 +66,15 @@ body {
   height: 300px;
 }
 
-#vis, #max-frame {
-  display: inline-flex;
+#max-frame{
+  position: absolute;
+  top: $top-padding;
+}
+
+#vis {
+  display: inline-block;
   position: fixed; /* --> non-responsiveness w.r.t. bootstrap template, but needed to correctly be placed. */
-  top: 60px;
+  top: $top-padding;
   z-index: 1;
   margin-left: 0;
   padding: 0;
