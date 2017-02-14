@@ -326,7 +326,8 @@ var focusRelig = ["Protestant", "Catholic"];
            var swoopy = swoopyArrow()
              .angle(Math.PI/3)
              .x(ƒ(0))
-             .y(ƒ(1));
+             .y(ƒ(1))
+             .clockwise(false);
 
 
            // Define simple arrowhead marker
@@ -345,10 +346,10 @@ var focusRelig = ["Protestant", "Catholic"];
                .attr("points", "-6.75,-6.75 0,0 -6.75,6.75");
 
            // Draw some arrows!
-           svg.append("path.arrow")
-             .attr('marker-end', 'url(#arrowhead)')
-             .datum([[width*0.55, dims.religSlope.h * 0.14],[width*0.45,dims.religSlope.h * 0.14]])
-             .attr("d", swoopy);
+          //  svg.append("path.arrow")
+          //    .attr('marker-end', 'url(#arrowhead)')
+          //    .datum([[width*0.55, dims.religSlope.h * 0.14],[width*0.45,dims.religSlope.h * 0.14]])
+          //    .attr("d", swoopy);
 
 // Individual pages
     tfr = plotG
