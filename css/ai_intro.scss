@@ -1,0 +1,11 @@
+.g-scrolly-text{
+  background: rgba(255, 255, 255, 0.5);
+  font-size: $large-font-size;
+}
+
+#intro-max {
+  position: fixed;
+  top: $top-padding;
+  padding-left: 35px;
+  z-index: 100;
+}
