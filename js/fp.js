@@ -68,21 +68,49 @@
   }
 
 // text annotations
-  annotations = {
-    relig_map: [{class: "prot-annot", id:"prot-a1",
-                  x: 10, y: 10, w: "30%",
-                  text: "The Protestant population in the northeast has expanded dramatically in the past decade"},
-                  {class: "prot-annot", id:"prot-a2",
-                  x: 60, y: height * 0.7, w: "30%",
-                  text: "Protestants have typically lived along Lake Kivu"},
-                  {class: "cath-annot", id:"cath-a1",
-                  x: width/2 + 50, y: 10, w: "30%",
-                  text: "Catholics are concentrated in the central portion of the country"}],
+annotations = {
+  relig_map: [{class: "prot-annot", id:"prot-a1",
+  x: 10, y: 10, w: "30%",
+  text: "The Protestant population in the northeast has expanded dramatically in the past decade"},
+  {class: "prot-annot", id:"prot-a2",
+  x: 60, y: height * 0.7, w: "30%",
+  text: "Protestants have typically lived along Lake Kivu"},
+  {class: "cath-annot", id:"cath-a1",
+  x: width/2 + 50, y: 10, w: "30%",
+  text: "Catholics are concentrated in the central portion of the country"}],
 
-          all: [{class: "prot-annot", id:"prot-a1",
-                x: 10, y: 10, w: "20%",
-                text: "Annotation annotation annotation"}]
-                }
+  all: [{class: "cath-annot", id:"tfr-a1",
+  x: 10, y: 10, w: "20%",
+  text: "TFR has changed little in the past 5 years"},
+  {class: "prot-annot", id:"tfr-a1",
+  x: 10, y: 40, w: "20%",
+  text: "This 11% increase translates into an increase of ~ 1.8 million Protestants, nearly doubling their population"},
+  {class: "prot-annot", id:"tfr-a1",
+  x: 10, y: 80, w: "20%",
+  text: "1.8 million"},
+  {class: "cath-annot", id:"tfr-a1",
+  x: 10, y: 100, w: "20%",
+  text: "0.6 million"},
+  {class: "prot-annot", id:"tfr-a1",
+  x: 10, y: 120, w: "20%",
+  text: "Protestants have a larger share of children under 10"},
+  {class: "cath-annot", id:"tfr-a1",
+  x: 10, y: 140, w: "20%",
+  text: "Catholics have a larger portion of adults over 40"},
+  {class: "prot-annot", id:"tfr-a1",
+  x: 10, y: 180, w: "20%",
+  text: "Women in the Northwest had lower modern contraception use in 2010, but dramatically increased by 2014/2015"},
+  {class: "cath-annot", id:"tfr-a1",
+  x: 10, y: 230, w: "20%",
+  text: "Households in the Southwest, where ACCESS TO HEALTHCARE FACILITIES MAY BE AN ISSUE, continue to report low modern contraception use"},
+    {class: "cath-annot", id:"tfr-a1",
+    x: 10, y: 300, w: "20%",
+  text: "Women in the Lake Kivu Coffee region are less likely to use modern contraception"},
+  {class: "prot-annot", id:"tfr-a1",
+  x: 10, y: 350, w: "20%",
+  text: ""}
+]
+}
 
 // swoopy arrow annotations
 swoopyArrows = {
@@ -337,7 +365,7 @@ var focusRelig = ["Protestant", "Catholic"];
              .style("width", function(d) {return d.w;})
              .style("left", function(d) {return d.x + "px";})
              .style("top", function(d) {return d.y + "px";})
-             .style("position", "absolute")
+             .style("position", "fixed")
              .style("opacity", 1);
 // Basic swoopy arrow
            var swoopy = swoopyArrow()
@@ -1359,7 +1387,11 @@ tfr.append("text")
         .style("fill", function(d) {return z(d.country);})
         .style("stroke", function(d) {return z(d.country);})
         .style("stroke-opacity", 1)
-       .style("fill-opacity", function(d) {return d.country == "Rwanda" ? 0.5 : 0.25;});
+       .style("fill-opacity", function(d) { return 1;})
+    //      if(d.country == "Rwanda" & d.year == 2010) { return 1;
+    //    } else if(d.country == "Rwanda"){ return 0.5;
+    //  } else {
+      //  return 0.25;});
 
   // TEXT: Country label
       tfr.selectAll("#tfr-annot")
@@ -1421,14 +1453,14 @@ summ.append("div")
         .attr("id", "geo-jump")
         .text("Geography matters:")
       summ2.append("span")
-        .text(" In the northwest region, one of the most populated in all Rwanda, were more likely to use modern contraception than those in the central area, while women in the southwest were less likely.")
+        .text(" In the Northwest, one of the most populated in all Rwanda, women were more likely to use modern contraception than those in the central area, while women in the southwest were less likely.")
 
       summ3.append("a")
         .attr("href", "#demographics")
         .attr("id", "demo-jump")
-        .text("Desires for more children are prevalent:")
+        .text("Socioeconomic and education levels weakly influence family planning:")
       summ3.append("span")
-        .text(" Modern contraception use and desires for more children appear constant across socioeconomic and educational backgrounds.")
+        .text(" Modern contraception use and desires for more children do not appear to differ between socioeconomic and educational backgrounds.")
 
   };
 // end of SETUP VIS ------------------------------------------------------------
