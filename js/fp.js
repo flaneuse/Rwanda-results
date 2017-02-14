@@ -331,7 +331,6 @@ var focusRelig = ["Protestant", "Catholic"];
     summ = fullG
       .append("div")
         .attr("id", "fp-summary")
-        .attr("class", "full-frame")
         .style("opacity", 0);
 
 // Attach pop density raster map
