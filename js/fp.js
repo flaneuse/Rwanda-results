@@ -42,7 +42,7 @@
   // Specific margins for each of the different windows
   var margins = {
     map:      { top: 0, right: 15, bottom: 0, left: 0 },
-    tfr:      { top: 65, right: 125, bottom: 25, left: 50 },
+    tfr:      { top: 65, right: 100, bottom: 25, left: 50 },
     mcu:      { top: 75, right: 75, bottom: 0, left: 235 },
     mcuRelig: { top: 75, right: 75, bottom: 0, left: 100 },
     religSlope: { top: 75, right: 125, bottom: 25, left: 75 },
