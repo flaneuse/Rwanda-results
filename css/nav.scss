@@ -1,11 +1,11 @@
 // -- define Nav bar --
 .nav {
-  // min-height: 30px;
+  height: $nav-height;
 }
 
 .navbar-default {
-  // height: 30px;
-  line-height: 1.75em;
+  max-height: $nav-height;
+  // line-height: 1.75em;
   background-color: $soft-black;
   border-radius: 0;
   border-width: 0;
@@ -15,14 +15,18 @@
   text-transform: uppercase;
   text-align: right;
   margin-bottom: 0;
+  padding-left: 30px;
+  padding-right: 30px;
 
-.navbar-default .navbar-nav>li>a {
-    color: lighten($soft-black, 50%);
+.navbar-default, .navbar-nav>li>a, .nav>li>a {
+    color: lighten($soft-black, 20%);
+    font-family: $nav-font;
     text-decoration: none;
-    // padding-top: 0;
-    // padding-bottom: 0;
-    // margin-top: auto;
-    // margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: auto;
+    margin-bottom: 0;
+    line-height: $nav-height;
     // Gaps between nav items, but not on the first one
     &:not(:first-child) {
       margin-left: 15px;

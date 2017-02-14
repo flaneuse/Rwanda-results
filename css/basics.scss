@@ -75,7 +75,8 @@ body {
 
 #max-frame{
   position: absolute;
-  top: $top-padding;
+  top: 0;
+  // top: $top-padding;
 }
 
 #vis {
@@ -89,6 +90,10 @@ body {
 
 #vis .title {
   text-anchor: middle;
+}
+
+#first-section {
+  padding-top: $top-padding;
 }
 
 // Accent/special fonts --------------------------------------------------------
