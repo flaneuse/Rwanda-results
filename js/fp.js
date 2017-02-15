@@ -795,7 +795,7 @@ br.selectAll("circle").on("click", function(d,i) {
     {tfr: [{coords: [[x(2010.5), y(5)],[x(2010.25), y(4.7)]]},
           {coords: [[x(2016.5), y(4.8)],[x(2016.25), y(4.5)]]}
     ],
-    mcuRelig: {coords: [[xMCUrelig(0.55), yMCUrelig("Protestant")],[xMCUrelig(0.5), yMCUrelig("Protestant") + 15]]},
+    mcuRelig: {coords: [[xMCUrelig(0.53), yMCUrelig("Protestant") + 40],[xMCUrelig(0.49), yMCUrelig("Protestant") + 60]]},
     slope: [{coords: [[xRslope(2004), yRslope(0.54)],[xRslope(2003), yRslope(0.53)]]},
     {coords: [[xRslope(2008), yRslope(0.28)],[xRslope(2007), yRslope(0.3)]]}
   ],
@@ -2003,6 +2003,11 @@ function RslopeOff() {
     .transition()
       .duration(0)
       .style("opacity", 0);
+
+      plotG.selectAll("#slope-annot")
+      .transition()
+        .duration(0)
+        .style("opacity", 0)
 
 
       plotG.selectAll(".slope")
