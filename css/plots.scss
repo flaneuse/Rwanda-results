@@ -127,11 +127,13 @@
   stroke-width: 5;
 }
 
-#bar-ref {
+.dotted-line, #bar-ref {
+  fill: none;
   stroke-width: 0.75;
   stroke: $grey90K;
   stroke-dasharray: 8;
 }
+
 
 .slope {
   stroke-width: 1.5;
