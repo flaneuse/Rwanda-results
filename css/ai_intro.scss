@@ -27,6 +27,28 @@
   // left: 0;
 }
 
+// ---- Africa outline animation
+.afr {
+  fill:none;
+  stroke:#333;
+  stroke-width:0.35px;
+  stroke-dasharray: 5px;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  stroke-miterlimit:10;}
+
+  .afr-anim {
+    stroke-dasharray: 4000;
+    stroke-dashoffset: 4000;
+    animation: dash 10s linear forwards;
+  }
+
+  @keyframes dash {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
 
 // ---------
 // From ai2html:
