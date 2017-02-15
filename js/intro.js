@@ -169,15 +169,15 @@ var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
             .attr("id", "intro-img")
             .attr("class", "intro-full")
             .style("max-width", "inherit")
+            .style("opacity", 0)
             .append("img")
             .attr("src", "/img/intro/rw-countryside.jpg")
-            .style("width", "100%")
-            .style("opacity", 1);
+            .style("width", "100%");
 
         // initial text, on the vis side
         intro_text = vis.append("div")
-          .attr("id", "intro-max")
-          // .attr("class", "intro-full");
+          .attr("id", "intro-text")
+          .style("opacity", 0);
 
           intro_text.append("div")
               .attr("class","paragraph")
@@ -412,14 +412,37 @@ var path = mapSVG.append("path")
    */
 
    function show1() {
+     // PREVIOUS
 
+     // NEXT
+     mapOff("#afr1");
+
+     // CURRENT
+     d3.selectAll("#intro-img")
+      .transition()
+        .duration(tDefault)
+        .style("opacity", 1);
+
+      d3.selectAll("#intro-text")
+       .transition()
+         .duration(tDefault)
+         .style("opacity", 1);
    }
 
   function show2() {
 // PREVIOUS
+d3.selectAll("#intro-img")
+ .transition()
+   .duration(0)
+   .style("opacity", 0);
+
+ d3.selectAll("#intro-text")
+  .transition()
+    .duration(0)
+    .style("opacity", 0);
 
 // NEXT
-     mapOff("#afr2")
+     mapOff("#afr2");
 
   // CURRENT
      mapOn("#afr1");
