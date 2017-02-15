@@ -168,6 +168,13 @@
   dominant-baseline: central;
 }
 
+.basic-annot {
+  alignment-baseline: middle;
+  vertical-align: middle;
+  text-anchor: start; // or middle, start, end
+  height: 1.1em;
+  color: $soft-black;
+}
 
 
 #val-annot {

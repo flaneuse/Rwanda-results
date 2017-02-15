@@ -79,10 +79,12 @@ annotations = {
   x: width/2 + 50, y: 10, w: "30%",
   text: "Catholics are concentrated in the central portion of the country"}],
 
-  all: [{class: "cath-annot", id:"tfr-a1",
-  x: 10, y: 10, w: "20%",
-  text: "TFR has changed little in the past 5 years"},
-  {class: "prot-annot", id:"tfr-a1",
+  tfr: [{class: "basic-annot", id:"tfr-annot",
+  x: 2011, y: 5,
+  text: "TFR has changed little"}],
+
+  all:
+  [{class: "prot-annot", id:"tfr-a1",
   x: 10, y: 40, w: "20%",
   text: "This 11% increase translates into an increase of ~ 1.8 million Protestants, nearly doubling their population"},
   {class: "prot-annot", id:"tfr-a1",
@@ -113,15 +115,21 @@ annotations = {
 }
 
 // swoopy arrow annotations
-swoopyArrows = {
-  relig_map: [{class: "prot-annot", id:"prot-a1",
-                x: 10, y: 10, w: "30%",
-                text: "The Protestant population in the northeast has expanded dramatically in the past decade"},
-                {class: "prot-annot", id:"prot-a2",
-                x: 60, y: height * 0.7, w: "30%",
-                text: "Protestants have typically lived along Lake Kivu"}
-              ]
-}
+// swoopyArrows = {
+//   relig_map: [{class: "prot-annot", id:"prot-a1",
+//                 x: 10, y: 10, w: "30%",
+//                 text: "The Protestant population in the northeast has expanded dramatically in the past decade"},
+//                 {class: "prot-annot", id:"prot-a2",
+//                 x: 60, y: height * 0.7, w: "30%",
+//                 text: "Protestants have typically lived along Lake Kivu"}
+//   tfr: [{class: "prot-annot", id:"prot-a1",
+//                               x: 10, y: 10, w: "30%",
+//                               text: "The Protestant population in the northeast has expanded dramatically in the past decade"},
+//                               {class: "prot-annot", id:"prot-a2",
+//                               x: 60, y: height * 0.7, w: "30%",
+//                               text: "Protestants have typically lived along Lake Kivu"}
+//               ]
+// }
 // end RESPONSIVENESS (plus call in 'display') ---------------------------------------------------------------
 
 // CONSTANTS -------------------------------------------------------------------
@@ -303,7 +311,7 @@ var focusRelig = ["Protestant", "Catholic"];
               // .tickFormat(d3.format("d"))
               // .ticks(5)
               .orient("left");
-
+// GENERATORS ---------------------------------------------------------------------
 // line generator
         var line = d3.svg.line() // d3.line for v4
               .x(function(d) { return x(d.year); })
@@ -367,34 +375,10 @@ var focusRelig = ["Protestant", "Catholic"];
              .style("top", function(d) {return d.y + "px";})
              .style("position", "fixed")
              .style("opacity", 1);
-// Basic swoopy arrow
-           var swoopy = swoopyArrow()
-             .angle(Math.PI/3)
-             .x(ƒ(0))
-             .y(ƒ(1))
-             .clockwise(false);
 
 
-           // Define simple arrowhead marker
-           svg.append('defs')
-             .append("marker")
-               .attr("id", "arrowhead")
-               .attr("viewBox", "-10 -10 20 20")
-               .attr("refX", 0)
-               .attr("refY", 0)
-               .attr("markerWidth", 15)
-               .attr("markerHeight", 20)
-               .attr("stroke-width", 1)
-               .attr("orient", "auto")
-             .append("polyline")
-               .attr("stroke-linejoin", "bevel")
-               .attr("points", "-6.75,-6.75 0,0 -6.75,6.75");
 
-           // Draw some arrows!
-          //  svg.append("path.arrow")
-          //    .attr('marker-end', 'url(#arrowhead)')
-          //    .datum([[width*0.55, dims.religSlope.h * 0.14],[width*0.45,dims.religSlope.h * 0.14]])
-          //    .attr("d", swoopy);
+
 
 // Individual pages
     tfr = plotG
@@ -807,6 +791,43 @@ br.selectAll("circle").on("click", function(d,i) {
    */
   setupVis = function(data, tfrNest, tfrRwanda, religData, religNest, religPctData, religAgeData) {
 
+// Swoopy arrows!
+    // swoopy arrow annotations
+    var swAnnot =
+    {tfr: [{coords: [[x(2010.5), y(5)],[x(2010.25), y(4.7)]]},
+          {coords: [[x(2016.5), y(4.8)],[x(2016.25), y(4.5)]]}
+    ]
+    }
+    
+    // TEXT / SWOOPY ANNOTATION
+    // Basic swoopy arrow
+               var swoopyOver = swoopyArrow()
+                 .angle(Math.PI/3)
+                 .x(ƒ(0))
+                 .y(ƒ(1))
+                 .clockwise(false);
+
+                 var swoopyUnder = swoopyArrow()
+                   .angle(Math.PI/3)
+                   .x(ƒ(0))
+                   .y(ƒ(1))
+                   .clockwise(true);
+
+
+               // Define simple arrowhead marker
+               svg.append('defs')
+                 .append("marker")
+                   .attr("id", "arrowhead")
+                   .attr("viewBox", "-10 -10 20 20")
+                   .attr("refX", 0)
+                   .attr("refY", 0)
+                   .attr("markerWidth", 15)
+                   .attr("markerHeight", 20)
+                   .attr("stroke-width", 1)
+                   .attr("orient", "auto")
+                 .append("polyline")
+                   .attr("stroke-linejoin", "bevel")
+                   .attr("points", "-6.75,-4.75 0,0 -6.75,4.75");
     // --- SOURCE ---
     // TEXT: source
 
@@ -1335,6 +1356,8 @@ tfr.append("text")
     .attr("dy", -margins.tfr.top)
     .text("estimated total fertility rate");
 
+
+
     // draw the axes
   tfr.append("g")
     .call(xAxTFR)
@@ -1394,10 +1417,10 @@ tfr.append("text")
 
 
   // TEXT: Country label
-      tfr.selectAll("#tfr-annot")
+      tfr.selectAll("#tfr-country")
           .data(data.filter(function(d) {return d.mostrecent == true;}))
         .enter().append("text")
-          .attr("id", "tfr-annot")
+          .attr("id", "tfr-country")
           .attr("class", "annot")
           .text(function(d) {return d.country})
           .attr("x", dims.tfr.w)
@@ -1421,6 +1444,36 @@ tfr.append("text")
           .style("opacity", function(d) {return d.country == "Rwanda" ? 1 : 0.5;});
 
 
+
+// Draw some arrows!
+tfr
+.append("path.arrow")
+  .attr('marker-end', 'url(#arrowhead)')
+  .attr("id", "tfr-arrow")
+  .datum(swAnnot.tfr[0].coords)
+  .attr("d", swoopyOver)
+  .style("opacity", 0);
+
+  tfr
+  .append("path.arrow")
+    .attr('marker-end', 'url(#arrowhead)')
+    .attr("id", "tfr-arrow")
+    .datum(swAnnot.tfr[1].coords)
+    .attr("d", swoopyUnder)
+    .style("opacity", 0);
+
+          tfr.selectAll("annots")
+            .data(annotations.tfr)
+            .enter().append("text")
+            .attr("class", function(d) {return d.class;})
+            .attr("id", function(d) {return d.id;})
+            .html(function(d) {return d.text})
+                    // .tspans(function(d) {return d3.wordwrap(d.text, ncharBreak);})
+            .attr("x", function(d) {return x(d.x);})
+            .attr("y", function(d) {return y(d.y);})
+            .style("opacity", 1);
+
+// end of TFR -------------------------------------------------------------------
 
 // TEXT: Summary ----------
 
@@ -1691,7 +1744,21 @@ function tfrOn(tDefault) {
   plotG.selectAll("#tfr")
     .transition()
       .duration(tDefault)
+      .style("opacity", 1)
+      .each("end", function() {
+
+  plotG.selectAll("#tfr-arrow")
+    .transition()
+    .duration(tDefault)
+    .delay(tDefault)
+    .style("opacity", 1);
+
+    plotG.selectAll("#tfr-annot")
+      .transition()
+      .duration(tDefault)
+          .delay(tDefault)
       .style("opacity", 1);
+})
 
   sourceOn("Demographic and Health Surveys", tDefault)
 }
@@ -1702,6 +1769,15 @@ function tfrOff() {
       .duration(0)
       .style("opacity", 0);
 
+      plotG.selectAll("#tfr-arrow")
+        .transition()
+          .duration(0)
+          .style("opacity", 0);
+
+          plotG.selectAll("#tfr-annot")
+            .transition()
+            .duration(0)
+            .style("opacity", 0);
 }
 
 function mcuOn(tDefault) {
