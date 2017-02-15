@@ -297,7 +297,7 @@ var focusRelig = ["Protestant", "Catholic"];
          .range([0, dims.religBar.w]);
 
          var yRbar = d3.scale.ordinal()
-              .rangeBands([0, dims.religBar.h], 0.2, 0.2);
+              .rangeBands([0, dims.religBar.h], 0.5, 0.2);
 
          var xAxRbar = d3.svg.axis()
               .scale(xRbar)
@@ -981,8 +981,8 @@ svg.selectAll("#diff-line")
   .attr("class", "solid-line")
   .attr("x1", function(d) {console.log(d); return xRbar(d.pop);})
   .attr("x2", function(d) {return xRbar(d.diff + d.pop);})
-  .attr("y1", dims.religBar.h/4  + margins.religBar.top/2)
-  .attr("y2", dims.religBar.h/4  + margins.religBar.top/2)
+  .attr("y1", yRbar.rangeBand() * 2.2)
+  .attr("y2", yRbar.rangeBand() * 2.2)
   .style("fill", function(d) {return zRelig(d.religion);})
   .style("text-anchor", "middle")
   .text(function(d) {return (d3.format(".2s"))(d.diff);});
@@ -992,7 +992,7 @@ svg.selectAll("#diff-annot")
 .enter().append("text")
   .attr("id", "diff-annot")
   .attr("x", function(d) {return xRbar(d.diff/2 + d.pop);})
-  .attr("y", dims.religBar.h/4  + margins.religBar.top/2)
+  .attr("y", yRbar.rangeBand() * 2.2)
   .style("fill", function(d) {return zRelig(d.religion);})
   .text(function(d) {return (d3.format(".2s"))(d.diff);});
 
