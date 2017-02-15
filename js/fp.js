@@ -83,16 +83,13 @@ annotations = {
   x: 2011, y: 5,
   text: "TFR has changed little"}],
 
-  all:
-  [{class: "prot-annot", id:"tfr-a1",
-  x: 10, y: 40, w: "20%",
-  text: "This 11% increase translates into an increase of ~ 1.8 million Protestants, nearly doubling their population"},
-  {class: "prot-annot", id:"tfr-a1",
-  x: 10, y: 80, w: "20%",
-  text: "1.8 million"},
-  {class: "cath-annot", id:"tfr-a1",
-  x: 10, y: 100, w: "20%",
-  text: "0.6 million"},
+  relig_slope: [{class: "prot-annot", id:"slope-annot",
+  x: 0.6 * dims.religSlope.w, y: 0.3,
+  text: "This 11% increase translates into an increase of ~ 1.8 million Protestants, nearly doubling their population"}],
+
+  all:[
+
+
   {class: "prot-annot", id:"tfr-a1",
   x: 10, y: 120, w: "20%",
   text: "Protestants have a larger share of children under 10"},
@@ -799,8 +796,8 @@ br.selectAll("circle").on("click", function(d,i) {
           {coords: [[x(2016.5), y(4.8)],[x(2016.25), y(4.5)]]}
     ],
     mcuRelig: {coords: [[xMCUrelig(0.55), yMCUrelig("Protestant")],[xMCUrelig(0.5), yMCUrelig("Protestant") + 15]]},
-    slope: [{coords: [[xRslope(2005), yRslope(0.52)],[xRslope(2003), yRslope(0.5)]]},
-    {coords: [[xRslope(2010), yRslope(0.35)],[xRslope(2007), yRslope(0.3)]]}
+    slope: [{coords: [[xRslope(2004), yRslope(0.54)],[xRslope(2003), yRslope(0.53)]]},
+    {coords: [[xRslope(2008), yRslope(0.28)],[xRslope(2007), yRslope(0.3)]]}
   ],
     rBar: [{coords: [[xRbar(2.2e6), yRbar(2012) - 50],[xRslope(2003), yRbar(2012) - 50]]}
   ]
@@ -1132,10 +1129,11 @@ if(popByRelig.key == "Protestant") {
             .data(religData.filter(function(d) {return d.religion == "Catholic" & d.mostrecent == true;}))
           .enter().append("text")
             .attr("class", "top-label")
-            .attr("x", function(d) {return xRslope(d.year);})
-            .attr("y", function(d) {return yRslope(d.pct);})
-            .attr("dx", -dims.religSlope.w * 0.35)
-            .attr("dy", -dims.religSlope.h * 0.15)
+            .attr("x", dims.religSlope.w * 0.22)
+            .attr("y", -margins.religSlope.top*2/3)
+            // .attr("dx", -dims.religSlope.w * 0.35)
+            // .attr("dy", -dims.religSlope.h * 0.1)
+            .style("text-anchor", "start")
             .text("percent of population")
             .style("opacity", 1);
 
@@ -1153,6 +1151,56 @@ if(popByRelig.key == "Protestant") {
                 .attr("transform", "translate(" + (40-margins.religSlope.left) + ",0)")
                 .style("opacity", 1);
 
+
+// Swoopy arrows
+religSlope
+.append("path.arrow")
+  .attr('marker-end', 'url(#arrowhead)')
+  .attr("id", "slope-arrow")
+  .datum(swAnnot.slope[0].coords)
+  .attr("d", swoopyOver)
+  .style("opacity", 0);
+
+  religSlope
+  .append("path.arrow")
+    .attr('marker-end', 'url(#arrowhead)')
+    .attr("id", "slope-annot")
+    .datum(swAnnot.slope[1].coords)
+    .attr("d", swoopyUnder)
+    .style("opacity", 0);
+
+                // Annotations
+    religSlope.selectAll("slope-annot")
+      .data(annotations.relig_slope)
+      .enter().append('text')
+          .attr("y", function(d) {return yRslope(d.y);})
+          .attr("id", function(d) {return d.id;})
+          .style("opacity", 0)
+        .tspans(function(d) {
+        return d3.wordwrap(d.text, 25);  // break line after 25 characters
+      });
+
+
+religSlope.selectAll("tspan")
+  .attr("x", 0.62 * dims.religSlope.w)
+
+                    // Underlying box, to mask the grid lines
+        var text = d3.select("#slope-annot");
+        var bbox = text.node().getBBox();
+
+        var padding = 4;
+
+        religSlope.insert("rect", "#slope-annot")
+            .attr("x", bbox.x - padding)
+            .attr("y", bbox.y - padding)
+            .attr("width", bbox.width + (padding*2))
+            .attr("height", bbox.height + (padding*2))
+            .style("fill", "white")
+            .style("opacity", 0.5);
+
+
+
+// LINE: slope line connecting pts
 religSlope.selectAll(".slope")
     .data(religPctData)
   .enter().append("line")
@@ -1163,6 +1211,8 @@ religSlope.selectAll(".slope")
       .attr("y2", function(d) {return yRslope(d.pct2002);})
       .attr("stroke", function(d) {return zRelig(d.religion);})
       .style("opacity", function(d) {return focusRelig.indexOf(d.religion) > -1 ? 1 : 0.35;});
+
+
 
 // 2002 dot mask
     religSlope.selectAll("#relig2002-mask")
@@ -1255,6 +1305,8 @@ religSlope.selectAll(".slope")
         .attr("y", function(d) {return yRslope(d.pct2002);})
         .style("fill", function(d) {return zRelig(d.religion);})
         .style("opacity", 1);
+
+
 // --- end RELIGION DOT PLOT ---------------------------------------------------
 
 // --- RELIGION MCU PLOT ---
@@ -1874,6 +1926,11 @@ function RslopeOn(tDefault) {
       .duration(tDefault)
       .style("opacity", 1);
 
+      plotG.selectAll("#slope-arrow")
+      .transition("tSlope")
+        .duration(tDefault)
+        .style("opacity", 1)
+
   plotG.selectAll(".slope")
   .transition("tSlope")
     .duration(tDefault*3)
@@ -1882,12 +1939,35 @@ function RslopeOn(tDefault) {
       .attr("y2", function(d) {return yRslope(d.pct2012);});
 
 
+
+
   plotG.selectAll("#relig2012")
   .transition("tSlope")
     .duration(tDefault*3)
     .delay(tDefault)
     .attr("cx", function(d) {return xRslope(2012);})
-    .attr("cy", function(d) {return yRslope(d.pct2012);});
+    .attr("cy", function(d) {return yRslope(d.pct2012);})
+    .each("end", function() {
+
+// numeric labels
+      plotG.selectAll("#Rpct-annot2012")
+          .text(function(d) {return d3.format(".0%")(d.pct2012)})
+          .attr("x", function(d) {return xRslope(2012);})
+          .attr("dy", -20)
+          .attr("y", function(d) {return yRslope(d.pct2012);})
+          .style("opacity", 0)
+        .transition("tSlope")
+          .duration(tDefault*3)
+          .delay(tDefault)
+          .style("opacity", 1);
+
+// annotation of interesting behavior
+      plotG.selectAll("#slope-annot")
+      .transition("tSlope")
+        .duration(tDefault*2)
+        .delay(tDefault)
+        .style("opacity", 1)
+    });
 
     plotG.selectAll("#relig2012-mask")
     .transition("tSlope")
