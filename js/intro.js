@@ -127,6 +127,9 @@ var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
+      vis = d3.select("#vis");
+
+
          // BREADCRUMBS ------------------------------------------------------------
 
          var breadcrumbs = Array(numSlides).fill(0)
@@ -157,15 +160,36 @@ var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
               .style("opacity", 1);
 
         // Attach initial background image
-          fullG.append("div")
+        d3.select("#graphic")
+          .append("div")
+            .attr("id", "intro-max")
+            .style("max-width", 940 + "px")
+            .style("padding-left", "15px")
+            .append("div")
             .attr("id", "intro-img")
             .attr("class", "intro-full")
             .style("max-width", "inherit")
             .append("img")
             .attr("src", "/img/intro/rw-countryside.jpg")
             .style("width", "100%")
-            .style("overflow", "")
             .style("opacity", 1);
+
+        // initial text, on the vis side
+        intro_text = vis.append("div")
+          .attr("id", "intro-max")
+          // .attr("class", "intro-full");
+
+          intro_text.append("div")
+              .attr("class","paragraph")
+              .attr("id", "what-did")
+              .style("width", (graphicSize.width - sidebarSize.width - margin.right) + "px")
+              .text("In collaboration with the Rwanda mission, USAID's GeoCenter sought to learn:")
+            .append("ul")
+                .attr("class","summary-list")
+            .append("li")
+              .html('<strong><a href="fp.html">What is responsible for the slow down in fertility reductions?</a></strong>  <ul class="paragraph"><li>Though the total fertility rate &ndash; how many children a woman will have in her lifetime &ndash; has decreased from its peak of 6.2 <sup><a href="#source1">1</a></sup>, the rate has stagnated at ~ <mark>4.2 children/woman</mark>.<sup><a href="#source2">2</a></sup></li>  <li><span class="highlight">Do demographics play a role in this leveling off?</span></li></ul>')
+            .append("li")
+              .html('<strong><a href="stunting.html">How has economic growth affected changes in child malnutrition?</a></strong> <ul><li>Though Rwanda has had dramatic growth in the past 25 years, chronic child malnutrition remains high across the country, affecting <mark>nearly 40% of children under 5</mark></a>.<sup><a href="#source2">2</a></sup></li> <li><span class="highlight">Where have the gains been the greatest?</span></li></ul>');
 
       // Attach initial Africa map (afr1)
           fullG.append("div")

@@ -107,9 +107,30 @@ body {
 }
 
 // Accent/special fonts --------------------------------------------------------
+// -- standard links --
+a{
+  color: $accent-main;
+}
+a:visited {
+  color: $accent-dark;
+}
+a:hover {
+  text-decoration: underline;
+}
+
 strong {
   font-weight: $font-bold;
-  color: $accent-green;
+  // color: $accent-green;
+  a{
+    color: $soft-black;
+    text-decoration: underline;
+  }
+  a:visited {
+    color: $soft-black;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
 }
 
 .overlay-text {
@@ -123,19 +144,10 @@ mark {
   padding-bottom: 0;
   background-color: rgba(0, 163, 224, 0.12);
 }
-// -- standard links --
-a{
-  color: $accent-main;
-}
-a:visited {
-  color: $accent-dark;
-}
-a:hover {
-  text-decoration: underline;
-}
+
 
 // Add >> for links within "motivation section"
-#motivation a::before, #what-did a::before {
+#motivation a::before {
   content: "\f101  ";
   font-family: 'FontAwesome';
 }
@@ -209,10 +221,10 @@ a:hover {
     // padding-left: 100px;
     padding-top: 5px;
     padding-bottom: 5px;
-    border-top: 2px solid #bababa;
-    border-bottom: 2px solid #bababa;
+    border-top: 1px solid $grey50K;
+    border-bottom: 1px solid $grey50K;
     /*font-family: "Lora", serif;*/
-    font-size: 22px;
+    font-size: $base-font-size;
     line-height: 1.25em;
     list-style-type: circle;
 }

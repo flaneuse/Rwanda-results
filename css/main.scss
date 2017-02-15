@@ -71,6 +71,25 @@ $med-width:  800px;
 $small-width:  500px;
 
 
+#intro-bg {
+  background-color: rgba(255, 255, 255, 0.8);
+  // position: absolute;
+  bottom: 15px;
+  left: 15px;
+  // position: fixed;
+  // top: $top-padding;
+  // padding-left: 5px;
+  // width: 30%;
+  // height: 50%;
+  z-index: 1000;
+}
+
+#what-did {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: $large-pad;
+  position: fixed;
+  bottom: 25%;
+}
 
 // Sub-scss files to import.
 
