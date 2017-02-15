@@ -563,8 +563,8 @@ function display(data) {
   var $vis = $("#vis");
   $vis.empty();
 
-  var $map = $("#intro-max");
-  $map.empty();
+  var map = d3.selectAll("#intro-max");
+  map.remove();
 
   // create a new plot and
   // display it
