@@ -371,6 +371,23 @@ var path = mapSVG.append("path")
      // NEXT
      mapOff("#afr1");
 
+     // population annotations
+       fullG.select("#afr1").selectAll(".g-pop-explain")
+       .transition()
+       .duration(tDefault)
+       .style("opacity", 0)
+
+       mapSVG.selectAll("#low-density-annot")
+       .transition()
+       .duration(0)
+       .style("opacity", 0);
+
+       mapSVG.selectAll("#high-density-annot")
+           .transition()
+           .delay(0)
+           .duration(0)
+           .style("opacity", 0);
+
      // CURRENT
      d3.selectAll("#intro-img")
       .transition()
@@ -448,10 +465,22 @@ function show3(){
   .style("opacity", 0)
 
 
+// population annotations
   fullG.select("#afr1").selectAll(".g-pop-explain")
   .transition()
   .duration(tDefault)
   .style("opacity", 0)
+
+  mapSVG.selectAll("#low-density-annot")
+  .transition()
+  .duration(0)
+  .style("opacity", 0);
+
+  mapSVG.selectAll("#high-density-annot")
+      .transition()
+      .delay(0)
+      .duration(0)
+      .style("opacity", 0);
 
   changeScrollyText("#afr1", "Even without any other markers, you can begin to see the outline of the African coast.");
 
@@ -462,12 +491,7 @@ function show3(){
   function show4() {
 
 // NEXT
-    fullG.select("#afr2").selectAll("img")
-      .transition()
-      .delay(0)
-      .duration(0)
-      .styleTween("transform",
-                  function() {return d3.interpolate("translate(-113.5%, -17.5%) scale(5.349)", "translate(0%, 0%) scale(1)")});
+
 
 // CURRENT: Cross-fade images
       fullG.select("#afr1")
@@ -484,9 +508,31 @@ function show3(){
       .transition("cross-fade")
       .duration(tDefault*4)
       .style("opacity", 1)
+
+      changeScrollyText("#afr1", "We'll make this easier to see by adding in the surrounding ocean and inland lakes.");
+      changeScrollyText("#afr2", "We'll make this easier to see by adding in the surrounding ocean and inland lakes.");
   }
 
-function show5() {
+
+  function show5(){
+    // PREVIOUS
+
+    // NEXT
+
+    fullG.select("#afr2").selectAll("img")
+      .transition()
+      .delay(0)
+      .duration(0)
+      .styleTween("transform",
+                  function() {return d3.interpolate("translate(-113.5%, -17.5%) scale(5.349)", "translate(0%, 0%) scale(1)")});
+
+    // CURRENT: highlight lake Vic.
+                  
+
+  }
+
+
+function show6() {
   fullG.select("#afr2").selectAll("img")
     .transition()
     .delay(1000)
@@ -496,9 +542,7 @@ function show5() {
 
 }
 
-function show6(){
 
-}
 
 function show7() {
 
