@@ -562,6 +562,7 @@ var religData = rawData["relig"];
 religData.forEach(function(d) {
     d.pct = +d.pct;
     d.pop = +d.pop;
+    d.diff = +d.diff;
     d.year = +d.year;
 });
 
@@ -796,9 +797,15 @@ br.selectAll("circle").on("click", function(d,i) {
     var swAnnot =
     {tfr: [{coords: [[x(2010.5), y(5)],[x(2010.25), y(4.7)]]},
           {coords: [[x(2016.5), y(4.8)],[x(2016.25), y(4.5)]]}
-    ]
+    ],
+    mcuRelig: {coords: [[xMCUrelig(0.55), yMCUrelig("Protestant")],[xMCUrelig(0.5), yMCUrelig("Protestant") + 15]]},
+    slope: [{coords: [[xRslope(2005), yRslope(0.52)],[xRslope(2003), yRslope(0.5)]]},
+    {coords: [[xRslope(2010), yRslope(0.35)],[xRslope(2007), yRslope(0.3)]]}
+  ],
+    rBar: [{coords: [[xRbar(2.2e6), yRbar(2012) - 50],[xRslope(2003), yRbar(2012) - 50]]}
+  ]
     }
-    
+
     // TEXT / SWOOPY ANNOTATION
     // Basic swoopy arrow
                var swoopyOver = swoopyArrow()
@@ -966,6 +973,44 @@ source.append("rect")
               .style("stroke-width", 1)
               .style("fill-opacity", 0.2);
 
+// Text annotation: difference
+svg.selectAll("#diff-line")
+  .data(popByRelig.values.filter(function(d,i) {return d.ref == 1 & d.year == 2012 & d.religion == "Protestant";}))
+.enter().append("line")
+  .attr("id", "diff-line")
+  .attr("class", "solid-line")
+  .attr("x1", function(d) {console.log(d); return xRbar(d.pop);})
+  .attr("x2", function(d) {return xRbar(d.diff + d.pop);})
+  .attr("y1", dims.religBar.h/4  + margins.religBar.top/2)
+  .attr("y2", dims.religBar.h/4  + margins.religBar.top/2)
+  .style("fill", function(d) {return zRelig(d.religion);})
+  .style("text-anchor", "middle")
+  .text(function(d) {return (d3.format(".2s"))(d.diff);});
+
+svg.selectAll("#diff-annot")
+  .data(popByRelig.values.filter(function(d,i) {return d.ref == 1 & d.year == 2012;}))
+.enter().append("text")
+  .attr("id", "diff-annot")
+  .attr("x", function(d) {return xRbar(d.diff/2 + d.pop);})
+  .attr("y", dims.religBar.h/4  + margins.religBar.top/2)
+  .style("fill", function(d) {return zRelig(d.religion);})
+  .text(function(d) {return (d3.format(".2s"))(d.diff);});
+
+if(popByRelig.key == "Protestant"){
+// White box to hide underlying line
+  var text = d3.select("#diff-annot");
+  var bbox = text.node().getBBox();
+
+  var padding = 4;
+
+  svg.insert("rect", "#diff-annot")
+      .attr("x", bbox.x - padding)
+      .attr("y", bbox.y - padding)
+      .attr("width", bbox.width + (padding*2))
+      .attr("height", bbox.height + (padding*2))
+      .style("fill", "white");
+}
+
 // Ref line: 2002
               svg.selectAll("#bar-ref")
                 .data(popByRelig.values.filter(function(d) {return d.ref == 1 &
@@ -996,7 +1041,12 @@ source.append("rect")
             .attr("stroke", function(d) {return zRelig(d.religion);})
               .attr("stroke-width", 4)
             .style("opacity", 1);
+
+
       }
+
+
+
 
 
     // --- end RELIGION BAR PLOT ---
@@ -1253,6 +1303,15 @@ mcuRelig.append("g")
         .attr("dx", 10)
         .text(function(d) {return "national average: " + d3.format(".0%")(d.natl)})
         .style("opacity", 1);
+
+
+        mcuRelig
+        .append("path.arrow")
+          .attr('marker-end', 'url(#arrowhead)')
+          .attr("id", "mcuRelig-arrow")
+          .datum(swAnnot.mcuRelig.coords)
+          .attr("d", swoopyUnder)
+          .style("opacity", 1);
 
         // TEXT: protestant annotation
         mcuRelig.selectAll(".val-labels")

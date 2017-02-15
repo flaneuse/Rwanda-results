@@ -141,6 +141,11 @@
   stroke-dasharray: 6;
 }
 
+.solid-line {
+  fill: none;
+  stroke-width: 0.75;
+  stroke: $grey90K;
+}
 
 .afr-outline {
   fill: none;
@@ -176,6 +181,13 @@
   color: $soft-black;
 }
 
+#diff-annot {
+  alignment-baseline: middle;
+  vertical-align: middle;
+  text-anchor: middle; // or middle, start, end
+  height: 1.1em;
+  color: $soft-black;
+}
 
 #val-annot {
     text-anchor: middle;
