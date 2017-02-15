@@ -266,57 +266,11 @@ var spacing_bc = 25; // spacing between breadcrumbs, in pixels.
 var path = mapSVG.append("path")
     .attr("class", "afr-outline")
     // .style("fill", "none")
-    .attr("d", line(afr));
-// code via http://www.visualcinnamon.com/2016/01/animating-dashed-line-d3.html
-    //Get the total length of the path
-    var totalLength = path.node().getTotalLength();
+    .attr("d", line(afr))
+    .style('opacity', 0);
 
-    /***************** Create the required stroke-dasharray to animate a dashed pattern ****************/
-    //Adjusted from http://stackoverflow.com/questions/24021971/animate-the-drawing-of-a-dashed-svg-line
 
-    //Create a (random) dash pattern
-    //The first number specifies the length of the visible part, the dash
-    //The second number specifies the length of the invisible part
-    var dashing = "6, 6"
 
-    //This returns the length of adding all of the numbers in dashing (the length of one pattern in essense)
-    //So for "6,6", for example, that would return 6+6 = 12
-    var dashLength =
-    	dashing
-    		.split(/[\s,]/)
-    		.map(function (a) { return parseFloat(a) || 0 })
-    		.reduce(function (a, b) { return a + b });
-
-    //How many of these dash patterns will fit inside the entire path?
-    var dashCount = Math.ceil( totalLength / dashLength );
-
-    //Create an array that holds the pattern as often so it will fill the entire path
-    var newDashes = new Array(dashCount).join( dashing + " " );
-    //Then add one more dash pattern, namely with a visible part of length 0 (so nothing) and a white part
-    //that is the same length as the entire path
-    var dashArray = newDashes + " 0, " + totalLength;
-
-    /************************************* END ******************************************/
-
-    //Now offset the entire dash pattern, so only the last white section is
-    //visible and then decrease this offset in a transition to show the dashes
-
-    //Animate the path by offsetting the path so all you see is the white last bit of the dash pattern
-    //(which has a length that is the same as the length of the entire path), and then slowly move the offset
-    //to zero (i.e. out of the way) so the rest of the path becomes visible
-    //(the visible stuff at the start of the dash pattern)
-    path
-      	.attr("stroke-dashoffset", totalLength)
-      	.attr("stroke-dasharray", dashArray)	//This is where it differs with the solid line example
-      	.transition().duration(5000).ease("linear")
-    	.attr("stroke-dashoffset", 0);
-
-    // undashed version
-    // path
-    //   	.attr("stroke-dasharray", totalLength + " " + totalLength)
-    // 	.attr("stroke-dashoffset", totalLength)
-    //   	.transition().duration(5000).ease("linear")
-    // 	.attr("stroke-dashoffset", 0);
 
 
     // mapSVG.selectAll("text").data(afr)
@@ -441,8 +395,14 @@ d3.selectAll("#intro-img")
     .duration(0)
     .style("opacity", 0);
 
+
 // NEXT
      mapOff("#afr2");
+
+     fullG.select(".afr-outline")
+     .transition()
+     .duration(0)
+     .style("opacity", 0)
 
   // CURRENT
      mapOn("#afr1");
@@ -494,25 +454,36 @@ function show3(){
   .style("opacity", 0)
 
   changeScrollyText("#afr1", "Even without any other markers, you can begin to see the outline of the African coast.");
+
+  animatePath(".afr-outline");
+
 }
 
   function show4() {
-    fullG.select("#afr1")
-    .transition("cross-fade")
-    .duration(tDefault*4)
-    .style("opacity", 0)
 
-    fullG.select("#afr2")
-    .transition("cross-fade")
-    .duration(tDefault*4)
-    .style("opacity", 1)
-
+// NEXT
     fullG.select("#afr2").selectAll("img")
       .transition()
       .delay(0)
       .duration(0)
       .styleTween("transform",
                   function() {return d3.interpolate("translate(-113.5%, -17.5%) scale(5.349)", "translate(0%, 0%) scale(1)")});
+
+// CURRENT: Cross-fade images
+      fullG.select("#afr1")
+      .transition("cross-fade")
+      .duration(tDefault*4)
+      .style("opacity", 0)
+
+      fullG.select(".afr-outline")
+      .transition("cross-fade")
+      .duration(tDefault*4)
+      .style("opacity", 0)
+
+      fullG.select("#afr2")
+      .transition("cross-fade")
+      .duration(tDefault*4)
+      .style("opacity", 1)
   }
 
 function show5() {
@@ -559,6 +530,63 @@ function changeScrollyText(id, text) {
   .text(text)
 }
 
+
+function animatePath(id){
+
+  var path = d3.selectAll(id);
+
+  // code via http://www.visualcinnamon.com/2016/01/animating-dashed-line-d3.html
+      //Get the total length of the path
+      var totalLength = path.node().getTotalLength();
+
+      /***************** Create the required stroke-dasharray to animate a dashed pattern ****************/
+      //Adjusted from http://stackoverflow.com/questions/24021971/animate-the-drawing-of-a-dashed-svg-line
+
+      //Create a (random) dash pattern
+      //The first number specifies the length of the visible part, the dash
+      //The second number specifies the length of the invisible part
+      var dashing = "6, 6"
+
+      //This returns the length of adding all of the numbers in dashing (the length of one pattern in essense)
+      //So for "6,6", for example, that would return 6+6 = 12
+      var dashLength =
+      	dashing
+      		.split(/[\s,]/)
+      		.map(function (a) { return parseFloat(a) || 0 })
+      		.reduce(function (a, b) { return a + b });
+
+      //How many of these dash patterns will fit inside the entire path?
+      var dashCount = Math.ceil( totalLength / dashLength );
+
+      //Create an array that holds the pattern as often so it will fill the entire path
+      var newDashes = new Array(dashCount).join( dashing + " " );
+      //Then add one more dash pattern, namely with a visible part of length 0 (so nothing) and a white part
+      //that is the same length as the entire path
+      var dashArray = newDashes + " 0, " + totalLength;
+
+      /************************************* END ******************************************/
+
+      //Now offset the entire dash pattern, so only the last white section is
+      //visible and then decrease this offset in a transition to show the dashes
+
+      //Animate the path by offsetting the path so all you see is the white last bit of the dash pattern
+      //(which has a length that is the same as the length of the entire path), and then slowly move the offset
+      //to zero (i.e. out of the way) so the rest of the path becomes visible
+      //(the visible stuff at the start of the dash pattern)
+      // path
+      //     .attr("stroke-dashoffset", totalLength)
+      //     .attr("stroke-dasharray", dashArray)	//This is where it differs with the solid line example
+      //     .transition().duration(5000).ease("linear")
+      //   .attr("stroke-dashoffset", 0);
+
+      // undashed version
+      path
+        .attr("stroke-dasharray", totalLength + " " + totalLength)
+        .attr("stroke-dashoffset", totalLength)
+        .style("opacity", 1)
+          .transition().duration(5000).ease("linear")
+        .attr("stroke-dashoffset", 0);
+}
 
   /**
    * activate -
