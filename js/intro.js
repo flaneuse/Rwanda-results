@@ -508,7 +508,11 @@ d3.selectAll("#intro-img")
 
 // NEXT
 
-
+    mapOff("#afr2");
+    mapOff("#afr3");
+    mapOff("#afr3_cities");
+    mapOff("#afr4");
+    mapOff("#afr4_sm");
 
      fullG.select(".afr-outline")
      .transition()
@@ -554,6 +558,12 @@ d3.selectAll("#intro-img")
   }
 
 function show3(){
+  // remove next
+  mapOff("#afr3");
+  mapOff("#afr3_cities");
+  mapOff("#afr4");
+  mapOff("#afr4_sm");
+
 
   fullG.select("#afr1")
   .transition("cross-fade")
@@ -585,12 +595,16 @@ function show3(){
 
   changeScrollyText("#afr1", "Even without any geographical markers, you can easily see the outline of the African coast.");
 
-  animatePath(".afr-outline");
+  animatePath(".afr-outline", 2000);
 
 }
 
   function show4() {
 // NEXT
+mapOff("#afr1");
+mapOff("#afr4");
+mapOff("#afr4_sm");
+
 fullG.select("#afr2").selectAll("img")
   .transition()
   .delay(0)
@@ -642,6 +656,9 @@ fullG.select("#afr2").selectAll("img")
     // PREVIOUS
 
     // NEXT
+    mapOff("#afr1");
+    mapOff("#afr4");
+    mapOff("#afr4_sm");
 
     fullG.select("#afr2").selectAll("img")
       .transition()
@@ -729,7 +746,7 @@ mapOff("#afr4")
 
 
   // CURRENT
-  animatePath(".rwa-outline");
+  animatePath(".rwa-outline", 2000);
   changeScrollyTitle("#afr3", "Where is Rwanda?");
   changeScrollyText("#afr3", "Rwanda is situated in the middle of this major population cluster surrounding Lake Victoria. Even without being situated directly on the lake, Rwanda is a major population center.");
 
@@ -791,11 +808,19 @@ function show8() {
 mapOff("#afr4");
 
 // turn on current
-mapOn("#afr4_sm")
+vis.selectAll("#afr4_sm")
+  .transition()
+  .duration(tDefault)
+  .style("opacity", 1);
 
 }
 
-function show9(){}
+function show9(){
+  vis.selectAll("#afr4_sm")
+    .transition()
+    .duration(0)
+    .style("opacity", 0);
+}
 // HELPER FUNCTIONS ---------
 function mapOn(id){
      fullG.selectAll(id)
@@ -825,7 +850,7 @@ function changeScrollyTitle(id, text) {
 }
 
 
-function animatePath(id){
+function animatePath(id, tDuration){
 
   var path = d3.selectAll(id);
 
@@ -878,7 +903,7 @@ function animatePath(id){
         .attr("stroke-dasharray", totalLength + " " + totalLength)
         .attr("stroke-dashoffset", totalLength)
         .style("opacity", 1)
-          .transition().duration(5000).ease("linear")
+          .transition().duration(tDuration).ease("linear")
         .attr("stroke-dashoffset", 0);
 }
 
