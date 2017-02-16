@@ -28,6 +28,32 @@
 }
 
 
+#intro-bg {
+  background-color: rgba(255, 255, 255, 0.8);
+  // position: absolute;
+  bottom: 15px;
+  left: 15px;
+  // position: fixed;
+  // top: $top-padding;
+  margin-left: $large-pad;
+  margin-top: $large-pad;
+  padding-left: $large-pad;
+  // width: 30%;
+  // height: 50%;
+  z-index: 1000;
+}
+
+.highlight-bg {
+  background-color: rgba(227, 255, 255, 0.8);
+}
+
+#what-did {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: $large-pad;
+  position: fixed;
+  bottom: 25%;
+}
+
 
 // ---------
 // From ai2html:
@@ -216,3 +242,32 @@
 				letter-spacing:0.08333333333333em;
 				color:#ffffff;
 			}
+
+
+      #g-Africa_base_final-pop-scale{
+				position:relative;
+				overflow:hidden;
+			}
+
+
+			#g-Africa_base_final-pop-scale .g-aiPstyle0 {
+				font-family:Lato,sans-serif;
+				font-size:11px;
+				line-height:13px;
+				font-weight:300;
+				color:#414042;
+			}
+			#g-Africa_base_final-pop-scale .g-aiPstyle1 {
+				font-family:Lato,sans-serif;
+				font-size:9px;
+				line-height:11px;
+				font-weight:300;
+				color:#414042;
+			}
+			#g-Africa_base_final-pop-scale .g-aiPstyle2 {
+				font-family:Lato,sans-serif;
+				font-size:9px;
+				line-height:11px;
+				font-weight:300;
+				text-align:right;
+				color:#414042;
