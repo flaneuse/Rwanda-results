@@ -875,7 +875,7 @@ plotG.selectAll(".dot.dotMain")
     .style("opacity", 1)
     .transition()
     .duration(600)
-    .attr("cy", function(d) {return y(d.livelihood_zone)})
+    .attr("cy", function(d) {return y(d.livelihood_zone) + y.rangeBand()/2})
     .attr("transform","translate(0,0)")
     .style("fill", function(d) {return z(d.avg2010)})
     .attr("cx", function(d) {return x(d.avg2010)});
