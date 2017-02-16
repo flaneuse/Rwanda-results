@@ -103,6 +103,15 @@ var scrollVis = function() {
        .scale(y)
        .orient("left");
 
+// Axis to convert "centroids" of LZ to pixels on the map, for trasition.
+ var xMap = d3.scale.linear()
+      .range([0, width + margin.left])
+      .domain([0, 594.81]);
+
+    var yMap = d3.scale.linear()
+         .range([0, height + margin.top])
+         .domain([0, 541.48]);
+
 // // gridlines
 //   function make_x_gridlines() {
 //          return d3.axis.orient("bottom").x
@@ -786,8 +795,10 @@ var ci2010 = plotG.selectAll(".ci #y2010")
     plotG.selectAll(".dot.dotMain")
         .transition()
         .duration(600)
-        .attr("cx", function(d) {return d.imgX;})
-        .attr("cy", function(d) {return d.imgY;})
+        .attr("cx", function(d) {return (d.imgX);})
+        .attr("cy", function(d) {return (d.imgY);})
+        // .attr("cx", function(d) {return xMap(d.imgX);})
+        // .attr("cy", function(d) {return yMap(d.imgY);})
         .style("fill", function(d) {return z(d.avg2010)})
         .attr("transform","translate(-105,-40)")
         .transition()
