@@ -72,7 +72,16 @@
 
 // text annotations
 annotations = {
-  relig_map: [{class: "prot-annot", id:"prot-a1",
+  relig_map: [{class: "big-text", id:"prot-a0",
+  x: 10, y: height * 0.6, w: "50%",
+  text: "Protestant population"},
+  {class: "big-text", id:"cath-a0",
+  x: width/2, y: height * 0.6, w: "50%",
+  text: "Catholic population"},
+  {class: "prot-annot", id:"prot-a1",
+  x: 10, y: 10, w: "30%",
+  text: "The Protestant population in the northeast has expanded dramatically in the past decade"},
+  {class: "prot-annot", id:"prot-a1",
   x: 10, y: 10, w: "30%",
   text: "The Protestant population in the northeast has expanded dramatically in the past decade"},
   {class: "prot-annot", id:"prot-a2",
@@ -80,7 +89,8 @@ annotations = {
   text: "Protestants have typically lived along Lake Kivu"},
   {class: "cath-annot", id:"cath-a1",
   x: width/2 + 50, y: 10, w: "30%",
-  text: "Catholics are concentrated in the central portion of the country"}],
+  text: "Catholics are concentrated in the central portion of the country"}
+],
 
   tfr: [{class: "basic-annot", id:"tfr-annot",
   x: 2011, y: 5,
@@ -1384,6 +1394,7 @@ religSlope.selectAll(".slope")
 
 // --- end RELIGION DOT PLOT ---------------------------------------------------
 
+
 // --- RELIGION MCU PLOT ---
 mcuRelig.selectAll(".top-label")
     .data(religData.filter(function(d) {return d.religion == "Catholic" & d.mostrecent == true;}))
@@ -1534,14 +1545,6 @@ var imgs = mcu.selectAll("image")
           .style("opacity", function(d) {return d.Category == "Livelihood Zone" ? 1 : 0})
 // end MCU stepper -------------------------------------------------------------
 
-    // MAP: map
-  //  imgG.append("image")
-  //      .attr("class", "rw-map")
-  //      .attr("id", "popdensity")
-  //      .attr("xlink:href", function(d) {return "/img/intro/afr5.png"})
-  //      .attr("width", dims.map.w)
-  //      .attr("height", "100%")
-  //      .style("opacity", 1);
 
 // --- TFR plot ---
 tfr.append("text")
@@ -2538,6 +2541,11 @@ function religOff() {
 }
 
 function religMapOn(tDefault) {
+  fullG.selectAll(".big-text")
+    .transition("mapOn")
+      .duration(tDefault)
+      .style("opacity", 1);
+
   fullG.selectAll("#relig-map")
     .transition("mapOn")
       .duration(tDefault)
