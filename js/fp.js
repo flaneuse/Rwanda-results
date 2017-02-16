@@ -44,6 +44,7 @@
     map:      { top: 0, right: 15, bottom: 0, left: 0 },
     tfr:      { top: 65, right: 100, bottom: 25, left: 50 },
     mcu:      { top: 75, right: 75, bottom: 0, left: 235 },
+    mcuTime:  { top: 65, right: 100, bottom: 25, left: 50 },
     mcuRelig: { top: 75, right: 75, bottom: 0, left: 100 },
     religSlope: { top: 75, right: 125, bottom: 25, left: 75 },
     religBar: { top: 175, right: 100, bottom: 75, left: 45 },
@@ -57,6 +58,8 @@
                 h: height - margins.tfr.top - margins.tfr.bottom},
     mcu:      { w: width - margins.mcu.right - margins.mcu.left,
                 h: height - margins.mcu.top - margins.mcu.bottom},
+    mcuTime:      { w: width - margins.mcuTime.right - margins.mcuTime.left,
+                h: height - margins.mcuTime.top - margins.mcuTime.bottom},
     mcuRelig: { w: width - margins.mcuRelig.right - margins.mcuRelig.left,
                 h: height - margins.mcuRelig.top - margins.mcuRelig.bottom},
     religSlope: { w: width - margins.religSlope.right - margins.religSlope.left,
@@ -82,6 +85,10 @@ annotations = {
   tfr: [{class: "basic-annot", id:"tfr-annot",
   x: 2011, y: 5,
   text: "TFR has changed little"}],
+
+  mcuTime: [{class: "basic-annot", id:"mcuTime-annot",
+  x: 2000, y: 5,
+  text: "Does the slowing of uptake in modern contraception use help explain the stagnating fertility rate?"}],
 
   relig_slope: [{class: "prot-annot", id:"slope-annot",
   x: 0.6 * dims.religSlope.w, y: 0.3,
@@ -200,6 +207,25 @@ var focusRelig = ["Protestant", "Catholic"];
              .scale(y)
              .orient("left")
              .innerTickSize(-dims.tfr.w);
+
+     // AXES for MCU over time
+      var xMCUtime = d3.scale.linear()
+           .range([0, dims.mcuTime.w]);
+
+       var yMCUtime = d3.scale.linear()
+            .range([dims.mcuTime.h, 0]);
+
+      var xAxMCUtime = d3.svg.axis()
+           .scale(xMCUtime)
+           .orient("top")
+          .tickFormat(d3.format("d"))
+          .ticks(5);
+
+      var yAxMCUtime= d3.svg.axis()
+           .scale(yMCUtime)
+          .ticks(5, "%")
+           .orient("left")
+           .innerTickSize(-dims.tfr.w);
 
 // AXES for MCU
        var xMCU = d3.scale.linear()
@@ -360,18 +386,18 @@ var focusRelig = ["Protestant", "Catholic"];
            .style("max-width", dims.map.w + "px");
 
 // TEMP ANNOTATIONS
-           vis.selectAll("annots")
-             .data(annotations.all)
-             .enter().append("div")
-             .attr("class", function(d) {return d.class;})
-             .attr("id", function(d) {return d.id;})
-             .text(function(d) {return d.text;})
-                     // .tspans(function(d) {return d3.wordwrap(d.text, ncharBreak);})
-             .style("width", function(d) {return d.w;})
-             .style("left", function(d) {return d.x + "px";})
-             .style("top", function(d) {return d.y + "px";})
-             .style("position", "fixed")
-             .style("opacity", 1);
+          //  vis.selectAll("annots")
+          //    .data(annotations.all)
+          //    .enter().append("div")
+          //    .attr("class", function(d) {return d.class;})
+          //    .attr("id", function(d) {return d.id;})
+          //    .text(function(d) {return d.text;})
+          //            // .tspans(function(d) {return d3.wordwrap(d.text, ncharBreak);})
+          //    .style("width", function(d) {return d.w;})
+          //    .style("left", function(d) {return d.x + "px";})
+          //    .style("top", function(d) {return d.y + "px";})
+          //    .style("position", "fixed")
+          //    .style("opacity", 1);
 
 
 
@@ -383,6 +409,14 @@ var focusRelig = ["Protestant", "Catholic"];
       .attr("id", "tfr")
       .attr("transform", "translate(" + margins.tfr.left + "," + margins.tfr.top + ")")
       .style("opacity", 0) // set initially to 0.
+
+
+      mcuTime = plotG
+      .append("g")
+        .attr("id", "mcu-time")
+        .attr("transform", "translate(" + margins.mcuTime.left + "," + margins.mcuTime.top + ")")
+        .style("opacity", 1) // set initially to 0.
+
 
     var nav = fullG.append("div")
         .attr("id", "clicky")
@@ -446,7 +480,7 @@ var focusRelig = ["Protestant", "Catholic"];
       .style("max-width", "inherit")
           .attr("class", "intro-full")
           .html("<!-- Artboard: mcu2010-map -->	<div id='g-mcu2010-map' class='g-artboard g-artboard-v3 ' data-min-width='595'>		<style type='text/css' media='screen,print'>			#g-mcu2010-map{				position:relative;				overflow:hidden;			}			.g-aiAbs{				position:absolute;			}			.g-aiImg{				display:block;				width:100% !important;			}			#g-mcu2010-map p{				font-family:nyt-franklin,arial,helvetica,sans-serif;				font-size:13px;				line-height:18px;				margin:0;			}			#g-mcu2010-map .g-aiPstyle0 {				font-family:Lato,sans-serif;				font-size:14px;				line-height:16px;				font-weight:300;				text-transform:uppercase;				letter-spacing:-0.02083333333333em;				color:#414042;			}			#g-mcu2010-map .g-aiPstyle1 {				font-family:Lato,sans-serif;				font-size:27px;				line-height:33px;				font-weight:300;				text-transform:uppercase;				letter-spacing:-0.04166666666667em;				color:#414042;			}			#g-mcu2010-map .g-aiPstyle2 {				font-family:Lato,sans-serif;				font-size:12px;				line-height:12px;				font-weight:300;				text-align:right;				color:#a7a9ac;			}			#g-mcu2010-map .g-aiPstyle3 {				font-family:Lato,sans-serif;				font-size:11px;				line-height:13px;				font-weight:300;				color:#808285;			}			#g-mcu2010-map .g-aiPstyle4 {				font-family:Lato,sans-serif;				font-size:16px;				line-height:16px;				font-weight:300;				text-transform:uppercase;				text-align:center;				letter-spacing:0.16666666666667em;				color:#d1d3d4;			}			#g-mcu2010-map .g-aiPstyle5 {				font-family:Lato,sans-serif;				font-size:9px;				line-height:9px;				font-weight:300;				color:#636466;			}			#g-mcu2010-map .g-aiPstyle6 {				font-family:Lato,sans-serif;				font-size:12px;				line-height:12px;				font-weight:300;				text-transform:uppercase;				text-align:center;				letter-spacing:0.15em;				color:#d1d3d4;			}			#g-mcu2010-map .g-aiPstyle7 {				font-family:Lato,sans-serif;				font-size:10px;				line-height:12px;				font-weight:100;				text-align:center;				color:#658338;			}			#g-mcu2010-map .g-aiPstyle8 {				font-family:Lato,sans-serif;				font-size:14px;				line-height:12px;				font-weight:400;				text-align:center;				color:#e6e7e8;			}			#g-mcu2010-map .g-aiPstyle9 {				font-family:Lato,sans-serif;				font-size:14px;				line-height:17px;				font-weight:300;				font-style:italic;				text-transform:uppercase;				text-align:center;				letter-spacing:0.33333333333333em;				color:#a1abb7;			}			#g-mcu2010-map .g-aiPstyle10 {				font-family:Lato,sans-serif;				font-size:6px;				line-height:7px;				font-weight:300;				text-transform:uppercase;				letter-spacing:-0.04166666666667em;				color:#414042;			}			#g-mcu2010-map .g-aiPstyle11 {				font-family:Lato,sans-serif;				font-size:5px;				line-height:6px;				font-weight:300;				color:#808285;			}			#g-mcu2010-map .g-aiPstyle12 {				font-family:Lato,sans-serif;				font-size:10px;				line-height:12px;				font-weight:300;				color:#636466;			}			.g-aiPtransformed p { white-space: nowrap; }		</style>		<div id='g-mcu2010-map-graphic'>			<img id='g-ai0-0'				class='g-aiImg'				src='/img/fp/mcu2010-map.png'				/>			<div id='g-ai0-1' class='g-scale_-_MCU g-aiAbs' style='top:2.5855%;left:3.1142%;width:39.84%;'>				<p class='g-aiPstyle0'>Modern  Contraception*  use</p>			</div>			<div id='g-ai0-2' class='g-year g-aiAbs' style='top:2.9549%;left:84.7523%;width:10.2345%;'>				<p class='g-aiPstyle1'>2002</p>			</div>			<div id='g-ai0-3' class='g-scale_-_MCU g-aiAbs' style='top:5.9097%;right:58.7935%;width:15.5287%;'>				<p class='g-aiPstyle2'>in women in a union aged 15-49</p>			</div>			<div id='g-ai0-4' class='g-scale_-_MCU g-aiAbs' style='top:7.7565%;left:4.6606%;'>				<p class='g-aiPstyle3'>30%</p>			</div>			<div id='g-ai0-5' class='g-scale_-_MCU g-aiAbs' style='top:7.7565%;left:9.509%;'>				<p class='g-aiPstyle3'>40%</p>			</div>			<div id='g-ai0-6' class='g-scale_-_MCU g-aiAbs' style='top:7.7565%;left:14.3573%;'>				<p class='g-aiPstyle3'>50%</p>			</div>			<div id='g-ai0-7' class='g-scale_-_MCU g-aiAbs' style='top:7.7565%;left:19.2057%;'>				<p class='g-aiPstyle3'>60%</p>			</div>			<div id='g-ai0-8' class='g-label_-_countries_MCU g-aiAbs' style='top:9.9726%;left:53.1387%;width:14.9564%;margin-left:-7.4782%;'>				<p class='g-aiPstyle4'>uganda</p>			</div>			<div id='g-ai0-9' class='g-scale_-_MCU g-aiAbs' style='top:11.6347%;left:3.0628%;width:37.5593%;'>				<p class='g-aiPstyle5'>* includes female or male sterilization, pills, Intrauterine device, injectables, implants, male or female condom, lactational amenorrhea, and standard days method</p>			</div>			<div id='g-ai0-10' class='g-label_-_countries_MCU g-aiAbs' style='top:20.8687%;left:16.6718%;width:22.6969%;margin-left:-11.3484%;'>				<p class='g-aiPstyle6'>Democratic Republic of the Congo</p>			</div>			<div id='g-ai0-11' class='g-label_-_parks g-aiAbs' style='top:31.9494%;left:86.4102%;width:5.9918%;margin-left:-2.9959%;'>				<p class='g-aiPstyle7'>Akagera National Park</p>			</div>			<div id='g-ai0-12' class='g-provinces g-aiAbs' style='top:34.1655%;left:50.28%;width:10.6911%;margin-left:-5.3456%;'>				<p class='g-aiPstyle8'>Northern</p>			</div>			<div id='g-ai0-13' class='g-label_-_kivu g-aiAbs' style='top:41.7373%;left:18.4574%;width:10.8331%;margin-left:-5.4165%;'>				<p class='g-aiPstyle9'>Lake kivu</p>			</div>			<div id='g-ai0-14' class='g-provinces g-aiAbs' style='top:46.539%;left:59.3557%;width:10.6911%;margin-left:-5.3456%;'>				<p class='g-aiPstyle8'>Kigali</p>			</div>			<div id='g-ai0-15' class='g-provinces g-aiAbs' style='top:47.2777%;left:76.4178%;width:10.6911%;margin-left:-5.3456%;'>				<p class='g-aiPstyle8'>Eastern</p>			</div>			<div id='g-ai0-16' class='g-provinces g-aiAbs' style='top:50.4172%;left:32.9355%;width:10.6911%;margin-left:-5.3456%;'>				<p class='g-aiPstyle8'>Western</p>			</div>			<div id='g-ai0-17' class='g-provinces g-aiAbs' style='top:64.6375%;left:42.1725%;width:10.6911%;margin-left:-5.3456%;'>				<p class='g-aiPstyle8'>Southern</p>			</div>			<div id='g-ai0-18' class='g-SE_scale g-aiAbs' style='top:71.8399%;left:71.969%;width:9.5185%;'>				<p class='g-aiPstyle10'>CONFIDENCE Level</p>			</div>			<div id='g-ai0-19' class='g-label_-_parks g-aiAbs' style='top:72.7633%;left:24.271%;width:9.9777%;margin-left:-4.9888%;'>				<p class='g-aiPstyle7'>Nyungwe National Park</p>			</div>			<div id='g-ai0-20' class='g-SE_scale g-aiAbs' style='top:73.8714%;left:71.9475%;'>				<p class='g-aiPstyle11'>low</p>			</div>			<div id='g-ai0-21' class='g-SE_scale g-aiAbs' style='top:73.8714%;left:78.7948%;'>				<p class='g-aiPstyle11'>high</p>			</div>			<div id='g-ai0-22' class='g-label_-_countries_MCU g-aiAbs' style='top:80.7045%;left:62.1007%;width:16.8471%;margin-left:-8.4236%;'>				<p class='g-aiPstyle4'>burundi</p>			</div>			<div id='g-ai0-23' class='g-scale_-_dimensions_MCU g-aiAbs' style='top:91.0465%;left:3.0885%;'>				<p class='g-aiPstyle12'>0</p>			</div>			<div id='g-ai0-24' class='g-scale_-_dimensions_MCU g-aiAbs' style='top:91.0465%;left:10.2312%;'>				<p class='g-aiPstyle12'>20</p>			</div>			<div id='g-ai0-25' class='g-scale_-_dimensions_MCU g-aiAbs' style='top:91.0465%;left:17.8611%;'>				<p class='g-aiPstyle12'>40</p>			</div>			<div id='g-ai0-26' class='g-scale_-_dimensions_MCU g-aiAbs' style='top:91.0465%;left:25.4909%;'>				<p class='g-aiPstyle12'>60 km</p>			</div>		</div>	</div>")
-          .style("opacity", 1);
+          .style("opacity", 0);
 
         // Attach MCU raster map (2014)
         fullG.append("div")
@@ -454,7 +488,7 @@ var focusRelig = ["Protestant", "Catholic"];
           .attr("class", "intro-full")
           .style("max-width", "inherit")
           .html("<div id='g-box' class='ai2html'>	<!-- Generated by ai2html v0.61 - 2017-02-13 - 15:16 -->	<!-- ai file: 07_RWA_religion_500px -->	<style type='text/css' media='screen,print'>		.g-artboard {			margin:0 auto;		}	</style>	<!-- Artboard: mcu2010-map -->	<div id='g-mcu2010-map' class='g-artboard g-artboard-v3 ' data-min-width='595'>		<style type='text/css' media='screen,print'>			#g-mcu2010-map{				position:relative;				overflow:hidden;			}			.g-aiAbs{				position:absolute;			}			.g-aiImg{				display:block;				width:100% !important;			}			#g-mcu2010-map p{				font-family:nyt-franklin,arial,helvetica,sans-serif;				font-size:13px;				line-height:18px;				margin:0;			}			#g-mcu2010-map .g-aiPstyle0 {				font-family:Lato,sans-serif;				font-size:14px;				line-height:16px;				font-weight:300;				text-transform:uppercase;				letter-spacing:-0.02083333333333em;				color:#414042;			}			#g-mcu2010-map .g-aiPstyle1 {				font-family:Lato,sans-serif;				font-size:27px;				line-height:33px;				font-weight:300;				text-transform:uppercase;				letter-spacing:-0.04166666666667em;				color:#414042;			}			#g-mcu2010-map .g-aiPstyle2 {				font-family:Lato,sans-serif;				font-size:12px;				line-height:12px;				font-weight:300;				text-align:right;				color:#a7a9ac;			}			#g-mcu2010-map .g-aiPstyle3 {				font-family:Lato,sans-serif;				font-size:11px;				line-height:13px;				font-weight:300;				color:#808285;			}			#g-mcu2010-map .g-aiPstyle4 {				font-family:Lato,sans-serif;				font-size:16px;				line-height:16px;				font-weight:300;				text-transform:uppercase;				text-align:center;				letter-spacing:0.16666666666667em;				color:#d1d3d4;			}			#g-mcu2010-map .g-aiPstyle5 {				font-family:Lato,sans-serif;				font-size:9px;				line-height:9px;				font-weight:300;				color:#636466;			}			#g-mcu2010-map .g-aiPstyle6 {				font-family:Lato,sans-serif;				font-size:12px;				line-height:12px;				font-weight:300;				text-transform:uppercase;				text-align:center;				letter-spacing:0.15em;				color:#d1d3d4;			}			#g-mcu2010-map .g-aiPstyle7 {				font-family:Lato,sans-serif;				font-size:10px;				line-height:12px;				font-weight:100;				text-align:center;				color:#658338;			}			#g-mcu2010-map .g-aiPstyle8 {				font-family:Lato,sans-serif;				font-size:14px;				line-height:12px;				font-weight:400;				text-align:center;				color:#e6e7e8;			}			#g-mcu2010-map .g-aiPstyle9 {				font-family:Lato,sans-serif;				font-size:14px;				line-height:17px;				font-weight:300;				font-style:italic;				text-transform:uppercase;				text-align:center;				letter-spacing:0.33333333333333em;				color:#a1abb7;			}			#g-mcu2010-map .g-aiPstyle10 {				font-family:Lato,sans-serif;				font-size:6px;				line-height:7px;				font-weight:300;				text-transform:uppercase;				letter-spacing:-0.04166666666667em;				color:#414042;			}			#g-mcu2010-map .g-aiPstyle11 {				font-family:Lato,sans-serif;				font-size:5px;				line-height:6px;				font-weight:300;				color:#808285;			}			#g-mcu2010-map .g-aiPstyle12 {				font-family:Lato,sans-serif;				font-size:10px;				line-height:12px;				font-weight:300;				color:#636466;			}			.g-aiPtransformed p { white-space: nowrap; }		</style>		<div id='g-mcu2010-map-graphic'>			<img id='g-ai0-0'				class='g-aiImg'				src='/img/fp/mcu2010-map.png'				/>			<div id='g-ai0-1' class='g-scale_-_MCU g-aiAbs' style='top:2.5855%;left:3.1142%;width:39.84%;'>				<p class='g-aiPstyle0'>Modern  Contraception*  use</p>			</div>			<div id='g-ai0-2' class='g-year g-aiAbs' style='top:2.9549%;left:84.7523%;width:10.2345%;'>				<p class='g-aiPstyle1'>2002</p>			</div>			<div id='g-ai0-3' class='g-scale_-_MCU g-aiAbs' style='top:5.9097%;right:58.7935%;width:15.5287%;'>				<p class='g-aiPstyle2'>in women in a union aged 15-49</p>			</div>			<div id='g-ai0-4' class='g-scale_-_MCU g-aiAbs' style='top:7.7565%;left:4.6606%;'>				<p class='g-aiPstyle3'>30%</p>			</div>			<div id='g-ai0-5' class='g-scale_-_MCU g-aiAbs' style='top:7.7565%;left:9.509%;'>				<p class='g-aiPstyle3'>40%</p>			</div>			<div id='g-ai0-6' class='g-scale_-_MCU g-aiAbs' style='top:7.7565%;left:14.3573%;'>				<p class='g-aiPstyle3'>50%</p>			</div>			<div id='g-ai0-7' class='g-scale_-_MCU g-aiAbs' style='top:7.7565%;left:19.2057%;'>				<p class='g-aiPstyle3'>60%</p>			</div>			<div id='g-ai0-8' class='g-label_-_countries_MCU g-aiAbs' style='top:9.9726%;left:53.1387%;width:14.9564%;margin-left:-7.4782%;'>				<p class='g-aiPstyle4'>uganda</p>			</div>			<div id='g-ai0-9' class='g-scale_-_MCU g-aiAbs' style='top:11.6347%;left:3.0628%;width:37.5593%;'>				<p class='g-aiPstyle5'>* includes female or male sterilization, pills, Intrauterine device, injectables, implants, male or female condom, lactational amenorrhea, and standard days method</p>			</div>			<div id='g-ai0-10' class='g-label_-_countries_MCU g-aiAbs' style='top:20.8687%;left:16.6718%;width:22.6969%;margin-left:-11.3484%;'>				<p class='g-aiPstyle6'>Democratic Republic of the Congo</p>			</div>			<div id='g-ai0-11' class='g-label_-_parks g-aiAbs' style='top:31.9494%;left:86.4102%;width:5.9918%;margin-left:-2.9959%;'>				<p class='g-aiPstyle7'>Akagera National Park</p>			</div>			<div id='g-ai0-12' class='g-provinces g-aiAbs' style='top:34.1655%;left:50.28%;width:10.6911%;margin-left:-5.3456%;'>				<p class='g-aiPstyle8'>Northern</p>			</div>			<div id='g-ai0-13' class='g-label_-_kivu g-aiAbs' style='top:41.7373%;left:18.4574%;width:10.8331%;margin-left:-5.4165%;'>				<p class='g-aiPstyle9'>Lake kivu</p>			</div>			<div id='g-ai0-14' class='g-provinces g-aiAbs' style='top:46.539%;left:59.3557%;width:10.6911%;margin-left:-5.3456%;'>				<p class='g-aiPstyle8'>Kigali</p>			</div>			<div id='g-ai0-15' class='g-provinces g-aiAbs' style='top:47.2777%;left:76.4178%;width:10.6911%;margin-left:-5.3456%;'>				<p class='g-aiPstyle8'>Eastern</p>			</div>			<div id='g-ai0-16' class='g-provinces g-aiAbs' style='top:50.4172%;left:32.9355%;width:10.6911%;margin-left:-5.3456%;'>				<p class='g-aiPstyle8'>Western</p>			</div>			<div id='g-ai0-17' class='g-provinces g-aiAbs' style='top:64.6375%;left:42.1725%;width:10.6911%;margin-left:-5.3456%;'>				<p class='g-aiPstyle8'>Southern</p>			</div>			<div id='g-ai0-18' class='g-SE_scale g-aiAbs' style='top:71.8399%;left:71.969%;width:9.5185%;'>				<p class='g-aiPstyle10'>CONFIDENCE Level</p>			</div>			<div id='g-ai0-19' class='g-label_-_parks g-aiAbs' style='top:72.7633%;left:24.271%;width:9.9777%;margin-left:-4.9888%;'>				<p class='g-aiPstyle7'>Nyungwe National Park</p>			</div>			<div id='g-ai0-20' class='g-SE_scale g-aiAbs' style='top:73.8714%;left:71.9475%;'>				<p class='g-aiPstyle11'>low</p>			</div>			<div id='g-ai0-21' class='g-SE_scale g-aiAbs' style='top:73.8714%;left:78.7948%;'>				<p class='g-aiPstyle11'>high</p>			</div>			<div id='g-ai0-22' class='g-label_-_countries_MCU g-aiAbs' style='top:80.7045%;left:62.1007%;width:16.8471%;margin-left:-8.4236%;'>				<p class='g-aiPstyle4'>burundi</p>			</div>			<div id='g-ai0-23' class='g-scale_-_dimensions_MCU g-aiAbs' style='top:91.0465%;left:3.0885%;'>				<p class='g-aiPstyle12'>0</p>			</div>			<div id='g-ai0-24' class='g-scale_-_dimensions_MCU g-aiAbs' style='top:91.0465%;left:10.2312%;'>				<p class='g-aiPstyle12'>20</p>			</div>			<div id='g-ai0-25' class='g-scale_-_dimensions_MCU g-aiAbs' style='top:91.0465%;left:17.8611%;'>				<p class='g-aiPstyle12'>40</p>			</div>			<div id='g-ai0-26' class='g-scale_-_dimensions_MCU g-aiAbs' style='top:91.0465%;left:25.4909%;'>				<p class='g-aiPstyle12'>60 km</p>			</div>		</div>	</div>	<!-- Artboard: mcu2014-map -->	<div id='g-mcu2014-map' class='g-artboard g-artboard-v3 ' data-min-width='595'>		<style type='text/css' media='screen,print'>			#g-mcu2014-map{				position:relative;				overflow:hidden;			}			.g-aiAbs{				position:absolute;			}			.g-aiImg{				display:block;				width:100% !important;			}			#g-mcu2014-map p{				font-family:nyt-franklin,arial,helvetica,sans-serif;				font-size:13px;				line-height:18px;				margin:0;			}			#g-mcu2014-map .g-aiPstyle0 {				font-family:Lato,sans-serif;				font-size:14px;				line-height:16px;				font-weight:300;				text-transform:uppercase;				letter-spacing:-0.02083333333333em;				color:#414042;			}			#g-mcu2014-map .g-aiPstyle1 {				font-family:Lato,sans-serif;				font-size:27px;				line-height:33px;				font-weight:300;				text-transform:uppercase;				letter-spacing:-0.04166666666667em;				color:#414042;			}			#g-mcu2014-map .g-aiPstyle2 {				font-family:Lato,sans-serif;				font-size:12px;				line-height:12px;				font-weight:300;				text-align:right;				color:#a7a9ac;			}			#g-mcu2014-map .g-aiPstyle3 {				font-family:Lato,sans-serif;				font-size:11px;				line-height:13px;				font-weight:300;				color:#808285;			}			#g-mcu2014-map .g-aiPstyle4 {				font-family:Lato,sans-serif;				font-size:16px;				line-height:16px;				font-weight:300;				text-transform:uppercase;				text-align:center;				letter-spacing:0.16666666666667em;				color:#d1d3d4;			}			#g-mcu2014-map .g-aiPstyle5 {				font-family:Lato,sans-serif;				font-size:9px;				line-height:9px;				font-weight:300;				color:#636466;			}			#g-mcu2014-map .g-aiPstyle6 {				font-family:Lato,sans-serif;				font-size:12px;				line-height:12px;				font-weight:300;				text-transform:uppercase;				text-align:center;				letter-spacing:0.15em;				color:#d1d3d4;			}			#g-mcu2014-map .g-aiPstyle7 {				font-family:Lato,sans-serif;				font-size:10px;				line-height:12px;				font-weight:100;				text-align:center;				color:#658338;			}			#g-mcu2014-map .g-aiPstyle8 {				font-family:Lato,sans-serif;				font-size:14px;				line-height:12px;				font-weight:400;				text-align:center;				color:#e6e7e8;			}			#g-mcu2014-map .g-aiPstyle9 {				font-family:Lato,sans-serif;				font-size:14px;				line-height:17px;				font-weight:300;				font-style:italic;				text-transform:uppercase;				text-align:center;				letter-spacing:0.33333333333333em;				color:#a1abb7;			}			#g-mcu2014-map .g-aiPstyle10 {				font-family:Lato,sans-serif;				font-size:6px;				line-height:7px;				font-weight:300;				text-transform:uppercase;				letter-spacing:-0.04166666666667em;				color:#414042;			}			#g-mcu2014-map .g-aiPstyle11 {				font-family:Lato,sans-serif;				font-size:5px;				line-height:6px;				font-weight:300;				color:#808285;			}			#g-mcu2014-map .g-aiPstyle12 {				font-family:Lato,sans-serif;				font-size:10px;				line-height:12px;				font-weight:300;				color:#636466;			}			.g-aiPtransformed p { white-space: nowrap; }		</style>		<div id='g-mcu2014-map-graphic'>			<img id='g-ai1-0'				class='g-aiImg'				src='/img/fp/mcu2014-map.png'				/>			<div id='g-ai1-1' class='g-scale_-_MCU_copy g-aiAbs' style='top:2.5855%;left:3.1142%;width:38.1763%;'>				<p class='g-aiPstyle0'>Modern  Contraception* use</p>			</div>			<div id='g-ai1-2' class='g-label_-_year_copy g-aiAbs' style='top:2.9549%;left:84.7523%;width:10.2345%;'>				<p class='g-aiPstyle1'>2014</p>			</div>			<div id='g-ai1-3' class='g-scale_-_MCU_copy g-aiAbs' style='top:5.9097%;right:58.7935%;width:15.5287%;'>				<p class='g-aiPstyle2'>in women in a union aged 15-49</p>			</div>			<div id='g-ai1-4' class='g-scale_-_MCU_copy g-aiAbs' style='top:7.7565%;left:4.6606%;'>				<p class='g-aiPstyle3'>30%</p>			</div>			<div id='g-ai1-5' class='g-scale_-_MCU_copy g-aiAbs' style='top:7.7565%;left:9.5089%;'>				<p class='g-aiPstyle3'>40%</p>			</div>			<div id='g-ai1-6' class='g-scale_-_MCU_copy g-aiAbs' style='top:7.7565%;left:14.3574%;'>				<p class='g-aiPstyle3'>50%</p>			</div>			<div id='g-ai1-7' class='g-scale_-_MCU_copy g-aiAbs' style='top:7.7565%;left:19.2056%;'>				<p class='g-aiPstyle3'>60%</p>			</div>			<div id='g-ai1-8' class='g-label_-_countries_MCU_copy g-aiAbs' style='top:9.9726%;left:53.1387%;width:14.9564%;margin-left:-7.4782%;'>				<p class='g-aiPstyle4'>uganda</p>			</div>			<div id='g-ai1-9' class='g-scale_-_MCU_copy g-aiAbs' style='top:11.6347%;left:3.0628%;width:37.5593%;'>				<p class='g-aiPstyle5'>* includes female or male sterilization, pills, Intrauterine device, injectables, implants, male or female condom, lactational amenorrhea, and standard days method</p>			</div>			<div id='g-ai1-10' class='g-label_-_countries_MCU_copy g-aiAbs' style='top:20.8687%;left:16.6718%;width:22.6969%;margin-left:-11.3484%;'>				<p class='g-aiPstyle6'>Democratic Republic of the Congo</p>			</div>			<div id='g-ai1-11' class='g-label_-_parks_copy g-aiAbs' style='top:31.9494%;left:86.4102%;width:5.9918%;margin-left:-2.9959%;'>				<p class='g-aiPstyle7'>Akagera National Park</p>			</div>			<div id='g-ai1-12' class='g-provinces_copy g-aiAbs' style='top:34.1655%;left:50.2599%;width:10.6911%;margin-left:-5.3456%;'>				<p class='g-aiPstyle8'>Northern</p>			</div>			<div id='g-ai1-13' class='g-label_-_kivu_copy g-aiAbs' style='top:41.7373%;left:18.4574%;width:10.8331%;margin-left:-5.4165%;'>				<p class='g-aiPstyle9'>Lake kivu</p>			</div>			<div id='g-ai1-14' class='g-provinces_copy g-aiAbs' style='top:46.539%;left:59.3758%;width:10.6911%;margin-left:-5.3456%;'>				<p class='g-aiPstyle8'>Kigali</p>			</div>			<div id='g-ai1-15' class='g-provinces_copy g-aiAbs' style='top:47.2777%;left:76.3977%;width:10.6911%;margin-left:-5.3456%;'>				<p class='g-aiPstyle8'>Eastern</p>			</div>			<div id='g-ai1-16' class='g-provinces_copy g-aiAbs' style='top:50.4172%;left:32.9557%;width:10.6911%;margin-left:-5.3456%;'>				<p class='g-aiPstyle8'>Western</p>			</div>			<div id='g-ai1-17' class='g-provinces_copy g-aiAbs' style='top:64.6375%;left:42.1926%;width:10.6911%;margin-left:-5.3456%;'>				<p class='g-aiPstyle8'>Southern</p>			</div>			<div id='g-ai1-18' class='g-SE_scale_copy g-aiAbs' style='top:71.8399%;left:71.969%;width:9.5185%;'>				<p class='g-aiPstyle10'>CONFIDENCE Level</p>			</div>			<div id='g-ai1-19' class='g-label_-_parks_copy g-aiAbs' style='top:72.7633%;left:24.271%;width:9.9777%;margin-left:-4.9888%;'>				<p class='g-aiPstyle7'>Nyungwe National Park</p>			</div>			<div id='g-ai1-20' class='g-SE_scale_copy g-aiAbs' style='top:73.8714%;left:71.9475%;'>				<p class='g-aiPstyle11'>low</p>			</div>			<div id='g-ai1-21' class='g-SE_scale_copy g-aiAbs' style='top:73.8714%;left:78.7948%;'>				<p class='g-aiPstyle11'>high</p>			</div>			<div id='g-ai1-22' class='g-label_-_countries_MCU_copy g-aiAbs' style='top:80.7045%;left:62.1007%;width:16.8471%;margin-left:-8.4236%;'>				<p class='g-aiPstyle4'>burundi</p>			</div>			<div id='g-ai1-23' class='g-scale_-_dimensions_copy_MCU g-aiAbs' style='top:91.0465%;left:3.0885%;'>				<p class='g-aiPstyle12'>0</p>			</div>			<div id='g-ai1-24' class='g-scale_-_dimensions_copy_MCU g-aiAbs' style='top:91.0465%;left:10.2312%;'>				<p class='g-aiPstyle12'>20</p>			</div>			<div id='g-ai1-25' class='g-scale_-_dimensions_copy_MCU g-aiAbs' style='top:91.0465%;left:17.8611%;'>				<p class='g-aiPstyle12'>40</p>			</div>			<div id='g-ai1-26' class='g-scale_-_dimensions_copy_MCU g-aiAbs' style='top:91.0465%;left:25.4909%;'>				<p class='g-aiPstyle12'>60 km</p>			</div>		</div>	</div>	<!-- End ai2html - 2017-02-13 - 15:16 --></div>")
-          .style("opacity", 1);
+          .style("opacity", 0);
 
         mcuMap = fullG.selectAll("#mcu-map") ;
 
@@ -549,6 +583,17 @@ tfrRwanda = tfrData.filter(function(d) {return d.country == "Rwanda"});
 var tfrNest = d3.nest()
     .key(function(d) {return d.country;})
     .entries(tfrCountries);
+
+    // MCU data ---------------------------------------------------------------------------
+        mcuTimeData = rawData["mcuTime"];
+
+        // convert to numbers
+        mcuTimeData.forEach(function(d) {
+            d.year = +d.year;
+            d.ntl_mcu = +d.ntl_mcu;
+            d.nw_mcu = +d.nw_mcu;
+            d.kivu_mcu = +d.kivu_mcu;
+        });
 
 // MCU data ---------------------------------------------------------------------------
     mcuData = rawData["mcu"];
@@ -737,6 +782,13 @@ if(selectedCat == "Livelihood Zone") {
    y.domain([0, d3.max(tfrData, function(element) { return element.tfr; })]);
    z.domain(tfrData.map(function(element) {return element.country}));
 
+
+   // MCU over time; using same x domain as for TFR.
+     xMCUtime.domain([d3.min(tfrData, function(element) { return element.year; }),
+               d3.max(tfrData, function(element) { return element.year; })]);
+     yMCUtime.domain([0, d3.max(mcuTimeData, function(element) { return element.ntl_mcu; })]);
+
+
    // Religion Dot
      xRslope.domain([d3.min(religData, function(element) { return element.year; }),
                d3.max(religData, function(element) { return element.year; })]);
@@ -793,7 +845,7 @@ br.selectAll("circle").on("click", function(d,i) {
 
 
 // Call the function to set up the svg objects
-       setupVis(tfrCountries, tfrNest, tfrRwanda, religData, religNest, religPctData, religAgeNest);
+       setupVis(tfrCountries, tfrNest, tfrRwanda, religData, religNest, religPctData, religAgeNest, mcuTimeData);
 
 // Set up the functions to edit the sections.
        setupSections();
@@ -808,7 +860,7 @@ br.selectAll("circle").on("click", function(d,i) {
    * sections of the visualization.
    *
    */
-  setupVis = function(data, tfrNest, tfrRwanda, religData, religNest, religPctData, religAgeData) {
+  setupVis = function(data, tfrNest, tfrRwanda, religData, religNest, religPctData, religAgeData, mcuTimeData) {
 
 // Swoopy arrows!
     // swoopy arrow annotations
@@ -816,6 +868,7 @@ br.selectAll("circle").on("click", function(d,i) {
     {tfr: [{coords: [[x(2010.5), y(5)],[x(2010.25), y(4.7)]]},
           {coords: [[x(2016.5), y(4.8)],[x(2016.25), y(4.5)]]}
     ],
+    mcuTime: {coords: [[xMCUtime(2005), yMCUtime(0.47)],[xMCUtime(2009), yMCUtime(0.45)]]},
     mcuRelig: {coords: [[xMCUrelig(0.53), yMCUrelig("Protestant") + 40],[xMCUrelig(0.49), yMCUrelig("Protestant") + 60]]},
     slope: [{coords: [[xRslope(2004), yRslope(0.54)],[xRslope(2003), yRslope(0.53)]]},
     {coords: [[xRslope(2008), yRslope(0.28)],[xRslope(2007), yRslope(0.3)]]}
@@ -1606,6 +1659,164 @@ tfr
             .style("opacity", 1);
 
 // end of TFR -------------------------------------------------------------------
+
+// --- MCU over time plot ---
+mcuTime.append("text")
+    .attr("class", "top-label")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("dy", -margins.mcuTime.top)
+    .text("percent of women 15-49 married or in a union using modern contraception");
+
+
+
+    // draw the axes
+  mcuTime.append("g")
+    .call(xAxMCUtime)
+        .attr("class", "x axis")
+        .attr("id", "mcuTime-x")
+        .attr("transform", "translate(0," + xaxisOffset + ")")
+        .style("opacity", 1);
+
+  mcuTime.append("g")
+    .call(yAxMCUtime)
+        .attr("class","y axis")
+        .attr("id", "mcuTime-y")
+        .attr("transform", "translate(" + (40-margins.mcuTime.left) + ",0)")
+        .style("opacity", 1);
+
+
+// PATH: MCU over time
+var mcuLine = d3.svg.line()
+  .x(function(d) {return xMCUtime(d.year);})
+  .y(function(d) {return yMCUtime(d.ntl_mcu);})
+
+  var path = mcuTime.append("path")
+    .attr("d", mcuLine(mcuTimeData))
+    .attr("class", "solid-line")
+    .attr("id", "mcuPath")
+    .attr("stroke", function(d) {return z("Rwanda");})
+    .style("opacity", 1);
+
+    // CIRCLES: mcuTime over time
+    mcuTime.selectAll("#mcuTime-mask")
+        .data(mcuTimeData)
+      .enter().append("circle")
+        .attr("id", "mcuTime-mask")
+        .attr("class", "dot_mask")
+        .attr("r", radius)
+        .attr("cx", function(d) {return xMCUtime(d.year);})
+        .attr("cy", function(d) {return yMCUtime(d.ntl_mcu);})
+        .style("opacity", 0);
+
+    mcuTime.selectAll("#mcuTime-circles")
+        .data(mcuTimeData)
+      .enter().append("circle")
+        .attr("id", "mcuTime-circles")
+        .attr("class", "dot")
+        .attr("r", radius)
+        .attr("cx", function(d) {return xMCUtime(d.year);})
+        .attr("cy", function(d) {return yMCUtime(d.ntl_mcu);})
+        .style("fill", function(d) {return zMCU(d.ntl_mcu);})
+        // .style("stroke", function(d) {return z("Rwanda");})
+        .style("stroke-opacity", 0)
+       .style("fill-opacity", 0);
+
+
+
+
+   var totalLength = path.node().getTotalLength();
+
+   var dashing = "6, 6"
+
+   //This returns the length of adding all of the numbers in dashing (the length of one pattern in essense)
+   //So for "6,6", for example, that would return 6+6 = 12
+   var dashLength =
+     dashing
+       .split(/[\s,]/)
+       .map(function (a) { return parseFloat(a) || 0 })
+       .reduce(function (a, b) { return a + b });
+
+   //How many of these dash patterns will fit inside the entire path?
+   var dashCount = Math.ceil( totalLength / dashLength );
+
+   //Create an array that holds the pattern as often so it will fill the entire path
+   var newDashes = new Array(dashCount).join( dashing + " " );
+   //Then add one more dash pattern, namely with a visible part of length 0 (so nothing) and a white part
+   //that is the same length as the entire path
+   var dashArray = newDashes + " 0, " + totalLength;
+
+   /************************************* END ******************************************/
+
+   //Now offset the entire dash pattern, so only the last white section is
+   //visible and then decrease this offset in a transition to show the dashes
+
+   //Animate the path by offsetting the path so all you see is the white last bit of the dash pattern
+   //(which has a length that is the same as the length of the entire path), and then slowly move the offset
+   //to zero (i.e. out of the way) so the rest of the path becomes visible
+   //(the visible stuff at the start of the dash pattern)
+   path
+       .attr("stroke-dashoffset", totalLength)
+       .attr("stroke-dasharray", dashArray)	//This is where it differs with the solid line example
+       .transition("mcu-change")
+       .duration(2000).ease("linear")
+     .attr("stroke-dashoffset", 0);
+
+d3.selectAll("#mcuTime-circles")
+  .transition("mcu-change")
+  .duration(250)
+  .delay(function(d,i) {return i*500;})
+  .style("stroke-opacity", 1)
+  .style("fill-opacity", 0.6);
+
+  d3.selectAll("#mcuTime-mask")
+    .transition("mcu-change")
+    .duration(100)
+    .delay(function(d,i) {return i*500;})
+    .style("opacity", 1);
+
+  // // TEXT: mcuTime at final value
+  //     mcuTime.selectAll("#val-annot")
+  //         .data(data.filter(function(d) {return d.mostrecent == true | d.leastrecent == true;}))
+  //       .enter().append("text")
+  //         .attr("id", "val-annot")
+  //         .attr("class", "annot")
+  //         .text(function(d) {return d.mcuTime})
+  //         .attr("x", function(d) {return x(d.year);})
+  //         .attr("dy", function(d) {return d.country == "Kenya" & d.mostrecent == 1 ? 20 : -20;})
+  //         .attr("y", function(d) {return y(d.mcuTime);})
+  //         .style("fill", function(d) {return z(d.country);})
+  //         .style("opacity", function(d) {return d.country == "Rwanda" ? 1 : 0.5;});
+
+
+
+// Draw some arrows!
+mcuTime
+.append("path.arrow")
+  .attr('marker-end', 'url(#arrowhead)')
+  .attr("id", "mcuTime-arrow")
+  .datum(swAnnot.mcuTime.coords)
+  .attr("d", swoopyOver)
+  .style("opacity", 1);
+
+
+mcuTime.selectAll("mcuTime-annot")
+  .data(annotations.mcuTime)
+  .enter().append('text')
+      .attr("y", function(d) {return (d.y);})
+      .attr("id", function(d) {return d.id;})
+      .style("opacity", 1)
+    .tspans(function(d) {
+    return d3.wordwrap(d.text, 25);  // break line after 25 characters
+  });
+
+
+mcuTime.selectAll("tspan")
+.attr("x", function(d) {return dims.mcuTime.w * 0.15;})
+
+
+// end of MCU over time -------------------------------------------------------------------
+
 
 // TEXT: Summary ----------
 
@@ -2462,21 +2673,24 @@ function readData() {
 // Nested data calls to read data, bind to ddata.
 d3.csv("/data/tfr.csv", function(error, tfr){
   d3.csv("/data/mcu.csv", function(error, mcu){
-    d3.csv("/data/relig.csv", function(error, relig){
-      d3.csv("/data/relig_byAge2012.csv", function(error, religAge){
-        d3.csv("/data/religPct.csv", function(error, religPct){
-        ddata = {};
-        ddata['tfr'] = tfr;
-        ddata['mcu'] = mcu;
-        ddata['relig'] = relig;
-        ddata['religAge'] = religAge;
-        ddata['religPct'] = religPct;
+    d3.csv("/data/mcu_time.csv", function(error, mcuTime){
+      d3.csv("/data/relig.csv", function(error, relig){
+        d3.csv("/data/relig_byAge2012.csv", function(error, religAge){
+          d3.csv("/data/religPct.csv", function(error, religPct){
+            ddata = {};
+            ddata['tfr'] = tfr;
+            ddata['mcu'] = mcu;
+            ddata['mcuTime'] = mcuTime;
+            ddata['relig'] = relig;
+            ddata['religAge'] = religAge;
+            ddata['religPct'] = religPct;
 
-        console.log(ddata)
-        // call function to plot the data
-        display(ddata);
-      });
+            console.log(ddata)
+            // call function to plot the data
+            display(ddata);
           });
+        });
+      });
     });
   });
 });
