@@ -27,27 +27,6 @@
   // left: 0;
 }
 
-// ---- Africa outline animation
-.afr {
-  fill:none;
-  stroke:#333;
-  stroke-width:0.35px;
-  stroke-dasharray: 5px;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-  stroke-miterlimit:10;}
-
-  .afr-anim {
-    stroke-dasharray: 4000;
-    stroke-dashoffset: 4000;
-    animation: dash 10s linear forwards;
-  }
-
-  @keyframes dash {
-    to {
-      stroke-dashoffset: 0;
-    }
-  }
 
 
 // ---------
@@ -146,3 +125,18 @@
 }
 
 .g-aiPtransformed p { white-space: nowrap; }
+
+#g-Rwanda_LakeVic_final-lakevic-cities{
+  position:relative;
+  overflow:hidden;
+}
+
+#g-Rwanda_LakeVic_final-lakevic-cities .g-aiPstyle0 {
+  font-family:Lato,sans-serif;
+  font-size:12px;
+  line-height:16px;
+  font-weight:400;
+  letter-spacing:0.16666666666667em;
+  color:#6b6b6c;
+  text-shadow: white 1px 1px ;
+}
