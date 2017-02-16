@@ -415,7 +415,7 @@ var focusRelig = ["Protestant", "Catholic"];
       .append("g")
         .attr("id", "mcu-time")
         .attr("transform", "translate(" + margins.mcuTime.left + "," + margins.mcuTime.top + ")")
-        .style("opacity", 1) // set initially to 0.
+        .style("opacity", 0) // set initially to 0.
 
 
     var nav = fullG.append("div")
@@ -1722,71 +1722,17 @@ var mcuLine = d3.svg.line()
         .style("stroke-opacity", 0)
        .style("fill-opacity", 0);
 
-
-
-
-   var totalLength = path.node().getTotalLength();
-
-   var dashing = "6, 6"
-
-   //This returns the length of adding all of the numbers in dashing (the length of one pattern in essense)
-   //So for "6,6", for example, that would return 6+6 = 12
-   var dashLength =
-     dashing
-       .split(/[\s,]/)
-       .map(function (a) { return parseFloat(a) || 0 })
-       .reduce(function (a, b) { return a + b });
-
-   //How many of these dash patterns will fit inside the entire path?
-   var dashCount = Math.ceil( totalLength / dashLength );
-
-   //Create an array that holds the pattern as often so it will fill the entire path
-   var newDashes = new Array(dashCount).join( dashing + " " );
-   //Then add one more dash pattern, namely with a visible part of length 0 (so nothing) and a white part
-   //that is the same length as the entire path
-   var dashArray = newDashes + " 0, " + totalLength;
-
-   /************************************* END ******************************************/
-
-   //Now offset the entire dash pattern, so only the last white section is
-   //visible and then decrease this offset in a transition to show the dashes
-
-   //Animate the path by offsetting the path so all you see is the white last bit of the dash pattern
-   //(which has a length that is the same as the length of the entire path), and then slowly move the offset
-   //to zero (i.e. out of the way) so the rest of the path becomes visible
-   //(the visible stuff at the start of the dash pattern)
-   path
-       .attr("stroke-dashoffset", totalLength)
-       .attr("stroke-dasharray", dashArray)	//This is where it differs with the solid line example
-       .transition("mcu-change")
-       .duration(2000).ease("linear")
-     .attr("stroke-dashoffset", 0);
-
-d3.selectAll("#mcuTime-circles")
-  .transition("mcu-change")
-  .duration(250)
-  .delay(function(d,i) {return i*500;})
-  .style("stroke-opacity", 1)
-  .style("fill-opacity", 0.6);
-
-  d3.selectAll("#mcuTime-mask")
-    .transition("mcu-change")
-    .duration(100)
-    .delay(function(d,i) {return i*500;})
-    .style("opacity", 1);
-
-  // // TEXT: mcuTime at final value
-  //     mcuTime.selectAll("#val-annot")
-  //         .data(data.filter(function(d) {return d.mostrecent == true | d.leastrecent == true;}))
-  //       .enter().append("text")
-  //         .attr("id", "val-annot")
-  //         .attr("class", "annot")
-  //         .text(function(d) {return d.mcuTime})
-  //         .attr("x", function(d) {return x(d.year);})
-  //         .attr("dy", function(d) {return d.country == "Kenya" & d.mostrecent == 1 ? 20 : -20;})
-  //         .attr("y", function(d) {return y(d.mcuTime);})
-  //         .style("fill", function(d) {return z(d.country);})
-  //         .style("opacity", function(d) {return d.country == "Rwanda" ? 1 : 0.5;});
+  // // TEXT: mcuTime at initial / final value
+      mcuTime.selectAll("#mcuTime-vals")
+          .data(mcuTimeData.filter(function(d) {return d.mostrecent == true | d.leastrecent == true;}))
+        .enter().append("text")
+          .attr("id", "mcuTime-vals")
+          .attr("class", "annot")
+          .text(function(d) {return d3.format(".0%")(d.ntl_mcu)})
+          .attr("x", function(d) {return xMCUtime(d.year);})
+          .attr("dx", 20)
+          .attr("y", function(d) {return yMCUtime(d.ntl_mcu);})
+          .style("opacity", 0);
 
 
 
@@ -1797,7 +1743,7 @@ mcuTime
   .attr("id", "mcuTime-arrow")
   .datum(swAnnot.mcuTime.coords)
   .attr("d", swoopyOver)
-  .style("opacity", 1);
+  .style("opacity", 0);
 
 
 mcuTime.selectAll("mcuTime-annot")
@@ -1805,7 +1751,7 @@ mcuTime.selectAll("mcuTime-annot")
   .enter().append('text')
       .attr("y", function(d) {return (d.y);})
       .attr("id", function(d) {return d.id;})
-      .style("opacity", 1)
+      .style("opacity", 0)
     .tspans(function(d) {
     return d3.wordwrap(d.text, 25);  // break line after 25 characters
   });
@@ -1930,17 +1876,30 @@ summ.append("div")
 
 
 // -- TURN OFF NEXT --
-  summaryOff();
+  mcuTimeOff();
 
 // -- TURN ON CURRENT --
   tfrOn(tDefault);
 
   }
 
+  // [[ #3 ]] --------------------------------------------------------------------
+    function show3() {
+  // -- TURN OFF PREVIOUS --
+    tfrOff();
+
+  // -- TURN OFF NEXT --
+    summaryOff();
+
+  // -- TURN ON CURRENT --
+    mcuTimeOn(tDefault);
+
+    }
+
 // [[ #3 ]] --------------------------------------------------------------------
-  function show3() {
+  function show4() {
 // -- TURN OFF PREVIOUS --
-  tfrOff();
+  mcuTimeOff();
 
 // -- TURN OFF NEXT --
   religOff();
@@ -1951,7 +1910,7 @@ summ.append("div")
   }
 
 // [[ #4 ]] --------------------------------------------------------------------
-  function show4() {
+  function show5() {
 // -- TURN OFF PREVIOUS --
   summaryOff();
 
@@ -1963,7 +1922,7 @@ summ.append("div")
   }
 
 // [[ #5 ]] --------------------------------------------------------------------
-  function show5() {
+  function show6() {
 // -- TURN OFF PREVIOUS --
   religOff();
 
@@ -1975,7 +1934,7 @@ summ.append("div")
   }
 
 // [[ #6 ]] --------------------------------------------------------------------
-  function show6() {
+  function show7() {
 // -- TURN OFF PREVIOUS --
   RslopeOff();
 
@@ -1987,7 +1946,7 @@ summ.append("div")
   }
 
 // [[ #7 ]] --------------------------------------------------------------------
-  function show7() {
+  function show8() {
 // -- TURN OFF PREVIOUS --
   rBarOff();
 
@@ -1999,7 +1958,7 @@ summ.append("div")
   }
 
 // [[ #8 ]] --------------------------------------------------------------------
-  function show8() {
+  function show9() {
 // -- TURN OFF PREVIOUS --
   rAgeOff();
 
@@ -2012,7 +1971,7 @@ summ.append("div")
 
 
 // [[ #9 ]] --------------------------------------------------------------------
-  function show9() {
+  function show10() {
 // -- TURN OFF PREVIOUS --
   religMapOff();
 
@@ -2024,7 +1983,7 @@ summ.append("div")
   }
 
 // [[ #10 ]] --------------------------------------------------------------------
-  function show10() {
+  function show11() {
 // -- TURN OFF PREVIOUS --
   mcuMapOff();
 
@@ -2036,7 +1995,7 @@ summ.append("div")
   }
 
 // [[ #11 ]] --------------------------------------------------------------------
-  function show11() {
+  function show12() {
 // -- TURN OFF PREVIOUS --
   mcuRegrOff();
 // -- TURN OFF NEXT --
@@ -2047,7 +2006,7 @@ summ.append("div")
   }
 
 // [[ #12 ]] --------------------------------------------------------------------
-  function show12() {
+  function show13() {
 // -- TURN OFF PREVIOUS --
 
 // -- TURN OFF NEXT --
@@ -2121,6 +2080,128 @@ function tfrOff() {
             .transition()
             .duration(0)
             .style("opacity", 0);
+}
+
+function mcuTimeOn(tDefault) {
+  plotG.selectAll("#mcu-time")
+    .transition()
+    .duration(tDefault)
+    .style("opacity", 1);
+
+    var path = d3.selectAll("#mcuPath");
+
+     var totalLength = path.node().getTotalLength();
+
+     var dashing = "6, 6"
+
+     //This returns the length of adding all of the numbers in dashing (the length of one pattern in essense)
+     //So for "6,6", for example, that would return 6+6 = 12
+     var dashLength =
+       dashing
+         .split(/[\s,]/)
+         .map(function (a) { return parseFloat(a) || 0 })
+         .reduce(function (a, b) { return a + b });
+
+     //How many of these dash patterns will fit inside the entire path?
+     var dashCount = Math.ceil( totalLength / dashLength );
+
+     //Create an array that holds the pattern as often so it will fill the entire path
+     var newDashes = new Array(dashCount).join( dashing + " " );
+     //Then add one more dash pattern, namely with a visible part of length 0 (so nothing) and a white part
+     //that is the same length as the entire path
+     var dashArray = newDashes + " 0, " + totalLength;
+
+     /************************************* END ******************************************/
+
+     //Now offset the entire dash pattern, so only the last white section is
+     //visible and then decrease this offset in a transition to show the dashes
+
+     //Animate the path by offsetting the path so all you see is the white last bit of the dash pattern
+     //(which has a length that is the same as the length of the entire path), and then slowly move the offset
+     //to zero (i.e. out of the way) so the rest of the path becomes visible
+     //(the visible stuff at the start of the dash pattern)
+  // dashed
+    //  path
+    //      .attr("stroke-dashoffset", totalLength)
+    //      .attr("stroke-dasharray", dashArray)	//This is where it differs with the solid line example
+    //      .transition("mcu-change")
+    //      .duration(2000).ease("linear")
+    //    .attr("stroke-dashoffset", 0);
+
+  // undashed
+       path
+         .attr("stroke-dasharray", totalLength + " " + totalLength)
+         .attr("stroke-dashoffset", totalLength)
+         .style("opacity", 1)
+           .transition().duration(2000).ease("linear")
+         .attr("stroke-dashoffset", 0)
+         .each("end", function() {
+           plotG.selectAll("#mcuTime-arrow")
+            .transition("annotate")
+            .duration(tDefault)
+            .style("opacity", 1)
+
+            plotG.selectAll("#mcuTime-annot")
+             .transition("annotate")
+             .duration(tDefault)
+             .style("opacity", 1)
+         });
+
+  plotG.selectAll("#mcuTime-circles")
+    .transition("mcu-change")
+    .duration(250)
+    .delay(function(d,i) {return i*500;})
+    .style("stroke-opacity", 1)
+    .style("fill-opacity", 0.6);
+
+    plotG.selectAll("#mcuTime-vals")
+      .transition("mcu-change")
+      .duration(250)
+      .delay(function(d,i) {return i*2000;})
+      .style("opacity", 1);
+
+    plotG.selectAll("#mcuTime-mask")
+      .transition("mcu-change")
+      .duration(100)
+      .delay(function(d,i) {return i*500;})
+      .style("opacity", 1);
+
+        sourceOn("2010 & 2014/2015 Rwanda Demographic and Health Surveys", tDefault)
+}
+
+function mcuTimeOff()  {
+
+  plotG.selectAll("#mcu-time")
+    .transition()
+    .duration(0)
+    .style("opacity", 0);
+
+    plotG.selectAll("#mcuPath")
+    .transition()
+    .duration(0)
+         .style("opacity", 0);
+
+           plotG.selectAll("#mcuTime-arrow")
+            .transition("annotate")
+            .duration(0)
+            .style("opacity", 0);
+
+    plotG.selectAll("#mcuTime-annot")
+     .transition()
+     .duration(0)
+     .style("opacity", 0);
+
+  d3.selectAll("#mcuTime-circles")
+    .transition()
+    .duration(0)
+    .style("stroke-opacity", 0)
+    .style("fill-opacity", 0);
+
+    d3.selectAll("#mcuTime-mask")
+      .transition("mcu-change")
+      .duration(100)
+      .delay(function(d,i) {return i*500;})
+      .style("opacity", 1);
 }
 
 function mcuOn(tDefault) {
