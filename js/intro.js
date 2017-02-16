@@ -765,6 +765,12 @@ mapOff("#afr4")
 
 
 function show7() {
+// remove previous
+vis.selectAll("#afr4_sm")
+  .transition()
+  .duration(0)
+  .style("opacity", 0);
+
   // Remove box
   fullG.select(".rwa-outline")
     .transition("zoom")
