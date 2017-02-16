@@ -354,7 +354,7 @@ var scrollVis = function() {
            //  .attr("y1", function(d) {return y(d.livelihood_zone) + y.bandwidth()/2})
           //  .attr("y2", function(d) {return y(d.livelihood_zone) + y.bandwidth()/2})
            .attr("x1", function(d) {return x(d.avg2010)})
-           .attr("x2", function(d) {return x(d.avg2014)})
+           .attr("x2", function(d) {return x(d.avg2010)})
            .style("opacity", 0);
 
    // TEXT: national annotation
@@ -626,6 +626,8 @@ var ci2010 = plotG.selectAll(".ci #y2010")
       .attr("cy", height/2)
       .attr("r", Math.sqrt(Math.pow(radius, 2)*13)) // Calc equal area.
       .style("fill", function(d) {return z(d.natl2010)});
+
+
 
     plotG.selectAll(".natl-value")
         .transition()
@@ -920,9 +922,10 @@ plotG.selectAll(".dot.dot2010")
 
   // remove change line
   plotG.selectAll(".change")
+       .attr("x2", function(d) {return x(d.avg2010)})
     .transition()
-    .duration(0)
-    .style("opacity", 0);
+      .duration(0)
+      .style("opacity", 0);
 
 
   }
@@ -955,11 +958,17 @@ plotG.selectAll(".dot.dot2010")
 
     // change the normal dots to 2014 data.
     plotG.selectAll(".dot.dotMain")
-    .transition()
+    .transition("diff")
       // .delay(function(d,i) {return i*100;})
       .duration(4000)
       .attr("cx", function(d) {return x(d.avg2014)})
       .style("fill", function(d) {return z(d.avg2014)});
+
+      plotG.selectAll(".change")
+      .transition("diff")
+        // .delay(function(d,i) {return i*100;})
+        .duration(4000)
+           .attr("x2", function(d) {return x(d.avg2014)});
 
     // Change the avg. labels to not be so prominent.
     // change avg. label
