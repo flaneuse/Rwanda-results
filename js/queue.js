@@ -7,22 +7,23 @@
 
   function queue(parallelism) {
     var q,
-        tasks = [],
-        started = 0, // number of tasks that have been started (and perhaps finished)
-        active = 0, // number of tasks currently being executed (started but not finished)
-        remaining = 0, // number of tasks not yet finished
-        popping, // inside a synchronous task callback?
-        error = null,
-        await = noop,
-        all;
+      tasks = [],
+      started = 0, // number of tasks that have been started (and perhaps finished)
+      active = 0, // number of tasks currently being executed (started but not finished)
+      remaining = 0, // number of tasks not yet finished
+      popping, // inside a synchronous task callback?
+      error = null,
+      await = noop,
+      all;
 
     if (!parallelism) parallelism = Infinity;
 
     function pop() {
       while (popping = started < tasks.length && active < parallelism) {
         var i = started++,
-            t = tasks[i],
-            a = slice.call(t, 1);
+          t = tasks[i],
+          a = slice.call(t, 1);
+          
         a.push(callback(i));
         ++active;
         t[0].apply(null, a);

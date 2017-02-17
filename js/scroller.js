@@ -39,29 +39,29 @@ function scroller() {
    *  through by user.
    */
     function scroll(els) {
-        // $('.step') ==> These are the els
-        sections = els;
+      // $('.step') ==> These are the els
+      sections = els;
 
-        // when window is scrolled call
-        // position. When it is resized
-        // call resize.
-        d3.select(window)
-        .on("scroll.scroller", position)
-        .on("resize.scroller", resize);
+      // when window is scrolled call
+      // position. When it is resized
+      // call resize.
+      d3.select(window)
+      .on("scroll.scroller", position)
+      .on("resize.scroller", resize);
 
-        // manually call resize
-        // initially to setup
-        // scroller.
-        resize();
+      // manually call resize
+      // initially to setup
+      // scroller.
+      resize();
 
-        // hack to get position
-        // to be called once for
-        // the scroll position on
-        // load.
-        d3.timer(function() {
-            position();
-            return true;
-        });
+      // hack to get position
+      // to be called once for
+      // the scroll position on
+      // load.
+      d3.timer(function() {
+          position();
+          return true;
+      });
     }
 
   /**
@@ -71,23 +71,23 @@ function scroller() {
    *
    */
     function resize() {
-        // sectionPositions will be each sections
-        // starting position relative to the top
-        // of the first section.
-        sectionPositions = [];
-        var startPos;
+      // sectionPositions will be each sections
+      // starting position relative to the top
+      // of the first section.
+      sectionPositions = [];
+      var startPos;
 
-        sections.each(function(d,i) {
-            var top = this.getBoundingClientRect().top;
+      sections.each(function(d,i) {
+          var top = this.getBoundingClientRect().top;
 
-            if(i === 0) {
-                startPos = top;
-            }
-            sectionPositions.push(top - startPos);
-        });
+          if(i === 0) {
+              startPos = top;
+          }
+          sectionPositions.push(top - startPos);
+      });
 
-        containerStart = container.node()
-        .getBoundingClientRect().top + window.pageYOffset;
+      containerStart = container.node()
+      .getBoundingClientRect().top + window.pageYOffset;
     }
 
   /**
@@ -98,37 +98,37 @@ function scroller() {
    *
    */
     function position() {
-        // position of the container: $('#graphic')
-        var pos = window.pageYOffset - 10 - containerStart;
+      // position of the container: $('#graphic')
+      var pos = window.pageYOffset - 10 - containerStart;
 
-        // BK => This is a nice way to find the figure out which section
-        // is next but it trigger each time the current section has a piece out.
-        var sectionIndex = d3.bisect(sectionPositions, pos);
+      // BK => This is a nice way to find the figure out which section
+      // is next but it trigger each time the current section has a piece out.
+      var sectionIndex = d3.bisect(sectionPositions, pos);
 
-        //BK => What is this doing?
-        //sectionIndex = Math.min(sections.size() - 1, sectionIndex);
+      //BK => What is this doing?
+      //sectionIndex = Math.min(sections.size() - 1, sectionIndex);
 
-        $.each(sectionPositions, function(i, sPos) {
-            // get the real position of the sections
-            var nPos = sPos - pos;
-            // check if the section is within the right range
-            if ( nPos < displayRange ) {
-                sectionIndex = i;
-                return;
-            }
-        });
+      $.each(sectionPositions, function(i, sPos) {
+          // get the real position of the sections
+          var nPos = sPos - pos;
+          // check if the section is within the right range
+          if ( nPos < displayRange ) {
+              sectionIndex = i;
+              return;
+          }
+      });
 
-        // this will trigger the change of section
-        if (currentIndex !== sectionIndex) {
-            dispatch.active(sectionIndex);
-            currentIndex = sectionIndex;
-        }
+      // this will trigger the change of section
+      if (currentIndex !== sectionIndex) {
+          dispatch.active(sectionIndex);
+          currentIndex = sectionIndex;
+      }
 
-        var prevIndex = Math.max(sectionIndex - 1, 0);
-        var prevTop = sectionPositions[prevIndex];
-        var progress = (pos - prevTop) / (sectionPositions[sectionIndex] - prevTop);
+      var prevIndex = Math.max(sectionIndex - 1, 0);
+      var prevTop = sectionPositions[prevIndex];
+      var progress = (pos - prevTop) / (sectionPositions[sectionIndex] - prevTop);
 
-        dispatch.progress(currentIndex, progress);
+      dispatch.progress(currentIndex, progress);
     }
 
   /**
