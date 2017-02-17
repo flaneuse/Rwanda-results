@@ -44,6 +44,7 @@ $font-bold: 400;
 // font: sizes
 $base-font-size: 18px;
 $title-size: 24px;
+$num-size: 36px;
 $small-font-size:  $base-font-size * 0.875;
 $large-font-size:  $base-font-size * 1.125;
 $footnote-size: $base-font-size*(2/3);
@@ -65,16 +66,12 @@ $clicky-height: 100px;
 $top-padding: 60px;
 $nav-height: 30px;
 
+$summary-height: 200px;
+
 // widths for media queries
 $max-width:  900px;
 $med-width:  800px;
 $small-width:  500px;
-
-#intro-img {
-  top: -5px;
-  padding-left: 10px;
-
-}
 
 
 
@@ -86,4 +83,5 @@ $small-width:  500px;
   "footer",
   "plots",
   "ai_relig",
-  "ai_intro";
+  "ai_intro",
+  "summary";

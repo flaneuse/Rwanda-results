@@ -1,0 +1,95 @@
+#summary {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+
+.main-title {
+  font-family:Lato,sans-serif;
+  font-size:50px;
+  line-height:60px;
+  text-transform:uppercase;
+  letter-spacing:0.0625em;
+  color: $title-color;
+  text-shadow: $grey15K 3px 3px ;
+}
+
+
+
+#mainsum-intro{
+  color: $grey50K;
+  font-family: $base-font-family;
+  font-size: $large-font-size;
+  font-weight: $base-weight;
+  padding-bottom: $large-pad;
+}
+
+#mainsum-img  img{
+  min-height: $summary-height;
+  width: 100%;
+  margin: auto;
+  display: block;
+}
+
+.mainsum-num {
+  width: 30px;
+  // display: inline-block;
+  font-family: $base-font-family;
+  font-weight: $font-bold;
+  font-size: $num-size;
+  color: $grey50K;
+  float: left;
+  vertical-align: text-top;
+  text-align: right;
+  padding-right: 10px !important;
+  margin-right: 10px !important;
+}
+
+
+.mainsum-text {
+  width: auto;
+  border-left: $accent-green solid 2px;
+  margin-left: 40px !important;
+  padding-left: $large-pad;
+  padding-right: $large-pad;
+  min-height: $summary-height;
+}
+
+
+// .mainsum-text:first-child {
+//   margin-left: -5px !important;
+// }
+
+
+#mainsum-pts {
+  // display: inline-block;
+}
+
+.summary-sect {
+  min-height: $summary-height;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.mainsum-text > .title {
+  text-transform: uppercase;
+  font-size: $base-font-size;
+  font-weight: $base-weight;
+  color: $accent-green;
+  padding-bottom: $base-pad;
+}
+
+.mainsum-text > .sum-text {
+  font-size: $base-font-size;
+  font-weight: $base-weight;
+  color: $base-font-color;
+}
+
+.sum-text > ul {
+  margin-left: $large-pad + $base-pad;
+  padding-left: $base-pad;
+}
+
+.sum-text > ul > li {
+  padding-bottom: $base-pad*3;
+}
